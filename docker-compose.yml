@@ -1,0 +1,26 @@
+services:
+  server:
+    build: ./server
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./server:/app
+      - quizz-db:/app/data
+    environment:
+      - SECRET_KEY=dev-secret-change-me
+      - DB_PATH=/app/data/quizz.db
+
+  client:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    volumes:
+      - ./client:/app
+      - client-node-modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+
+volumes:
+  quizz-db:
+  client-node-modules:
