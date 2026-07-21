@@ -6,3 +6,7 @@ __pycache__/
 server/data/
 .env
 changelog.md
+
+# Déploiement — local, non versionné (contient secrets + notes VPS)
+vps-pass.txt
+deploy/
