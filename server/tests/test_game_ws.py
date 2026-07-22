@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from app import config
 from tests.conftest import auth_headers, register
 from tests.test_quizzes import quiz_payload
@@ -9,12 +11,30 @@ def _create_game(client, session, quiz_id=None):
     return r.json()["code"]
 
 
+@contextmanager
+def ws_connect(client, code, session):
+    """Ouvre la socket puis s'authentifie par premier message (le token ne passe pas en URL)."""
+    with client.websocket_connect(f"/ws/game/{code}") as ws:
+        ws.send_json({"type": "auth", "token": session["token"]})
+        yield ws
+
+
 def _recv_until(ws, msg_type, limit=20):
     for _ in range(limit):
         msg = ws.receive_json()
         if msg["type"] == msg_type:
             return msg
     raise AssertionError(f"message {msg_type} jamais reçu")
+
+
+def test_ws_rejects_invalid_token(client):
+    host = register(client, "Hote")
+    code = _create_game(client, host)
+    with client.websocket_connect(f"/ws/game/{code}") as ws:
+        ws.send_json({"type": "auth", "token": "pas-un-vrai-token"})
+        msg = ws.receive_json()
+        assert msg["type"] == "error"
+        assert msg["code"] == "invalid_token"
 
 
 def test_lobby_join_ready_and_host_only_settings(client):
@@ -25,13 +45,13 @@ def test_lobby_join_ready_and_host_only_settings(client):
     r = client.get(f"/api/games/{code}")
     assert r.status_code == 200 and r.json()["joinable"]
 
-    with client.websocket_connect(f"/ws/game/{code}?token={host['token']}") as ws_host:
+    with ws_connect(client, code, host) as ws_host:
         joined = ws_host.receive_json()
         assert joined["type"] == "joined"
         assert joined["state"]["phase"] == "lobby"
         assert joined["state"]["hostId"] == host["user"]["id"]
 
-        with client.websocket_connect(f"/ws/game/{code}?token={guest['token']}") as ws_guest:
+        with ws_connect(client, code, guest) as ws_guest:
             joined_guest = ws_guest.receive_json()
             assert joined_guest["type"] == "joined"
 
@@ -59,8 +79,8 @@ def test_full_game_flow(client, monkeypatch):
     quiz_id = client.post("/api/quizzes", json=quiz_payload(), headers=auth_headers(host)).json()["id"]
     code = _create_game(client, host, quiz_id=quiz_id)
 
-    with client.websocket_connect(f"/ws/game/{code}?token={host['token']}") as ws_host, \
-         client.websocket_connect(f"/ws/game/{code}?token={guest['token']}") as ws_guest:
+    with ws_connect(client, code, host) as ws_host, \
+         ws_connect(client, code, guest) as ws_guest:
         assert ws_host.receive_json()["type"] == "joined"
         assert ws_guest.receive_json()["type"] == "joined"
 

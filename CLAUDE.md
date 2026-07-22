@@ -25,10 +25,10 @@ docker compose restart client                      # après modification de pack
 ## Architecture
 
 - `server/app/` — FastAPI + SQLite (sqlite3 stdlib, pas d'ORM, schéma dans `schema.sql`, idempotent, exécuté au lifespan). Endpoints REST **sync** (`def`, threadpool) ; depuis l'asyncio du jeu, accès DB via `asyncio.to_thread`.
-  - `security.py` : bcrypt du code, tokens itsdangerous, génération des codes.
+  - `security.py` : bcrypt du code, tokens itsdangerous **datés** (`URLSafeTimedSerializer`, expiration `TOKEN_MAX_AGE` = 30 j), génération des codes.
   - `routers/` : `auth` (register/login/me), `quizzes` (CRUD, `correctIndex` renvoyé à l'owner uniquement, 403 sinon), `leaderboard` (agrégation `game_players` × période), `games` (création de salon → crée la `GameRoom` mémoire).
   - `game/room.py` : cœur du temps réel — `GameRoom` (players, settings, `asyncio.Lock`), boucle `run()` autoritaire (question → `all_answered`/timeout → reveal → sleep 4s), `compute_points()` = `max(250, round(1000 × (durée−écoulé)/durée))` si correct sinon 0, persistance en fin de partie seulement. `play_again` crée une **nouvelle ligne `games`** avec le même code (le code n'est pas UNIQUE en base ; l'unicité des salons actifs = clés du dict du manager).
-  - `game/ws.py` : `/ws/game/{code}?token=…` — la connexion vaut join ; une nouvelle socket du même user **remplace** l'ancienne (close 4000) = mécanisme de reconnexion ; snapshot complet `joined` à chaque (re)connexion. Codes de close applicatifs : 4001 token, 4003 partie commencée, 4004 salon inconnu, 4005 purge.
+  - `game/ws.py` : `/ws/game/{code}` — **auth par premier message** `{"type":"auth","token":…}` (timeout 5 s ; le token ne transite jamais en query string → pas dans les logs). La connexion vaut join ; une nouvelle socket du même user **remplace** l'ancienne (close 4000) = mécanisme de reconnexion ; snapshot complet `joined` à chaque (re)connexion. Codes de close applicatifs : 4001 token, 4003 partie commencée, 4004 salon inconnu, 4005 purge.
 - `client/src/` — React 19 + Vite + TS strict + Tailwind v4 + Zustand.
   - `stores/gameStore.ts` : miroir client de l'état de partie, **une seule** porte d'entrée `apply(msg)` (style reducer) alimentée par `lib/ws.ts` (reconnexion auto backoff 0.5→5s).
   - `GamePage` = une seule route `/game/:code` qui rend Lobby/Playing/Results selon `phase` poussée par le serveur — ne pas introduire de navigation entre ces états.

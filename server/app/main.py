@@ -22,7 +22,13 @@ async def lifespan(app: FastAPI):
     purge_task.cancel()
 
 
-app = FastAPI(title="Midi Quizz API", lifespan=lifespan)
+app = FastAPI(
+    title="Midi Quizz API",
+    lifespan=lifespan,
+    docs_url="/docs" if config.DOCS_ENABLED else None,
+    redoc_url=None,
+    openapi_url="/openapi.json" if config.DOCS_ENABLED else None,
+)
 
 app.add_middleware(
     CORSMiddleware,

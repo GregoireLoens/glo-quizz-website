@@ -1,11 +1,11 @@
 import secrets
 
 import bcrypt
-from itsdangerous import BadSignature, URLSafeSerializer
+from itsdangerous import BadSignature, URLSafeTimedSerializer
 
 from . import config
 
-_serializer = URLSafeSerializer(config.SECRET_KEY, salt="midi-quizz-session")
+_serializer = URLSafeTimedSerializer(config.SECRET_KEY, salt="midi-quizz-session")
 
 
 def generate_user_code() -> str:
@@ -37,7 +37,8 @@ def create_token(user_id: int) -> str:
 
 
 def parse_token(token: str) -> int | None:
+    # SignatureExpired hérite de BadSignature : un token trop vieux est simplement invalide.
     try:
-        return int(_serializer.loads(token)["uid"])
+        return int(_serializer.loads(token, max_age=config.TOKEN_MAX_AGE)["uid"])
     except (BadSignature, KeyError, TypeError, ValueError):
         return None
