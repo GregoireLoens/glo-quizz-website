@@ -54,7 +54,20 @@ _static = Path(config.STATIC_DIR) if config.STATIC_DIR else None
 if _static is not None and _static.is_dir():
     app.mount("/assets", StaticFiles(directory=_static / "assets"), name="assets")
 
-    @app.get("/{full_path:path}", include_in_schema=False)
+    @app.middleware("http")
+    async def cache_headers(request, call_next):
+        response = await call_next(request)
+        if request.url.path.startswith("/assets/"):
+            # Fichiers Vite hashés dans le nom → immuables.
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        elif response.headers.get("content-type", "").startswith("text/html"):
+            # index.html : toujours revalider, sinon un HTML périmé peut référencer
+            # des assets disparus après un déploiement.
+            response.headers["Cache-Control"] = "no-cache"
+        return response
+
+    # HEAD accepté : les moniteurs d'uptime sondent souvent sans corps.
+    @app.api_route("/{full_path:path}", methods=["GET", "HEAD"], include_in_schema=False)
     async def spa_fallback(full_path: str):
         candidate = (_static / full_path).resolve()
         if full_path and candidate.is_file() and candidate.is_relative_to(_static.resolve()):
