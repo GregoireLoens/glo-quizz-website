@@ -28,15 +28,15 @@ class GameSocket {
   }
 
   private open() {
-    const token = useAuthStore.getState().token ?? ''
     const proto = location.protocol === 'https:' ? 'wss' : 'ws'
-    const ws = new WebSocket(
-      `${proto}://${location.host}/ws/game/${this.code}?token=${encodeURIComponent(token)}`,
-    )
+    // Pas de token dans l'URL : il est envoyé en premier message une fois la socket ouverte.
+    const ws = new WebSocket(`${proto}://${location.host}/ws/game/${this.code}`)
     this.ws = ws
 
     ws.onopen = () => {
       this.retryDelay = 500
+      const token = useAuthStore.getState().token ?? ''
+      ws.send(JSON.stringify({ type: 'auth', token }))
       useGameStore.getState().setConnection('open')
     }
 

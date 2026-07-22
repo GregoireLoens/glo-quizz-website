@@ -4,6 +4,10 @@ from pathlib import Path
 DB_PATH = os.environ.get("DB_PATH", str(Path(__file__).resolve().parent.parent / "data" / "quizz.db"))
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 STATIC_DIR = os.environ.get("STATIC_DIR", "")
+DOCS_ENABLED = os.environ.get("DOCS_ENABLED", "1") == "1"
+
+TOKEN_MAX_AGE = int(os.environ.get("TOKEN_MAX_AGE", 30 * 24 * 3600))  # validité des sessions : 30 jours
+WS_AUTH_TIMEOUT = 5.0  # délai pour recevoir le message d'auth après ouverture de la socket
 
 CATEGORIES = [
     "Culture générale",

@@ -4,7 +4,7 @@ import logging
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-from .. import db
+from .. import config, db
 from ..security import parse_token
 from .manager import manager
 
@@ -25,7 +25,20 @@ def _fetch_user(user_id: int):
 async def game_ws(websocket: WebSocket, code: str):
     await websocket.accept()
 
-    user_id = parse_token(websocket.query_params.get("token", ""))
+    # Auth par premier message {"type": "auth", "token": …} : le token ne transite
+    # jamais en query string (access logs uvicorn, logs Cloudflare).
+    token = ""
+    try:
+        raw = await asyncio.wait_for(websocket.receive_text(), timeout=config.WS_AUTH_TIMEOUT)
+        first = json.loads(raw)
+        if isinstance(first, dict) and first.get("type") == "auth" and isinstance(first.get("token"), str):
+            token = first["token"]
+    except (asyncio.TimeoutError, json.JSONDecodeError):
+        pass
+    except WebSocketDisconnect:
+        return
+
+    user_id = parse_token(token)
     if user_id is None:
         await websocket.send_json({"type": "error", "code": "invalid_token", "message": "Session invalide."})
         await websocket.close(code=4001)

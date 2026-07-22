@@ -131,6 +131,7 @@ export type ServerMessage =
   | { type: 'error'; code: string; message: string }
 
 export type ClientMessage =
+  | { type: 'auth'; token: string }
   | { type: 'ready'; ready: boolean }
   | { type: 'update_settings'; settings: Partial<GameSettings> }
   | { type: 'start' }
