@@ -42,12 +42,12 @@ docker compose restart client                      # après modification de pack
 3. `document.body.innerText` est affecté par `text-transform: uppercase` — comparaisons de texte E2E en case-insensitive.
 4. Ne jamais lancer pytest sans être sûr que `tests/conftest.py` force `DB_PATH` (base jetable) — sinon les tests écrasent la base de dev.
 
-## Déploiement (cible, pas encore fait)
+## Déploiement (fait le 21/07/2026)
 
-VPS perso : Caddy (TLS auto) → `/` statique `client/dist` (build `client/Dockerfile`), `/api/*` + `/ws/*` → uvicorn 127.0.0.1:8000 (1 worker). `SECRET_KEY` et `DB_PATH` par env (`server/app/config.py`). Backup : `sqlite3 quizz.db "VACUUM INTO 'backup.db'"`. Reste à écrire : `docker-compose.prod.yml` + Caddyfile.
+Prod : **https://midi-quizz.gloens.fr** — VPS OVH, reverse proxy **Traefik v3** existant (TLS Let's Encrypt, routage par labels Docker, réseau externe `n8n_default`), domaine proxifié Cloudflare. Un seul conteneur `midi-quizz` (image multi-stage : build client → uvicorn 1 worker qui sert API + WS + SPA via `STATIC_DIR`). Tout est dans **`deploy/` (gitignoré**, contient secrets et notes VPS) : `Dockerfile`, `docker-compose.prod.yml`, `deploy.sh` (redéploiement = `./deploy/deploy.sh`, sync tar-over-ssh + build), `.env` (`SECRET_KEY` — ne jamais régénérer), et l'état des lieux complet `01-etat-des-lieux-vps.md`. En prod : `DOCS_ENABLED=0` (pas de `/docs`). Backup SQLite (`VACUUM INTO`) : pas encore de cron.
 
 ## Divers
 
-- Identité git : configurée en local (`glo` / gregoire.loens59670@gmail.com). Pas de remote configuré.
+- Identité git : configurée en local (`glo` / gregoire.loens59670@gmail.com). Remote : `origin` → `git@github.com:GregoireLoens/glo-quizz-website.git`.
 - `changelog.md` : journal local **non versionné** (dans `.gitignore`) — le tenir à jour à chaque itération.
 - Plan d'origine : `~/.claude/plans/structured-napping-boot.md`.
