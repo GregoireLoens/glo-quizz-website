@@ -20,20 +20,22 @@ function RequireAuth() {
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/register/code" element={<RegisterCodePage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/leaderboard" element={<LeaderboardPage />} />
-      <Route element={<RequireAuth />}>
-        <Route path="/join" element={<JoinPage />} />
-        <Route path="/game/:code" element={<GamePage />} />
-        <Route path="/quizzes/mine" element={<MyQuizzesPage />} />
-        <Route path="/quiz/new" element={<QuizEditorPage />} />
-        <Route path="/quiz/:id/edit" element={<QuizEditorPage />} />
-      </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <main>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/register/code" element={<RegisterCodePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/leaderboard" element={<LeaderboardPage />} />
+        <Route element={<RequireAuth />}>
+          <Route path="/join" element={<JoinPage />} />
+          <Route path="/game/:code" element={<GamePage />} />
+          <Route path="/quizzes/mine" element={<MyQuizzesPage />} />
+          <Route path="/quiz/new" element={<QuizEditorPage />} />
+          <Route path="/quiz/:id/edit" element={<QuizEditorPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </main>
   )
 }
