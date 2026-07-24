@@ -107,3 +107,55 @@ def test_full_game_flow(client, monkeypatch):
     # les scores sont persistés pour le classement
     board = client.get("/api/leaderboard").json()
     assert len(board["entries"]) >= 1
+
+
+def test_lobby_random_mix_selection(client):
+    host = register(client, "Hote")
+    quiz_id = client.post("/api/quizzes", json=quiz_payload(), headers=auth_headers(host)).json()["id"]
+    code = _create_game(client, host)
+
+    with ws_connect(client, code, host) as ws:
+        assert ws.receive_json()["type"] == "joined"
+
+        ws.send_json({"type": "update_settings", "settings": {"randomMix": True}})
+        upd = _recv_until(ws, "settings_updated")
+        assert upd["settings"]["randomMix"] is True
+        assert upd["settings"]["quizId"] is None
+        assert upd["settings"]["quizTitle"] == config.RANDOM_MIX_TITLE
+
+        # re-choisir un quiz désactive le mode aléatoire
+        ws.send_json({"type": "update_settings", "settings": {"quizId": quiz_id}})
+        upd = _recv_until(ws, "settings_updated")
+        assert upd["settings"]["randomMix"] is False
+        assert upd["settings"]["quizId"] == quiz_id
+
+
+def test_random_mix_full_flow(client, monkeypatch):
+    monkeypatch.setattr(config, "REVEAL_SECONDS", 0.05)
+    host = register(client, "Hote")
+
+    # sans aucune question en base, pas de partie aléatoire possible
+    r = client.post("/api/games", json={"random": True}, headers=auth_headers(host))
+    assert r.status_code == 409
+
+    client.post("/api/quizzes", json=quiz_payload(), headers=auth_headers(host))
+    r = client.post("/api/games", json={"random": True}, headers=auth_headers(host))
+    assert r.status_code == 201
+    code = r.json()["code"]
+
+    with ws_connect(client, code, host) as ws:
+        joined = ws.receive_json()
+        settings = joined["state"]["settings"]
+        assert settings["randomMix"] is True
+        assert settings["quizId"] is None
+        assert settings["quizQuestionTotal"] == 2  # le quiz de test n'a que 2 questions distinctes
+
+        ws.send_json({"type": "start"})
+        for _ in range(2):
+            q = _recv_until(ws, "question")
+            assert q["total"] == 2
+            assert "correctIndex" not in q
+            ws.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 0})
+            _recv_until(ws, "reveal")
+        over = _recv_until(ws, "game_over")
+        assert len(over["ranking"]) == 1

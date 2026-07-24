@@ -38,9 +38,11 @@ docker compose restart client                      # après modification de pack
 ## Vérification avant de conclure
 
 1. `pytest` vert + `tsc --noEmit` sans erreur.
-2. Multijoueur : test à 2 contextes navigateur (le script E2E puppeteer utilisé pour la v1 peut être recréé sur ce modèle : register via API, token dans localStorage, 2 pages, partie complète jusqu'au podium).
+2. Multijoueur : test à 2 contextes navigateur — script prêt dans `scripts/e2e-random.js` (register via API, token dans localStorage, 2 pages, partie complète jusqu'au podium). Lancement : `docker run --rm --network host -e NODE_PATH=/usr/src/app/node_modules -v "$PWD/scripts:/work" --entrypoint node zenika/alpine-chrome:with-puppeteer /work/e2e-random.js`.
 3. `document.body.innerText` est affecté par `text-transform: uppercase` — comparaisons de texte E2E en case-insensitive.
-4. Ne jamais lancer pytest sans être sûr que `tests/conftest.py` force `DB_PATH` (base jetable) — sinon les tests écrasent la base de dev.
+4. Répondre dans `PlayingView` = **2 clics** : la carte sélectionne, seul « Valider → » envoie la réponse au serveur. Un E2E qui ne clique que les cartes n'envoie rien (questions au timeout, scores à 0). Couper animations/filtres en CSS dans le navigateur headless évite les gels de page.
+5. Ne jamais lancer pytest sans être sûr que `tests/conftest.py` force `DB_PATH` (base jetable) — sinon les tests écrasent la base de dev.
+6. Après les vérifs navigateur : supprimer les images Docker utilisées (`docker rmi zenika/alpine-chrome…`) et purger les comptes/parties de test de la base de dev — ne garder que ce qui sert.
 
 ## Déploiement (fait le 21/07/2026)
 

@@ -16,6 +16,7 @@ export function HomePage() {
   const [categories, setCategories] = useState<string[]>([])
   const [category, setCategory] = useState<string | null>(null)
   const [busyQuizId, setBusyQuizId] = useState<number | null>(null)
+  const [busyRandom, setBusyRandom] = useState(false)
 
   useEffect(() => {
     api.get<string[]>('/api/categories').then(setCategories).catch(() => {})
@@ -26,6 +27,20 @@ export function HomePage() {
     if (category) params.set('category', category)
     api.get<QuizSummary[]>(`/api/quizzes?${params}`).then(setQuizzes).catch(() => {})
   }, [category])
+
+  const playRandom = async () => {
+    if (!user) {
+      navigate('/login', { state: { from: '/' } })
+      return
+    }
+    setBusyRandom(true)
+    try {
+      const res = await api.post<{ code: string }>('/api/games', { random: true })
+      navigate(`/game/${res.code}`)
+    } finally {
+      setBusyRandom(false)
+    }
+  }
 
   const playQuiz = async (quiz: QuizSummary) => {
     if (!user) {
@@ -72,6 +87,16 @@ export function HomePage() {
           </PillButton>
           <PillButton size="lg" variant="outline" onClick={() => navigate('/join')}>
             Rejoindre une partie
+          </PillButton>
+          <PillButton
+            size="lg"
+            variant="outline"
+            className="border-violet/50 text-violet hover:bg-violet/10"
+            disabled={busyRandom}
+            onClick={playRandom}
+          >
+            Partie aléatoire
+            <span className="text-lg">🎲</span>
           </PillButton>
         </div>
       </div>

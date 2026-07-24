@@ -46,6 +46,19 @@ function QuizPicker({ onClose }: { onClose: () => void }) {
       ref={ref}
       className="absolute left-0 top-11 z-20 flex max-h-72 w-80 flex-col gap-1 overflow-y-auto rounded-3xl border border-cream/10 bg-ink p-2"
     >
+      <button
+        type="button"
+        onClick={() => {
+          gameSocket.send({ type: 'update_settings', settings: { randomMix: true } })
+          onClose()
+        }}
+        className="flex cursor-pointer items-center gap-3 rounded-2xl px-3 py-2.5 text-left hover:bg-violet/15"
+      >
+        <span className="text-xl">🎲</span>
+        <span className="flex-1 truncate text-sm font-medium text-violet">Mix aléatoire</span>
+        <span className="text-xs text-muted">toutes catégories</span>
+      </button>
+      <div className="mx-3 h-px bg-cream/10" />
       {quizzes.length === 0 && (
         <span className="px-4 py-3 text-sm text-muted">Aucun quiz disponible — crée-en un !</span>
       )}
@@ -222,7 +235,7 @@ export function LobbyView() {
           <PillButton
             size="lg"
             className="px-10"
-            disabled={!settings?.quizId || players.length < 1}
+            disabled={(!settings?.quizId && !settings?.randomMix) || players.length < 1}
             onClick={() => gameSocket.send({ type: 'start' })}
           >
             Lancer la partie

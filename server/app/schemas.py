@@ -72,3 +72,4 @@ class QuizIn(BaseModel):
 
 class GameCreateIn(BaseModel):
     quizId: int | None = None
+    random: bool = False

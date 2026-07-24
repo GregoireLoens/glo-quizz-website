@@ -6,6 +6,7 @@ from .. import config
 from ..db import get_db
 from ..deps import get_current_user
 from ..game.manager import manager
+from ..game.room import random_mix_settings
 from ..schemas import GameCreateIn
 
 router = APIRouter(prefix="/api", tags=["games"])
@@ -18,7 +19,12 @@ def create_game(
     db: sqlite3.Connection = Depends(get_db),
 ):
     settings: dict = {}
-    if payload.quizId is not None:
+    if payload.random:
+        total = db.execute("SELECT COUNT(DISTINCT lower(text)) AS n FROM questions").fetchone()["n"]
+        if total == 0:
+            raise HTTPException(status_code=409, detail="no_questions")
+        settings = random_mix_settings(total)
+    elif payload.quizId is not None:
         row = db.execute(
             "SELECT q.id, q.title,"
             " (SELECT COUNT(*) FROM questions WHERE quiz_id = q.id) AS question_count"
