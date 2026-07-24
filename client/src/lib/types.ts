@@ -61,6 +61,7 @@ export interface GameSettings {
   quizId: number | null
   quizTitle: string | null
   quizQuestionTotal: number | null
+  randomMix: boolean
 }
 
 export interface GamePlayer {

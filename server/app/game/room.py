@@ -48,6 +48,7 @@ class GameRoom:
             "quizId": None,
             "quizTitle": None,
             "quizQuestionTotal": None,
+            "randomMix": False,
             **settings,
         }
         self.phase: str = "lobby"  # lobby | question | reveal | finished
@@ -234,7 +235,13 @@ class GameRoom:
         incoming = msg.get("settings") or {}
         quiz_info = None
         quiz_id = incoming.get("quizId")
-        if quiz_id is not None and quiz_id != self.settings["quizId"]:
+        if incoming.get("randomMix") is True:
+            if not self.settings["randomMix"]:
+                quiz_info = await asyncio.to_thread(_random_mix_info)
+                if quiz_info is None:
+                    await self._error(user_id, "no_questions", "Aucune question disponible.")
+                    return
+        elif quiz_id is not None and quiz_id != self.settings["quizId"]:
             quiz_info = await asyncio.to_thread(_load_quiz_info, quiz_id)
             if quiz_info is None:
                 await self._error(user_id, "quiz_not_found", "Ce quiz n'existe pas.")
@@ -261,10 +268,13 @@ class GameRoom:
             await self._error(user_id, "already_started", "La partie a déjà commencé.")
             return
         quiz_id = self.settings["quizId"]
-        if quiz_id is None:
+        if self.settings["randomMix"]:
+            questions = await asyncio.to_thread(_load_random_questions, self.game_id, self.settings)
+        elif quiz_id is None:
             await self._error(user_id, "no_quiz", "Choisis un quiz avant de lancer.")
             return
-        questions = await asyncio.to_thread(_load_questions, quiz_id, self.game_id, self.settings)
+        else:
+            questions = await asyncio.to_thread(_load_questions, quiz_id, self.game_id, self.settings)
         if not questions:
             await self._error(user_id, "no_questions", "Ce quiz n'a aucune question.")
             return
@@ -449,7 +459,30 @@ def _load_quiz_info(quiz_id: int) -> dict | None:
         ).fetchone()
         if row is None:
             return None
-        return {"quizId": row["id"], "quizTitle": row["title"], "quizQuestionTotal": row["question_count"]}
+        return {
+            "quizId": row["id"],
+            "quizTitle": row["title"],
+            "quizQuestionTotal": row["question_count"],
+            "randomMix": False,
+        }
+    finally:
+        conn.close()
+
+
+def random_mix_settings(question_total: int) -> dict:
+    return {
+        "quizId": None,
+        "quizTitle": config.RANDOM_MIX_TITLE,
+        "quizQuestionTotal": min(config.RANDOM_MIX_SIZE, question_total),
+        "randomMix": True,
+    }
+
+
+def _random_mix_info() -> dict | None:
+    conn = db.connect()
+    try:
+        total = conn.execute("SELECT COUNT(DISTINCT lower(text)) AS n FROM questions").fetchone()["n"]
+        return random_mix_settings(total) if total else None
     finally:
         conn.close()
 
@@ -465,6 +498,29 @@ def _load_questions(quiz_id: int, game_id: int, settings: dict) -> list[dict]:
             "UPDATE games SET status = 'playing', quiz_id = ?, question_count = ?, time_per_question = ?"
             " WHERE id = ?",
             (quiz_id, settings["questionCount"], settings["timePerQuestion"], game_id),
+        )
+        conn.commit()
+        return [
+            {"text": r["text"], "answers": json.loads(r["answers"]), "correct_index": r["correct_index"]}
+            for r in rows
+        ]
+    finally:
+        conn.close()
+
+
+def _load_random_questions(game_id: int, settings: dict) -> list[dict]:
+    """Quiz virtuel « Mix aléatoire » : questions distinctes piochées toutes catégories."""
+    conn = db.connect()
+    try:
+        rows = conn.execute(
+            "SELECT text, answers, correct_index FROM questions"
+            " GROUP BY lower(text) ORDER BY RANDOM() LIMIT ?",
+            (config.RANDOM_MIX_SIZE,),
+        ).fetchall()
+        conn.execute(
+            "UPDATE games SET status = 'playing', quiz_id = NULL, question_count = ?,"
+            " time_per_question = ? WHERE id = ?",
+            (settings["questionCount"], settings["timePerQuestion"], game_id),
         )
         conn.commit()
         return [

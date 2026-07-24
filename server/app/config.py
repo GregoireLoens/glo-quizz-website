@@ -25,6 +25,9 @@ CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
 GAME_CODE_LENGTH = 6
 USER_CODE_LENGTH = 8
 
+RANDOM_MIX_SIZE = 30           # taille du quiz virtuel « Mix aléatoire » (questions toutes catégories)
+RANDOM_MIX_TITLE = "Mix aléatoire"
+
 TIME_CHOICES = [15, 30, 60]
 QUESTION_COUNT_CHOICES = [5, 10, 15, 20]
 DEFAULT_QUESTION_COUNT = 10
