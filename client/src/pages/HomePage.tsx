@@ -102,7 +102,7 @@ export function HomePage() {
       </div>
 
       {/* quiz populaires */}
-      <div className="relative mx-auto max-w-[1080px] pb-[100px] pt-24">
+      <div className="relative mx-auto max-w-[1080px] pb-16 pt-24">
         <div className="mb-6 flex items-baseline gap-3">
           <span className="font-display text-[26px] font-semibold text-cream">Quizz populaires</span>
           <div className="flex-1" />
@@ -161,6 +161,28 @@ export function HomePage() {
           ))}
         </div>
       </div>
+
+      <footer className="relative mx-auto max-w-[1080px] border-t border-cream/10 pb-10 pt-6 text-[13px] leading-relaxed text-muted">
+        Les quiz signés « OpenQuizzDB » proviennent d'
+        <a
+          href="https://www.openquizzdb.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-cream"
+        >
+          OpenQuizzDB
+        </a>{' '}
+        et sont réutilisés sous licence{' '}
+        <a
+          href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-cream"
+        >
+          CC BY-SA 4.0
+        </a>
+        .
+      </footer>
     </div>
   )
 }
