@@ -44,8 +44,6 @@ export function MyQuizzesPage() {
       <div className="relative mx-auto max-w-[760px] pb-24 pt-14">
         <div className="mb-8 flex items-center gap-4">
           <h1 className="font-display text-[38px] font-semibold text-cream">Mes quiz</h1>
-          <div className="flex-1" />
-          <PillButton onClick={() => navigate('/quiz/new')}>+ Créer un quiz</PillButton>
         </div>
 
         {quizzes === null ? (
@@ -53,10 +51,7 @@ export function MyQuizzesPage() {
         ) : quizzes.length === 0 ? (
           <div className="flex flex-col items-center gap-4 rounded-[28px] bg-card p-12 text-center">
             <span className="text-4xl">✨</span>
-            <p className="text-muted">
-              Tu n'as pas encore de quiz. Crée ton premier quiz et défie tes amis !
-            </p>
-            <PillButton onClick={() => navigate('/quiz/new')}>Créer mon premier quiz</PillButton>
+            <p className="text-muted">Tu n'as pas de quiz pour l'instant.</p>
           </div>
         ) : (
           <div className="flex flex-col gap-4">

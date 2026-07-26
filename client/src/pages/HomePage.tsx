@@ -70,23 +70,20 @@ export function HomePage() {
           </span>
         </div>
         <h1 className="max-w-[820px] font-display text-[52px] font-semibold leading-[1.02] tracking-[-1px] text-cream md:text-[76px]">
-          Crée des quizz.
+          Lance un quizz.
           <br />
           Défie tes potes
           <br />
           en direct.
         </h1>
         <p className="mt-[26px] max-w-[460px] text-lg leading-[27px] text-muted-soft">
-          Compose un quiz en quelques minutes, partage un code, et joue avec tes amis en temps réel
-          — où qu'ils soient.
+          Choisis un quiz, partage un code, et joue avec tes amis en temps réel — où qu'ils
+          soient.
         </p>
         <div className="mt-8 flex flex-wrap gap-3.5">
-          <PillButton size="lg" onClick={() => navigate(user ? '/quiz/new' : '/register')}>
-            Créer un quiz
-            <span className="text-lg">↗</span>
-          </PillButton>
-          <PillButton size="lg" variant="outline" onClick={() => navigate('/join')}>
+          <PillButton size="lg" onClick={() => navigate('/join')}>
             Rejoindre une partie
+            <span className="text-lg">↗</span>
           </PillButton>
           <PillButton
             size="lg"
@@ -105,19 +102,11 @@ export function HomePage() {
       <div className="relative mx-auto max-w-[1080px] pb-16 pt-24">
         <div className="mb-6 flex items-baseline gap-3">
           <span className="font-display text-[26px] font-semibold text-cream">Quizz populaires</span>
-          <div className="flex-1" />
-          <button
-            type="button"
-            onClick={() => navigate(user ? '/quiz/new' : '/register')}
-            className="cursor-pointer text-sm font-semibold text-citron hover:underline"
-          >
-            Créer le tien ↗
-          </button>
         </div>
 
         {quizzes.length === 0 ? (
           <div className="rounded-[28px] bg-card p-10 text-center text-muted">
-            Aucun quiz pour l'instant — sois le premier à en créer un !
+            Aucun quiz pour l'instant — reviens bientôt !
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">

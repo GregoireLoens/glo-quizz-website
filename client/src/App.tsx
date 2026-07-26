@@ -31,7 +31,6 @@ export default function App() {
           <Route path="/join" element={<JoinPage />} />
           <Route path="/game/:code" element={<GamePage />} />
           <Route path="/quizzes/mine" element={<MyQuizzesPage />} />
-          <Route path="/quiz/new" element={<QuizEditorPage />} />
           <Route path="/quiz/:id/edit" element={<QuizEditorPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

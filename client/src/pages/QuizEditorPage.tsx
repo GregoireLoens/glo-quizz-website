@@ -15,7 +15,6 @@ const emptyQuestion = (): QuestionInput => ({ text: '', answers: ['', '', '', ''
 export function QuizEditorPage() {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
-  const editing = id !== undefined
 
   const [title, setTitle] = useState('')
   const [emoji, setEmoji] = useState('🎯')
@@ -24,14 +23,13 @@ export function QuizEditorPage() {
   const [questions, setQuestions] = useState<QuestionInput[]>([emptyQuestion()])
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
-  const [loaded, setLoaded] = useState(!editing)
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     api.get<string[]>('/api/categories').then(setCategories).catch(() => {})
   }, [])
 
   useEffect(() => {
-    if (!editing) return
     api
       .get<QuizDetail>(`/api/quizzes/${id}`)
       .then((quiz) => {
@@ -42,7 +40,7 @@ export function QuizEditorPage() {
         setLoaded(true)
       })
       .catch(() => navigate('/quizzes/mine'))
-  }, [editing, id, navigate])
+  }, [id, navigate])
 
   const patchQuestion = (index: number, patch: Partial<QuestionInput>) => {
     setQuestions((qs) => qs.map((q, i) => (i === index ? { ...q, ...patch } : q)))
@@ -78,11 +76,7 @@ export function QuizEditorPage() {
     setSaving(true)
     try {
       const payload = { title: title.trim(), emoji, category, questions }
-      if (editing) {
-        await api.put(`/api/quizzes/${id}`, payload)
-      } else {
-        await api.post('/api/quizzes', payload)
-      }
+      await api.put(`/api/quizzes/${id}`, payload)
       navigate('/quizzes/mine')
     } catch {
       setError("L'enregistrement a échoué. Vérifie le contenu et réessaie.")
@@ -104,7 +98,7 @@ export function QuizEditorPage() {
 
       <div className="relative mx-auto max-w-[760px] pb-32 pt-14">
         <h1 className="mb-8 font-display text-[38px] font-semibold text-cream">
-          {editing ? 'Modifier le quiz' : 'Crée ton quiz'}
+          Modifier le quiz
         </h1>
 
         {/* infos générales */}
