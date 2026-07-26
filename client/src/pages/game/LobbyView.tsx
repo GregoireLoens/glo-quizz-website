@@ -58,6 +58,18 @@ function QuizPicker({ onClose }: { onClose: () => void }) {
         <span className="flex-1 truncate text-sm font-medium text-violet">Mix aléatoire</span>
         <span className="text-xs text-muted">toutes catégories</span>
       </button>
+      <button
+        type="button"
+        onClick={() => {
+          gameSocket.send({ type: 'update_settings', settings: { survival: true } })
+          onClose()
+        }}
+        className="flex cursor-pointer items-center gap-3 rounded-2xl px-3 py-2.5 text-left hover:bg-coral/15"
+      >
+        <span className="text-xl">💀</span>
+        <span className="flex-1 truncate text-sm font-medium text-coral">Mode Survie</span>
+        <span className="text-xs text-muted">3 vies, dernier debout</span>
+      </button>
       <div className="mx-3 h-px bg-cream/10" />
       {quizzes.length === 0 && (
         <span className="px-4 py-3 text-sm text-muted">Aucun quiz disponible — crée-en un !</span>
@@ -173,7 +185,14 @@ export function LobbyView() {
       {/* réglages */}
       <div className="relative mt-14 flex flex-wrap items-center justify-center gap-3.5 rounded-[28px] bg-card px-5 py-3.5">
         <span className="text-[13px] text-muted">Questions</span>
-        {isHost ? (
+        {settings?.survival ? (
+          <div
+            className="flex h-[34px] items-center rounded-full bg-coral/15 px-3.5 text-[15px] font-semibold text-coral"
+            title="Jusqu'au dernier survivant"
+          >
+            ∞
+          </div>
+        ) : isHost ? (
           <SegmentedControl
             options={QUESTION_CHOICES.map((n) => ({ label: String(n), value: n }))}
             value={settings?.questionCount ?? 10}
@@ -221,6 +240,13 @@ export function LobbyView() {
         </div>
       </div>
 
+      {settings?.survival && (
+        <p className="relative mt-4 text-center text-[13px] text-coral-soft">
+          💀 Mode Survie : 3 vies chacun, questions en chaîne toutes catégories — mauvaise réponse ou
+          silence = une vie en moins. Le dernier debout gagne.
+        </p>
+      )}
+
       {errorMsg && (
         <button
           type="button"
@@ -237,7 +263,10 @@ export function LobbyView() {
           <PillButton
             size="lg"
             className="px-10"
-            disabled={(!settings?.quizId && !settings?.randomMix) || players.length < 1}
+            disabled={
+              (!settings?.quizId && !settings?.randomMix && !settings?.survival) ||
+              players.length < 1
+            }
             onClick={() => gameSocket.send({ type: 'start' })}
           >
             Lancer la partie

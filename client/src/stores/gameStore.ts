@@ -28,6 +28,7 @@ interface GameState {
   reveal: RevealMessage | null
   finalRanking: RankingEntry[] | null
   durationSec: number
+  questionsPlayed: number | null
   errorMsg: string | null
 
   setConnection: (c: ConnectionState) => void
@@ -55,6 +56,7 @@ const initial = {
   reveal: null,
   finalRanking: null,
   durationSec: 0,
+  questionsPlayed: null,
   errorMsg: null,
 }
 
@@ -90,6 +92,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
           reveal: s.reveal,
           finalRanking: s.ranking,
           durationSec: s.durationSec,
+          questionsPlayed: s.questionsPlayed,
         })
         break
       }
@@ -123,19 +126,24 @@ export const useGameStore = create<GameState>()((set, get) => ({
         })
         break
       case 'reveal': {
-        const scoreById = new Map(msg.results.map((r) => [r.playerId, r.score]))
+        const resultById = new Map(msg.results.map((r) => [r.playerId, r]))
         set({
           phase: 'reveal',
           reveal: msg,
-          players: get().players.map((p) => ({
-            ...p,
-            score: scoreById.get(p.id) ?? p.score,
-          })),
+          players: get().players.map((p) => {
+            const r = resultById.get(p.id)
+            return r ? { ...p, score: r.score, lives: r.lives } : p
+          }),
         })
         break
       }
       case 'game_over':
-        set({ phase: 'finished', finalRanking: msg.ranking, durationSec: msg.durationSec })
+        set({
+          phase: 'finished',
+          finalRanking: msg.ranking,
+          durationSec: msg.durationSec,
+          questionsPlayed: msg.questionsPlayed,
+        })
         break
       case 'lobby_reset':
         set({
@@ -150,6 +158,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
           reveal: null,
           finalRanking: null,
           durationSec: 0,
+          questionsPlayed: null,
           errorMsg: null,
         })
         break

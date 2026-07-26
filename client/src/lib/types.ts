@@ -62,6 +62,7 @@ export interface GameSettings {
   quizTitle: string | null
   quizQuestionTotal: number | null
   randomMix: boolean
+  survival: boolean
 }
 
 export interface GamePlayer {
@@ -71,12 +72,13 @@ export interface GamePlayer {
   connected: boolean
   score: number
   correctCount: number
+  lives: number
   answered: boolean
 }
 
 export interface GameQuestion {
   index: number
-  total: number
+  total: number | null // null en mode Survie (nombre de questions inconnu d'avance)
   text: string
   answers: string[]
   duration: number
@@ -89,6 +91,7 @@ export interface RevealResult {
   correct: boolean
   pointsEarned: number
   score: number
+  lives: number
 }
 
 export interface RankingEntry {
@@ -97,6 +100,7 @@ export interface RankingEntry {
   username: string
   score: number
   correctCount: number
+  lives: number
 }
 
 export interface GameStateSnapshot {
@@ -109,6 +113,7 @@ export interface GameStateSnapshot {
   ranking: RankingEntry[] | null
   yourAnswer: number | null
   durationSec: number
+  questionsPlayed: number | null
 }
 
 export interface RevealMessage {
@@ -127,7 +132,7 @@ export type ServerMessage =
   | { type: 'answer_ack'; questionIndex: number }
   | { type: 'player_answered'; playerId: number }
   | RevealMessage
-  | { type: 'game_over'; durationSec: number; ranking: RankingEntry[] }
+  | { type: 'game_over'; durationSec: number; questionsPlayed: number; ranking: RankingEntry[] }
   | { type: 'lobby_reset'; players: GamePlayer[]; settings: GameSettings; hostId: number }
   | { type: 'error'; code: string; message: string }
 

@@ -34,6 +34,10 @@ USER_CODE_LENGTH = 8
 RANDOM_MIX_SIZE = 30           # taille du quiz virtuel « Mix aléatoire » (questions toutes catégories)
 RANDOM_MIX_TITLE = "Mix aléatoire"
 
+SURVIVAL_LIVES = 3             # mode Survie : vies au départ
+SURVIVAL_BATCH = 30            # questions aléatoires chargées par lot (rechargé tant qu'il reste des vivants)
+SURVIVAL_TITLE = "Mode Survie"
+
 TIME_CHOICES = [15, 30, 60]
 QUESTION_COUNT_CHOICES = [5, 10, 15, 20]
 DEFAULT_QUESTION_COUNT = 10

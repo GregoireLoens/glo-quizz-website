@@ -159,3 +159,87 @@ def test_random_mix_full_flow(client, monkeypatch):
             _recv_until(ws, "reveal")
         over = _recv_until(ws, "game_over")
         assert len(over["ranking"]) == 1
+
+
+def test_lobby_survival_selection(client):
+    host = register(client, "Hote")
+    quiz_id = client.post("/api/quizzes", json=quiz_payload(), headers=auth_headers(host)).json()["id"]
+    code = _create_game(client, host)
+
+    with ws_connect(client, code, host) as ws:
+        assert ws.receive_json()["type"] == "joined"
+
+        ws.send_json({"type": "update_settings", "settings": {"survival": True}})
+        upd = _recv_until(ws, "settings_updated")
+        assert upd["settings"]["survival"] is True
+        assert upd["settings"]["quizId"] is None
+        assert upd["settings"]["randomMix"] is False
+        assert upd["settings"]["quizTitle"] == config.SURVIVAL_TITLE
+        assert upd["settings"]["quizQuestionTotal"] is None
+
+        # re-choisir un quiz désactive le mode Survie
+        ws.send_json({"type": "update_settings", "settings": {"quizId": quiz_id}})
+        upd = _recv_until(ws, "settings_updated")
+        assert upd["settings"]["survival"] is False
+        assert upd["settings"]["quizId"] == quiz_id
+
+
+def test_survival_full_flow(client, monkeypatch):
+    """3 joueurs : « Mort » répond toujours faux → éliminé à la 3e question,
+    les 2 survivants jouent jusqu'à épuisement du pool (8 questions)."""
+    monkeypatch.setattr(config, "REVEAL_SECONDS", 0.05)
+
+    host = register(client, "Hote")
+    loser = register(client, "Mort")
+    other = register(client, "Vif")
+    questions = [
+        {"text": f"Question {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
+        for i in range(8)
+    ]
+    client.post("/api/quizzes", json=quiz_payload(questions=questions), headers=auth_headers(host))
+    code = _create_game(client, host)
+
+    with ws_connect(client, code, host) as ws_host, \
+         ws_connect(client, code, loser) as ws_loser, \
+         ws_connect(client, code, other) as ws_other:
+        for ws in (ws_host, ws_loser, ws_other):
+            assert ws.receive_json()["type"] == "joined"
+
+        ws_host.send_json({"type": "update_settings", "settings": {"survival": True}})
+        _recv_until(ws_host, "settings_updated")
+        ws_host.send_json({"type": "start"})
+
+        expected_lives = {"Hote": 3, "Vif": 3, "Mort": 3}
+        for i in range(8):
+            q = _recv_until(ws_host, "question")
+            assert q["total"] is None  # nombre de questions inconnu en Survie
+            _recv_until(ws_loser, "question")
+            _recv_until(ws_other, "question")
+
+            if i < 3:
+                ws_loser.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 1})
+            elif i == 3:
+                # éliminé : sa réponse est refusée (avant que les vivants ne clôturent la question)
+                ws_loser.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 0})
+                err = _recv_until(ws_loser, "error")
+                assert err["code"] == "eliminated"
+            ws_host.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 0})
+            ws_other.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 0})
+
+            reveal = _recv_until(ws_host, "reveal")
+            if i < 3:
+                expected_lives["Mort"] -= 1
+            lives = {r["playerId"]: r["lives"] for r in reveal["results"]}
+            assert lives[host["user"]["id"]] == 3
+            if i < 3:
+                assert lives[loser["user"]["id"]] == expected_lives["Mort"]
+            else:
+                assert loser["user"]["id"] not in lives  # spectateur : plus scoré
+
+        over = _recv_until(ws_host, "game_over")
+        assert over["questionsPlayed"] == 8  # pool épuisé, 2 survivants se départagent
+        ranking = over["ranking"]
+        assert [r["username"] for r in ranking][-1] == "Mort"
+        assert ranking[-1]["lives"] == 0
+        assert all(r["lives"] == 3 for r in ranking[:2])
+        assert ranking[0]["rank"] == 1

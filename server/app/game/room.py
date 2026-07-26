@@ -33,6 +33,8 @@ class PlayerState:
     ready: bool = False
     score: int = 0
     correct_count: int = 0
+    lives: int = 0  # mode Survie uniquement (0 en mode classique)
+    eliminated_at: int | None = None  # index de la question fatale (Survie)
     answers: dict[int, tuple[int, float]] = field(default_factory=dict)
     joined_at: float = field(default_factory=time.monotonic)
 
@@ -49,11 +51,14 @@ class GameRoom:
             "quizTitle": None,
             "quizQuestionTotal": None,
             "randomMix": False,
+            "survival": False,
             **settings,
         }
         self.phase: str = "lobby"  # lobby | question | reveal | finished
         self.players: dict[int, PlayerState] = {}
         self.questions: list[dict] = []
+        self.questions_played: int = 0
+        self.survival_threshold: int = 1  # fin quand vivants <= seuil (0 si partie solo)
         self.current_index: int = -1
         self.question_started_at: float = 0.0
         self.started_at: float = 0.0
@@ -79,16 +84,33 @@ class GameRoom:
                 "connected": p.connected,
                 "score": p.score,
                 "correctCount": p.correct_count,
+                "lives": p.lives,
                 "answered": self.current_index in p.answers,
             }
             for p in sorted(self.players.values(), key=lambda p: p.joined_at)
         ]
 
+    def _alive(self) -> list[PlayerState]:
+        return [p for p in self.players.values() if p.lives > 0]
+
     def _ranking_payload(self) -> list[dict]:
-        ordered = sorted(
-            self.players.values(),
-            key=lambda p: (-p.score, -p.correct_count, p.joined_at),
-        )
+        if self.settings["survival"]:
+            # survivants d'abord, puis par longévité (éliminé le plus tard), puis au score
+            ordered = sorted(
+                self.players.values(),
+                key=lambda p: (
+                    0 if p.lives > 0 else 1,
+                    -(p.eliminated_at if p.eliminated_at is not None else 10**9),
+                    -p.score,
+                    -p.correct_count,
+                    p.joined_at,
+                ),
+            )
+        else:
+            ordered = sorted(
+                self.players.values(),
+                key=lambda p: (-p.score, -p.correct_count, p.joined_at),
+            )
         return [
             {
                 "rank": i + 1,
@@ -96,6 +118,7 @@ class GameRoom:
                 "username": p.username,
                 "score": p.score,
                 "correctCount": p.correct_count,
+                "lives": p.lives,
             }
             for i, p in enumerate(ordered)
         ]
@@ -104,7 +127,8 @@ class GameRoom:
         q = self.questions[index]
         return {
             "index": index,
-            "total": len(self.questions),
+            # en Survie le nombre total de questions n'est pas connu d'avance
+            "total": None if self.settings["survival"] else len(self.questions),
             "text": q["text"],
             "answers": q["answers"],
             "duration": self.settings["timePerQuestion"],
@@ -134,6 +158,7 @@ class GameRoom:
             state["reveal"] = self.last_reveal
         if self.phase == "finished":
             state["ranking"] = self.final_ranking
+        state["questionsPlayed"] = self.questions_played if self.phase == "finished" else None
         return state
 
     async def _send(self, ws: WebSocket, msg: dict) -> None:
@@ -235,7 +260,13 @@ class GameRoom:
         incoming = msg.get("settings") or {}
         quiz_info = None
         quiz_id = incoming.get("quizId")
-        if incoming.get("randomMix") is True:
+        if incoming.get("survival") is True:
+            if not self.settings["survival"]:
+                quiz_info = await asyncio.to_thread(_survival_info)
+                if quiz_info is None:
+                    await self._error(user_id, "no_questions", "Aucune question disponible.")
+                    return
+        elif incoming.get("randomMix") is True:
             if not self.settings["randomMix"]:
                 quiz_info = await asyncio.to_thread(_random_mix_info)
                 if quiz_info is None:
@@ -268,7 +299,9 @@ class GameRoom:
             await self._error(user_id, "already_started", "La partie a déjà commencé.")
             return
         quiz_id = self.settings["quizId"]
-        if self.settings["randomMix"]:
+        if self.settings["survival"]:
+            questions = await asyncio.to_thread(_load_survival_questions, self.game_id, self.settings)
+        elif self.settings["randomMix"]:
             questions = await asyncio.to_thread(_load_random_questions, self.game_id, self.settings)
         elif quiz_id is None:
             await self._error(user_id, "no_quiz", "Choisis un quiz avant de lancer.")
@@ -282,7 +315,15 @@ class GameRoom:
             if self.phase != "lobby" or self.run_task is not None:
                 return
             random.shuffle(questions)
-            self.questions = questions[: self.settings["questionCount"]]
+            if self.settings["survival"]:
+                self.questions = questions
+                self.survival_threshold = 1 if len(self.players) >= 2 else 0
+                for p in self.players.values():
+                    p.lives = config.SURVIVAL_LIVES
+                    p.eliminated_at = None
+                await self.broadcast_players()  # les clients doivent voir les vies avant la 1re question
+            else:
+                self.questions = questions[: self.settings["questionCount"]]
             self.touch()
             self.run_task = asyncio.create_task(self.run())
 
@@ -299,6 +340,9 @@ class GameRoom:
             p = self.players.get(user_id)
             if p is None:
                 return
+            if self.settings["survival"] and p.lives <= 0:
+                await self._error(user_id, "eliminated", "Tu es éliminé — spectateur jusqu'à la fin.")
+                return
             if index in p.answers:
                 await self._error(user_id, "already_answered", "Réponse déjà enregistrée.")
                 return
@@ -313,8 +357,12 @@ class GameRoom:
     def _maybe_all_answered(self) -> None:
         if self.phase != "question":
             return
-        connected = [p for p in self.players.values() if p.connected]
-        if connected and all(self.current_index in p.answers for p in connected):
+        survival = bool(self.settings["survival"])
+        active = [
+            p for p in self.players.values()
+            if p.connected and (not survival or p.lives > 0)
+        ]
+        if active and all(self.current_index in p.answers for p in active):
             self.all_answered.set()
 
     async def _play_again(self, user_id: int) -> None:
@@ -330,6 +378,7 @@ class GameRoom:
             self.game_id = new_game_id
             self.phase = "lobby"
             self.questions = []
+            self.questions_played = 0
             self.current_index = -1
             self.last_reveal = None
             self.final_ranking = None
@@ -340,6 +389,8 @@ class GameRoom:
             for p in self.players.values():
                 p.score = 0
                 p.correct_count = 0
+                p.lives = 0
+                p.eliminated_at = None
                 p.answers = {}
                 p.ready = False
             self.touch()
@@ -355,7 +406,19 @@ class GameRoom:
     async def run(self) -> None:
         try:
             self.started_at = time.monotonic()
-            for i in range(len(self.questions)):
+            survival = bool(self.settings["survival"])
+            i = 0
+            while True:
+                if i >= len(self.questions):
+                    if not survival:
+                        break
+                    # Survie : recharge un lot de questions inédites ; pool épuisé → fin
+                    seen = {q["text"].lower() for q in self.questions}
+                    more = await asyncio.to_thread(_load_more_survival_questions, seen)
+                    if not more:
+                        break
+                    random.shuffle(more)
+                    self.questions.extend(more)
                 async with self.lock:
                     self.phase = "question"
                     self.current_index = i
@@ -374,8 +437,12 @@ class GameRoom:
                     self.touch()
                 await self.broadcast(self.last_reveal)
                 await asyncio.sleep(config.REVEAL_SECONDS)
+                i += 1
+                if survival and len(self._alive()) <= self.survival_threshold:
+                    break
             async with self.lock:
                 self.phase = "finished"
+                self.questions_played = i
                 self.final_ranking = self._ranking_payload()
                 self.duration_sec = round(time.monotonic() - self.started_at)
                 self.touch()
@@ -383,6 +450,7 @@ class GameRoom:
             await self.broadcast({
                 "type": "game_over",
                 "durationSec": self.duration_sec,
+                "questionsPlayed": self.questions_played,
                 "ranking": self.final_ranking,
             })
         except Exception:
@@ -391,8 +459,11 @@ class GameRoom:
     def _score_question(self, index: int) -> dict:
         q = self.questions[index]
         duration = self.settings["timePerQuestion"]
+        survival = bool(self.settings["survival"])
         results = []
         for p in self.players.values():
+            if survival and p.lives <= 0:
+                continue  # déjà éliminé : simple spectateur
             ans = p.answers.get(index)
             answer_index: int | None = None
             correct = False
@@ -403,6 +474,10 @@ class GameRoom:
                 points = compute_points(duration, elapsed, correct)
             if correct:
                 p.correct_count += 1
+            elif survival:
+                p.lives -= 1
+                if p.lives <= 0:
+                    p.eliminated_at = index
             p.score += points
             results.append({
                 "playerId": p.user_id,
@@ -410,6 +485,7 @@ class GameRoom:
                 "correct": correct,
                 "pointsEarned": points,
                 "score": p.score,
+                "lives": p.lives,
             })
         return {
             "type": "reveal",
@@ -434,7 +510,7 @@ class GameRoom:
             conn.execute(
                 "UPDATE games SET status = 'finished', finished_at = datetime('now'),"
                 " quiz_id = ?, question_count = ?, time_per_question = ? WHERE id = ?",
-                (self.settings["quizId"], len(self.questions), self.settings["timePerQuestion"], self.game_id),
+                (self.settings["quizId"], self.questions_played, self.settings["timePerQuestion"], self.game_id),
             )
             if self.settings["quizId"] is not None:
                 conn.execute(
@@ -464,6 +540,7 @@ def _load_quiz_info(quiz_id: int) -> dict | None:
             "quizTitle": row["title"],
             "quizQuestionTotal": row["question_count"],
             "randomMix": False,
+            "survival": False,
         }
     finally:
         conn.close()
@@ -475,7 +552,27 @@ def random_mix_settings(question_total: int) -> dict:
         "quizTitle": config.RANDOM_MIX_TITLE,
         "quizQuestionTotal": min(config.RANDOM_MIX_SIZE, question_total),
         "randomMix": True,
+        "survival": False,
     }
+
+
+def survival_settings() -> dict:
+    return {
+        "quizId": None,
+        "quizTitle": config.SURVIVAL_TITLE,
+        "quizQuestionTotal": None,  # illimité : jusqu'au dernier survivant
+        "randomMix": False,
+        "survival": True,
+    }
+
+
+def _survival_info() -> dict | None:
+    conn = db.connect()
+    try:
+        total = conn.execute("SELECT COUNT(DISTINCT lower(text)) AS n FROM questions").fetchone()["n"]
+        return survival_settings() if total else None
+    finally:
+        conn.close()
 
 
 def _random_mix_info() -> dict | None:
@@ -523,6 +620,52 @@ def _load_random_questions(game_id: int, settings: dict) -> list[dict]:
             (settings["questionCount"], settings["timePerQuestion"], game_id),
         )
         conn.commit()
+        return [
+            {"text": r["text"], "answers": json.loads(r["answers"]), "correct_index": r["correct_index"]}
+            for r in rows
+        ]
+    finally:
+        conn.close()
+
+
+def _load_survival_questions(game_id: int, settings: dict) -> list[dict]:
+    """Mode Survie : premier lot de questions aléatoires toutes catégories."""
+    conn = db.connect()
+    try:
+        rows = conn.execute(
+            "SELECT text, answers, correct_index FROM questions"
+            " GROUP BY lower(text) ORDER BY RANDOM() LIMIT ?",
+            (config.SURVIVAL_BATCH,),
+        ).fetchall()
+        conn.execute(
+            "UPDATE games SET status = 'playing', quiz_id = NULL, question_count = NULL,"
+            " time_per_question = ? WHERE id = ?",
+            (settings["timePerQuestion"], game_id),
+        )
+        conn.commit()
+        return [
+            {"text": r["text"], "answers": json.loads(r["answers"]), "correct_index": r["correct_index"]}
+            for r in rows
+        ]
+    finally:
+        conn.close()
+
+
+def _load_more_survival_questions(exclude_texts: set[str]) -> list[dict]:
+    """Lot suivant, sans re-poser une question déjà jouée dans cette partie."""
+    conn = db.connect()
+    try:
+        where = ""
+        params: list = []
+        if exclude_texts:
+            where = f" WHERE lower(text) NOT IN ({','.join('?' * len(exclude_texts))})"
+            params = list(exclude_texts)
+        rows = conn.execute(
+            "SELECT text, answers, correct_index FROM questions"
+            + where
+            + " GROUP BY lower(text) ORDER BY RANDOM() LIMIT ?",
+            (*params, config.SURVIVAL_BATCH),
+        ).fetchall()
         return [
             {"text": r["text"], "answers": json.loads(r["answers"]), "correct_index": r["correct_index"]}
             for r in rows
