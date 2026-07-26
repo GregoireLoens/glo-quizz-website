@@ -119,7 +119,10 @@ async function waitForText(page, needle, timeout = 30000) {
       for (const p of [pHost, pGuest]) {
         await p.evaluate(() => {
           // 1er passage : choisir une carte ; passage suivant : « Valider → » envoie la réponse
-          const cards = [...document.querySelectorAll('button.min-h-24')].filter((b) => !b.disabled);
+          // (cartes réponse = boutons dont le texte commence par la lettre A–D sur sa propre ligne)
+          const cards = [...document.querySelectorAll('button')].filter(
+            (b) => !b.disabled && /^[ABCD]\n/.test(b.innerText),
+          );
           if (cards.length === 4) cards[Math.floor(Math.random() * 4)].click();
           const valider = [...document.querySelectorAll('button')].find(
             (b) => /valider/i.test(b.innerText) && !b.disabled,

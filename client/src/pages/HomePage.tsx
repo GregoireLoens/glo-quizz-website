@@ -62,25 +62,25 @@ export function HomePage() {
       <NavPill />
 
       {/* hero */}
-      <div className="relative mx-auto max-w-[1080px] pt-[100px]">
+      <div className="relative mx-auto max-w-[1080px] pt-16 md:pt-[100px]">
         <div className="mb-[22px] inline-flex h-[30px] items-center gap-2 rounded-full bg-citron/14 px-3.5">
           <span className="h-1.5 w-1.5 rounded-full bg-citron" />
           <span className="text-xs font-semibold uppercase tracking-[1.5px] text-citron">
             Quiz multijoueur
           </span>
         </div>
-        <h1 className="max-w-[820px] font-display text-[52px] font-semibold leading-[1.02] tracking-[-1px] text-cream md:text-[76px]">
+        <h1 className="max-w-[820px] font-display text-[42px] font-semibold leading-[1.02] tracking-[-1px] text-cream sm:text-[52px] md:text-[76px]">
           Lance un quizz.
           <br />
           Défie tes potes
           <br />
           en direct.
         </h1>
-        <p className="mt-[26px] max-w-[460px] text-lg leading-[27px] text-muted-soft">
+        <p className="mt-[26px] max-w-[460px] text-base leading-[25px] text-muted-soft md:text-lg md:leading-[27px]">
           Choisis un quiz, partage un code, et joue avec tes amis en temps réel — où qu'ils
           soient.
         </p>
-        <div className="mt-8 flex flex-wrap gap-3.5">
+        <div className="mt-8 flex flex-col gap-3.5 sm:flex-row sm:flex-wrap">
           <PillButton size="lg" onClick={() => navigate('/join')}>
             Rejoindre une partie
             <span className="text-lg">↗</span>
@@ -99,7 +99,7 @@ export function HomePage() {
       </div>
 
       {/* quiz populaires */}
-      <div className="relative mx-auto max-w-[1080px] pb-16 pt-24">
+      <div className="relative mx-auto max-w-[1080px] pb-16 pt-16 md:pt-24">
         <div className="mb-6 flex items-baseline gap-3">
           <span className="font-display text-[26px] font-semibold text-cream">Quizz populaires</span>
         </div>

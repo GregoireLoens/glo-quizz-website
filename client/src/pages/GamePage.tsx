@@ -46,7 +46,7 @@ export function GamePage() {
         <p className="relative max-w-md text-center text-lg text-cream-soft">
           {END_MESSAGES[endReason ?? ''] ?? 'La connexion à la partie a été interrompue.'}
         </p>
-        <div className="relative flex gap-3">
+        <div className="relative flex flex-wrap justify-center gap-3">
           <PillButton onClick={() => navigate('/join')}>Rejoindre une autre partie</PillButton>
           <PillButton variant="outline" onClick={() => navigate('/')}>
             Retour à l'accueil

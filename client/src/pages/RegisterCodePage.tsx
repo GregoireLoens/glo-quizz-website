@@ -59,7 +59,7 @@ export function RegisterCodePage() {
 
       <div className="relative mx-auto mt-[60px] flex w-full max-w-[560px] flex-col items-center gap-4 pb-20">
         <span className="text-[40px]">🎉</span>
-        <h1 className="text-center font-display text-[34px] font-semibold text-cream">
+        <h1 className="text-center font-display text-[28px] font-semibold text-cream sm:text-[34px]">
           Bienvenue, {username} !
         </h1>
         <p className="max-w-[420px] text-center text-[15px] leading-[22px] text-muted-soft">
@@ -67,16 +67,16 @@ export function RegisterCodePage() {
           jamais.
         </p>
 
-        <div className="mt-2 flex flex-col items-center gap-2 rounded-[28px] bg-card px-10 py-7">
+        <div className="mt-2 flex w-full max-w-full flex-col items-center gap-2 rounded-[28px] bg-card px-5 py-6 sm:w-auto sm:px-10 sm:py-7">
           <span className="text-xs font-semibold uppercase tracking-widest text-muted">
             Ton code unique
           </span>
-          <span className="font-display text-[44px] font-semibold tracking-[6px] text-cream">
+          <span className="font-display text-[30px] font-semibold tracking-[3px] text-cream sm:text-[44px] sm:tracking-[6px]">
             {code}
           </span>
         </div>
 
-        <div className="mt-1 flex gap-3">
+        <div className="mt-1 flex flex-wrap justify-center gap-3">
           <PillButton variant="cream" onClick={copy}>
             {copied ? 'Copié ✓' : 'Copier le code'}
           </PillButton>

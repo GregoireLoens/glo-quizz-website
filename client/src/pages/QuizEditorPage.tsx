@@ -97,12 +97,12 @@ export function QuizEditorPage() {
       <NavPill />
 
       <div className="relative mx-auto max-w-[760px] pb-32 pt-14">
-        <h1 className="mb-8 font-display text-[38px] font-semibold text-cream">
+        <h1 className="mb-8 font-display text-[30px] font-semibold text-cream sm:text-[38px]">
           Modifier le quiz
         </h1>
 
         {/* infos générales */}
-        <div className="flex flex-col gap-6 rounded-[28px] bg-card p-7">
+        <div className="flex flex-col gap-6 rounded-[28px] bg-card p-5 sm:p-7">
           <div className="flex flex-col gap-2">
             <span className="text-[12.5px] font-semibold text-muted">Titre</span>
             <input
@@ -155,7 +155,7 @@ export function QuizEditorPage() {
 
         {/* questions */}
         {questions.map((q, qi) => (
-          <div key={qi} className="mt-6 flex flex-col gap-5 rounded-[28px] bg-card p-7">
+          <div key={qi} className="mt-6 flex flex-col gap-5 rounded-[28px] bg-card p-5 sm:p-7">
             <div className="flex items-center gap-3">
               <span className="flex h-8 items-center rounded-full bg-citron/14 px-3.5 text-[13px] font-semibold text-citron">
                 Question {qi + 1}
@@ -226,8 +226,8 @@ export function QuizEditorPage() {
         </button>
 
         {/* barre d'action */}
-        <div className="sticky bottom-6 mt-8 flex items-center gap-4 rounded-full border border-cream/10 bg-card px-6 py-3">
-          <span className="flex-1 text-[13px] text-muted">
+        <div className="sticky bottom-6 mt-8 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 rounded-[28px] border border-cream/10 bg-card px-5 py-3 sm:rounded-full sm:px-6">
+          <span className="min-w-[110px] flex-1 text-[13px] text-muted">
             {questions.length} question{questions.length > 1 ? 's' : ''}
             {error && <span className="ml-3 font-medium text-coral">{error}</span>}
           </span>

@@ -44,7 +44,7 @@ function QuizPicker({ onClose }: { onClose: () => void }) {
   return (
     <div
       ref={ref}
-      className="absolute left-0 top-11 z-20 flex max-h-72 w-80 flex-col gap-1 overflow-y-auto rounded-3xl border border-cream/10 bg-ink p-2"
+      className="absolute left-1/2 top-11 z-20 flex max-h-72 w-72 max-w-[calc(100vw-3rem)] -translate-x-1/2 flex-col gap-1 overflow-y-auto rounded-3xl border border-cream/10 bg-ink p-2 sm:left-0 sm:w-80 sm:translate-x-0"
     >
       <button
         type="button"
@@ -109,7 +109,7 @@ export function LobbyView() {
   return (
     <div className="relative flex min-h-screen flex-col items-center px-6">
       {/* barre haute */}
-      <nav className="relative z-10 mt-6 flex h-16 w-full max-w-[1080px] items-center gap-4 rounded-[32px] border border-white/12 bg-white/6 pl-[26px] pr-2.5">
+      <nav className="relative z-10 mt-6 flex h-16 w-full max-w-[1080px] items-center gap-3 rounded-[32px] border border-white/12 bg-white/6 pl-5 pr-2.5 sm:gap-4 sm:pl-[26px]">
         <button
           type="button"
           onClick={() => navigate('/')}
@@ -118,8 +118,10 @@ export function LobbyView() {
         >
           ←
         </button>
-        <span className="font-display text-lg font-semibold text-cream">Salon multijoueur</span>
-        <div className="flex h-8 items-center gap-1.5 rounded-full bg-citron/14 px-3">
+        <span className="truncate font-display text-base font-semibold text-cream sm:text-lg">
+          Salon multijoueur
+        </span>
+        <div className="hidden h-8 items-center gap-1.5 rounded-full bg-citron/14 px-3 sm:flex">
           <span className="h-1.5 w-1.5 rounded-full bg-citron" />
           <span className="text-xs font-semibold text-citron">En attente</span>
         </div>
@@ -132,10 +134,10 @@ export function LobbyView() {
         <span className="text-xs font-semibold uppercase tracking-[2px] text-muted">
           Code de la partie
         </span>
-        <span className="font-display text-[56px] font-semibold tracking-[10px] text-cream md:text-[88px] md:tracking-[14px]">
+        <span className="font-display text-[44px] font-semibold tracking-[7px] text-cream sm:text-[56px] sm:tracking-[10px] md:text-[88px] md:tracking-[14px]">
           {code}
         </span>
-        <div className="mt-2.5 flex gap-3">
+        <div className="mt-2.5 flex flex-wrap justify-center gap-3">
           <PillButton onClick={() => copy(code ?? '', 'code')}>
             {copied === 'code' ? 'Copié ✓' : 'Copier le code'}
           </PillButton>
@@ -183,7 +185,7 @@ export function LobbyView() {
           </div>
         )}
 
-        <div className="h-6 w-px bg-cream/15" />
+        <div className="hidden h-6 w-px bg-cream/15 sm:block" />
 
         <span className="text-[13px] text-muted">Temps</span>
         {isHost ? (
@@ -200,7 +202,7 @@ export function LobbyView() {
           </div>
         )}
 
-        <div className="h-6 w-px bg-cream/15" />
+        <div className="hidden h-6 w-px bg-cream/15 sm:block" />
 
         <span className="text-[13px] text-muted">Quiz</span>
         <div className="relative">

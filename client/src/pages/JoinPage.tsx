@@ -55,9 +55,9 @@ export function JoinPage() {
 
       <form
         onSubmit={join}
-        className="relative mx-auto mt-20 flex w-full max-w-[440px] flex-col items-center gap-[22px] pb-20"
+        className="relative mx-auto mt-12 flex w-full max-w-[440px] flex-col items-center gap-[22px] pb-20 sm:mt-20"
       >
-        <h1 className="text-center font-display text-[40px] font-semibold text-cream">
+        <h1 className="text-center font-display text-[32px] font-semibold text-cream sm:text-[40px]">
           Rejoindre une partie
         </h1>
         <p className="text-center text-[15px] leading-[22px] text-muted-soft">
@@ -72,7 +72,7 @@ export function JoinPage() {
           }}
           placeholder="XK4P9Q"
           autoFocus
-          className={`h-20 w-full rounded-full border-[1.5px] bg-card text-center font-display text-4xl font-semibold tracking-[10px] text-cream outline-none transition placeholder:text-muted-deep/50 focus:border-citron/60 ${
+          className={`h-16 w-full rounded-full border-[1.5px] bg-card text-center font-display text-3xl font-semibold tracking-[7px] text-cream outline-none transition placeholder:text-muted-deep/50 focus:border-citron/60 sm:h-20 sm:text-4xl sm:tracking-[10px] ${
             error ? 'border-coral' : 'border-cream/15'
           }`}
         />

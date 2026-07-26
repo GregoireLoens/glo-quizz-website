@@ -45,7 +45,7 @@ export function RegisterPage() {
 
       <form
         onSubmit={submit}
-        className="relative mx-auto mt-[72px] flex w-full max-w-[480px] flex-col items-center gap-[22px] pb-20"
+        className="relative mx-auto mt-12 flex w-full max-w-[480px] flex-col items-center gap-[22px] pb-20 sm:mt-[72px]"
       >
         <div className="flex h-[30px] items-center gap-2 rounded-full bg-citron/14 px-3.5">
           <span className="h-1.5 w-1.5 rounded-full bg-citron" />
@@ -54,7 +54,7 @@ export function RegisterPage() {
           </span>
         </div>
 
-        <h1 className="text-center font-display text-[44px] font-semibold leading-[1.1] text-cream">
+        <h1 className="text-center font-display text-[36px] font-semibold leading-[1.1] text-cream sm:text-[44px]">
           Choisis ton
           <br />
           pseudo de jeu

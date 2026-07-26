@@ -89,12 +89,12 @@ export function PlayingView() {
         )}
       </div>
 
-      <h1 className="relative mt-9 max-w-[760px] text-center font-display text-[28px] font-semibold leading-[1.2] text-cream md:text-[40px]">
+      <h1 className="relative mt-7 max-w-[760px] text-center font-display text-[24px] font-semibold leading-[1.2] text-cream sm:mt-9 sm:text-[28px] md:text-[40px]">
         {question.text}
       </h1>
 
       {/* réponses */}
-      <div className="relative mt-10 grid w-full max-w-[760px] grid-cols-1 gap-[18px] md:grid-cols-2">
+      <div className="relative mt-7 grid w-full max-w-[760px] grid-cols-1 gap-3 sm:mt-10 sm:gap-[18px] md:grid-cols-2">
         {question.answers.map((answer, i) => (
           <AnswerCard
             key={i}

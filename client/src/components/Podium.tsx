@@ -10,21 +10,21 @@ const SPOTS = [
 
 export function Podium({ ranking }: { ranking: RankingEntry[] }) {
   return (
-    <div className="flex items-end gap-[18px]">
+    <div className="flex items-end gap-2 sm:gap-[18px]">
       {SPOTS.map((spot) => {
         const entry = ranking.find((r) => r.rank === spot.rank)
-        if (!entry) return <div key={spot.rank} className="w-[150px]" />
+        if (!entry) return <div key={spot.rank} className="w-[96px] sm:w-[150px]" />
         return (
-          <div key={spot.rank} className="flex flex-col items-center gap-2.5">
+          <div key={spot.rank} className="flex w-[96px] flex-col items-center gap-2.5 sm:w-[150px]">
             <Avatar name={entry.username} size={spot.avatar} />
             <span
-              className={`text-cream ${spot.rank === 1 ? 'text-[15px] font-bold' : 'text-sm font-semibold'}`}
+              className={`max-w-full truncate text-cream ${spot.rank === 1 ? 'text-[15px] font-bold' : 'text-sm font-semibold'}`}
             >
               {entry.username}
             </span>
             <span className="text-xs text-muted">{formatPoints(entry.score)} pts</span>
             <div
-              className="flex w-[150px] items-center justify-center rounded-t-[24px]"
+              className="flex w-full items-center justify-center rounded-t-[24px]"
               style={{ height: spot.height, background: spot.color }}
             >
               <span

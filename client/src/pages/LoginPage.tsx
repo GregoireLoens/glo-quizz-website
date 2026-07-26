@@ -48,9 +48,9 @@ export function LoginPage() {
 
       <form
         onSubmit={submit}
-        className="relative mx-auto mt-20 flex w-full max-w-[440px] flex-col items-center gap-[22px] pb-20"
+        className="relative mx-auto mt-12 flex w-full max-w-[440px] flex-col items-center gap-[22px] pb-20 sm:mt-20"
       >
-        <h1 className="text-center font-display text-[40px] font-semibold text-cream">
+        <h1 className="text-center font-display text-[32px] font-semibold text-cream sm:text-[40px]">
           Content de te revoir 👋
         </h1>
         <p className="text-center text-[15px] leading-[22px] text-muted-soft">

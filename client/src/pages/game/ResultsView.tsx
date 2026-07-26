@@ -27,7 +27,7 @@ export function ResultsView() {
     <div className="relative flex min-h-screen flex-col items-center px-6">
       <div className="relative mt-[52px] flex flex-col items-center gap-2">
         <span className="text-[44px]">🏆</span>
-        <span className="text-center font-display text-[32px] font-semibold text-cream">
+        <span className="text-center font-display text-[26px] font-semibold text-cream sm:text-[32px]">
           {winner.username} remporte la partie !
         </span>
         <span className="text-[13.5px] text-muted">

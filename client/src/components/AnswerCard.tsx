@@ -29,7 +29,7 @@ export function AnswerCard({ letter, text, state, disabled = false, onClick }: P
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`flex min-h-24 w-full cursor-pointer items-center gap-4 rounded-[26px] px-[26px] text-left transition disabled:cursor-default ${card}`}
+      className={`flex min-h-20 w-full cursor-pointer items-center gap-3.5 rounded-[26px] px-5 py-4 text-left transition disabled:cursor-default sm:min-h-24 sm:gap-4 sm:px-[26px] ${card}`}
     >
       <span
         className={`flex h-9 w-9 flex-none items-center justify-center rounded-full text-sm font-semibold ${badge}`}
@@ -37,7 +37,7 @@ export function AnswerCard({ letter, text, state, disabled = false, onClick }: P
         {letter}
       </span>
       <span
-        className={`flex-1 text-lg ${state === 'selected' || state === 'correct' || state === 'wrong' ? 'font-semibold' : 'font-medium text-cream'}`}
+        className={`flex-1 text-base sm:text-lg ${state === 'selected' || state === 'correct' || state === 'wrong' ? 'font-semibold' : 'font-medium text-cream'}`}
       >
         {text}
       </span>

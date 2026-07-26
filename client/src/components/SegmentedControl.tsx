@@ -28,7 +28,7 @@ export function SegmentedControl<T extends string | number>({
             type="button"
             disabled={disabled}
             onClick={() => onChange?.(opt.value)}
-            className={`h-9 cursor-pointer rounded-full px-[18px] text-[13px] transition disabled:cursor-default ${
+            className={`h-9 cursor-pointer whitespace-nowrap rounded-full px-3.5 text-[13px] transition disabled:cursor-default sm:px-[18px] ${
               active
                 ? 'bg-citron font-semibold text-ink'
                 : 'text-muted enabled:hover:text-cream'

@@ -28,12 +28,13 @@ export function RankingList({ ranking, youId, questionTotal }: Props) {
             >
               {initials(entry.username)}
             </div>
-            <span className={`flex-1 text-[13.5px] font-semibold ${accent}`}>
+            <span className={`min-w-0 flex-1 truncate text-[13.5px] font-semibold ${accent}`}>
               {entry.username}
               {entry.playerId === youId && ' (vous)'}
             </span>
             <span className={`text-xs ${winner ? 'text-citron' : 'text-muted'}`}>
-              {entry.correctCount}/{questionTotal} bonnes réponses
+              {entry.correctCount}/{questionTotal}
+              <span className="hidden sm:inline"> bonnes réponses</span>
             </span>
             <span className={`text-[13.5px] font-bold ${accent}`}>
               {formatPoints(entry.score)} pts

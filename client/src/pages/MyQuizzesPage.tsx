@@ -43,7 +43,9 @@ export function MyQuizzesPage() {
 
       <div className="relative mx-auto max-w-[760px] pb-24 pt-14">
         <div className="mb-8 flex items-center gap-4">
-          <h1 className="font-display text-[38px] font-semibold text-cream">Mes quiz</h1>
+          <h1 className="font-display text-[30px] font-semibold text-cream sm:text-[38px]">
+            Mes quiz
+          </h1>
         </div>
 
         {quizzes === null ? (
@@ -56,14 +58,17 @@ export function MyQuizzesPage() {
         ) : (
           <div className="flex flex-col gap-4">
             {quizzes.map((quiz, i) => (
-              <div key={quiz.id} className="flex items-center gap-4 rounded-[28px] bg-card p-5">
+              <div
+                key={quiz.id}
+                className="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-[28px] bg-card p-5"
+              >
                 <div
                   className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl text-2xl"
                   style={{ background: ACCENTS[i % ACCENTS.length] }}
                 >
                   {quiz.emoji}
                 </div>
-                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <div className="flex min-w-0 flex-1 basis-44 flex-col gap-0.5">
                   <span className="truncate font-display text-[17px] font-semibold text-cream">
                     {quiz.title}
                   </span>
@@ -73,15 +78,21 @@ export function MyQuizzesPage() {
                     {quiz.playCount > 1 ? 's' : ''}
                   </span>
                 </div>
-                <PillButton size="sm" disabled={busyId === quiz.id} onClick={() => play(quiz)}>
-                  Jouer ▶
-                </PillButton>
-                <PillButton size="sm" variant="outline" onClick={() => navigate(`/quiz/${quiz.id}/edit`)}>
-                  Éditer
-                </PillButton>
-                <PillButton size="sm" variant="coral-ghost" onClick={() => remove(quiz)}>
-                  Supprimer
-                </PillButton>
+                <div className="flex w-full flex-wrap justify-end gap-2 sm:w-auto">
+                  <PillButton size="sm" disabled={busyId === quiz.id} onClick={() => play(quiz)}>
+                    Jouer ▶
+                  </PillButton>
+                  <PillButton
+                    size="sm"
+                    variant="outline"
+                    onClick={() => navigate(`/quiz/${quiz.id}/edit`)}
+                  >
+                    Éditer
+                  </PillButton>
+                  <PillButton size="sm" variant="coral-ghost" onClick={() => remove(quiz)}>
+                    Supprimer
+                  </PillButton>
+                </div>
               </div>
             ))}
           </div>

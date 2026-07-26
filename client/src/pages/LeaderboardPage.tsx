@@ -16,14 +16,22 @@ const PODIUM_STYLES = [
   { border: '#F0492E', label: '3ᵉ place', avatar: 56, lift: false },
 ]
 
-function PodiumCard({ entry, spot }: { entry?: LeaderboardEntry; spot: number }) {
+function PodiumCard({
+  entry,
+  spot,
+  className = '',
+}: {
+  entry?: LeaderboardEntry
+  spot: number
+  className?: string
+}) {
   const style = PODIUM_STYLES[spot]
-  if (!entry) return <div className="w-full max-w-[240px]" />
+  if (!entry) return <div className={`mx-auto w-full max-w-[240px] ${className}`} />
   return (
     <div
-      className={`flex w-full max-w-[240px] flex-col items-center gap-2 rounded-3xl bg-card p-5 ${
-        style.lift ? '-mt-4 py-6' : ''
-      }`}
+      className={`mx-auto flex w-full max-w-[240px] flex-col items-center gap-2 rounded-3xl bg-card p-5 ${
+        style.lift ? 'py-6 sm:-mt-4' : ''
+      } ${className}`}
       style={{ border: `1.5px solid ${style.border}` }}
     >
       {style.lift ? (
@@ -82,24 +90,28 @@ export function LeaderboardPage() {
         <span className={`w-6 text-[13px] font-bold ${isMe ? 'text-citron' : 'text-cream'}`}>
           {entry.rank}
         </span>
-        <div className="flex flex-1 items-center gap-2.5">
+        <div className="flex min-w-0 flex-1 items-center gap-2.5">
           <div
-            className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${
+            className={`flex h-8 w-8 flex-none items-center justify-center rounded-full text-xs font-semibold ${
               isMe ? 'bg-citron text-ink' : 'bg-cream/10 text-cream'
             }`}
           >
             {initials(entry.username)}
           </div>
-          <span className={`text-sm ${isMe ? 'font-semibold text-citron' : 'font-medium text-cream'}`}>
+          <span
+            className={`truncate text-sm ${isMe ? 'font-semibold text-citron' : 'font-medium text-cream'}`}
+          >
             {entry.username}
             {isMe && ' (vous)'}
           </span>
         </div>
-        <span className={`w-[100px] text-center text-[13px] ${isMe ? 'text-citron' : 'text-muted'}`}>
+        <span
+          className={`hidden w-[100px] text-center text-[13px] sm:block ${isMe ? 'text-citron' : 'text-muted'}`}
+        >
           {entry.gamesPlayed}
         </span>
         <span
-          className={`w-[120px] text-right text-sm ${isMe ? 'font-bold text-citron' : 'font-semibold text-cream'}`}
+          className={`w-[84px] text-right text-sm sm:w-[120px] ${isMe ? 'font-bold text-citron' : 'font-semibold text-cream'}`}
         >
           {formatPoints(entry.totalPoints)} pts
         </span>
@@ -119,7 +131,7 @@ export function LeaderboardPage() {
             Classement général
           </span>
         </div>
-        <h1 className="text-center font-display text-[34px] font-semibold text-cream md:text-[46px]">
+        <h1 className="text-center font-display text-[30px] font-semibold text-cream sm:text-[34px] md:text-[46px]">
           Qui domine Midi Quizz ?
         </h1>
         <p className="text-center text-[15px] text-muted-soft">
@@ -147,9 +159,9 @@ export function LeaderboardPage() {
       ) : (
         <>
           <div className="relative mx-auto mt-8 grid max-w-[760px] grid-cols-1 items-start gap-4 sm:grid-cols-3">
-            <PodiumCard entry={entries[1]} spot={0} />
-            <PodiumCard entry={entries[0]} spot={1} />
-            <PodiumCard entry={entries[2]} spot={2} />
+            <PodiumCard entry={entries[1]} spot={0} className="order-2 sm:order-none" />
+            <PodiumCard entry={entries[0]} spot={1} className="order-1 sm:order-none" />
+            <PodiumCard entry={entries[2]} spot={2} className="order-3 sm:order-none" />
           </div>
 
           {(listed.length > 0 || meOutsideList) && (
@@ -159,10 +171,10 @@ export function LeaderboardPage() {
                 <span className="flex-1 text-[11px] font-semibold uppercase tracking-wider text-muted-deep">
                   Joueur
                 </span>
-                <span className="w-[100px] text-center text-[11px] font-semibold text-muted-deep">
+                <span className="hidden w-[100px] text-center text-[11px] font-semibold text-muted-deep sm:block">
                   Parties
                 </span>
-                <span className="w-[120px] text-right text-[11px] font-semibold text-muted-deep">
+                <span className="w-[84px] text-right text-[11px] font-semibold text-muted-deep sm:w-[120px]">
                   Points
                 </span>
               </div>
