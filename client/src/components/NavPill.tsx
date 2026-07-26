@@ -28,18 +28,22 @@ export function NavPill({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
 
   return (
     <nav className="relative z-10 mx-auto mt-6 flex h-16 w-full max-w-[1080px] items-center gap-3 rounded-[32px] border border-white/12 bg-white/6 pl-5 pr-2.5 backdrop-blur-md md:gap-7 md:pl-[26px]">
-      <Link to="/" className="whitespace-nowrap font-display text-[21px] font-semibold text-cream">
+      <Link
+        to="/"
+        className="whitespace-nowrap font-display text-[19px] font-semibold text-cream sm:text-[21px]"
+      >
         midi quizz
       </Link>
       <div className="flex-1" />
 
       {variant === 'auth' ? (
         <>
+          {/* en mobile, le lien de la page active est masqué : il est redondant et fait déborder la pilule */}
           <NavLink
             to="/login"
             className={({ isActive }) =>
-              `flex h-10 items-center rounded-full px-[18px] text-[13.5px] font-semibold ${
-                isActive ? 'bg-cream text-ink' : 'text-cream-soft hover:text-cream'
+              `h-10 items-center rounded-full px-3.5 text-[13.5px] font-semibold sm:px-[18px] ${
+                isActive ? 'hidden bg-cream text-ink sm:flex' : 'flex text-cream-soft hover:text-cream'
               }`
             }
           >
@@ -48,8 +52,8 @@ export function NavPill({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
           <NavLink
             to="/register"
             className={({ isActive }) =>
-              `flex h-10 items-center rounded-full px-[18px] text-[13.5px] font-semibold ${
-                isActive ? 'bg-cream text-ink' : 'text-cream-soft hover:text-cream'
+              `h-10 items-center rounded-full px-3.5 text-[13.5px] font-semibold sm:px-[18px] ${
+                isActive ? 'hidden bg-cream text-ink sm:flex' : 'flex text-cream-soft hover:text-cream'
               }`
             }
           >
@@ -118,16 +122,17 @@ export function NavPill({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
               )}
             </div>
           ) : (
-            <div className="ml-1 flex items-center gap-2">
+            <div className="flex items-center gap-2 sm:ml-1">
+              {/* masqué en mobile (pas la place) : accessible via Inscription → « Déjà un compte ? » */}
               <Link
                 to="/login"
-                className="flex h-10 items-center rounded-full px-[18px] text-[13.5px] font-semibold text-cream-soft hover:text-cream"
+                className="hidden h-10 items-center rounded-full px-[18px] text-[13.5px] font-semibold text-cream-soft hover:text-cream sm:flex"
               >
                 Connexion
               </Link>
               <Link
                 to="/register"
-                className="flex h-10 items-center rounded-full bg-cream px-[18px] text-[13.5px] font-semibold text-ink"
+                className="flex h-10 items-center rounded-full bg-cream px-3.5 text-[13.5px] font-semibold text-ink sm:px-[18px]"
               >
                 Inscription
               </Link>
