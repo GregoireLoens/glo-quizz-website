@@ -15,9 +15,15 @@ CATEGORIES = [
     "Musique",
     "Sport",
     "Cinéma",
+    "Séries TV",
     "Histoire",
     "Géographie",
     "Jeux vidéo",
+    "Littérature",
+    "Gastronomie",
+    "Nature",
+    "People",
+    "High-tech",
 ]
 
 # Alphabet sans caractères ambigus (pas de O/0, I/1/L)

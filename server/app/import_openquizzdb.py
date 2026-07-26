@@ -21,23 +21,269 @@ DEFAULT_DIR = "/app/openquizzdb"
 OWNER_USERNAME = "OpenQuizzDB"
 
 # id OpenQuizzDB -> (catégorie du site, emoji). Seuls ces fichiers sont importés.
+# Couverture : tout le corpus importable du miroir, sauf les thèmes industrie X
+# (106, 110, 162, 235) et le doublon de titre « Comédies françaises » (250).
 MANIFEST: dict[int, tuple[str, str]] = {
-    79: ("Culture générale", "🧠"),
-    123: ("Culture générale", "💡"),
-    71: ("Sciences", "⚗️"),
-    10: ("Sciences", "🦈"),
-    39: ("Musique", "🎺"),
-    95: ("Musique", "🎤"),
-    26: ("Sport", "🥇"),
-    72: ("Sport", "🏀"),
-    63: ("Cinéma", "🦖"),
-    90: ("Cinéma", "🌌"),
-    120: ("Histoire", "🏺"),
-    70: ("Histoire", "⚔️"),
-    22: ("Géographie", "🗼"),
-    115: ("Géographie", "🌍"),
-    35: ("Jeux vidéo", "🎮"),
-    102: ("Jeux vidéo", "⚡"),
+    # Culture générale
+    1: ("Culture générale", "🏷️"),      # Marques, logos et slogans
+    33: ("Culture générale", "🐉"),      # Dragons hier et aujourd'hui
+    44: ("Culture générale", "🚗"),      # Automobile
+    58: ("Culture générale", "💇"),      # Les cheveux
+    68: ("Culture générale", "🌉"),      # Ponts tout en longueur
+    69: ("Culture générale", "🗿"),      # Sculpture
+    77: ("Culture générale", "🌈"),      # Haut en couleur
+    79: ("Culture générale", "🧠"),      # Culture générale
+    86: ("Culture générale", "🖼️"),      # Musée du Louvre
+    93: ("Culture générale", "🧚"),      # Personnages imaginaires
+    101: ("Culture générale", "👩‍👧"),     # Les mamans
+    111: ("Culture générale", "🌐"),     # Culture internationale
+    113: ("Culture générale", "🎩"),     # Culture et personnalités
+    119: ("Culture générale", "🔢"),     # Trouvez le nombre
+    122: ("Culture générale", "🪅"),     # Folklore
+    123: ("Culture générale", "💡"),     # Inventions
+    125: ("Culture générale", "🔧"),     # Objets et instruments
+    129: ("Culture générale", "🎨"),     # Couleurs
+    132: ("Culture générale", "🚆"),     # Moyens de transport
+    142: ("Culture générale", "😇"),     # Saints
+    154: ("Culture générale", "🧩"),     # Culture générale 2
+    155: ("Culture générale", "🎲"),     # Culture générale 3
+    157: ("Culture générale", "🏎️"),     # Constructeurs automobiles
+    161: ("Culture générale", "🔍"),     # Culture générale 4
+    166: ("Culture générale", "👗"),     # Victime de la mode
+    168: ("Culture générale", "💄"),     # Maquillage
+    172: ("Culture générale", "📣"),     # Faits de société
+    200: ("Culture générale", "🎯"),     # Incollable
+    202: ("Culture générale", "🫖"),     # Céramique et poterie
+    219: ("Culture générale", "🗨️"),     # Expressions connues
+    226: ("Culture générale", "🔤"),     # Prénoms célèbres
+    228: ("Culture générale", "🛹"),     # Culture jeune
+    246: ("Culture générale", "🔮"),     # Mystères du monde
+    249: ("Culture générale", "🧺"),     # Culture en vrac 3
+    254: ("Culture générale", "🎒"),     # Culture en vrac 4
+    259: ("Culture générale", "🎪"),     # Culture en vrac 5
+    265: ("Culture générale", "👨‍🦳"),     # Albert célèbres
+    266: ("Culture générale", "🗃️"),     # Culture en vrac 6
+    294: ("Culture générale", "🎅"),     # Fête de Saint-Nicolas
+    382: ("Culture générale", "📆"),     # C'était en 2019
+    405: ("Culture générale", "👺"),     # Folklore japonais
+    457: ("Culture générale", "✏️"),      # Orthoquizz
+    543: ("Culture générale", "🗓️"),     # Rétrospective 2021
+    550: ("Culture générale", "🔠"),     # Mots croisés
+    555: ("Culture générale", "🔡"),     # Mots croisés 2
+    # Sciences
+    71: ("Sciences", "⚗️"),              # Chimie
+    97: ("Sciences", "📏"),              # Unités de mesure
+    126: ("Sciences", "🌡️"),             # Réchauffement climatique
+    151: ("Sciences", "🔌"),             # Nikola Tesla
+    164: ("Sciences", "🩺"),             # Santé et bien-être
+    206: ("Sciences", "💊"),             # Magnésium
+    393: ("Sciences", "🦠"),             # COVID-19
+    541: ("Sciences", "😷"),             # La menace Omicron
+    # Musique
+    38: ("Musique", "🎹"),               # La new wave
+    39: ("Musique", "🎺"),               # Instruments de musique
+    56: ("Musique", "🥁"),               # Le reggae
+    62: ("Musique", "🎛️"),               # Jean Michel Jarre
+    85: ("Musique", "🎷"),               # Acid jazz
+    95: ("Musique", "🎤"),               # Chanteurs internationaux
+    103: ("Musique", "🎧"),              # Depeche Mode
+    136: ("Musique", "📼"),              # Groupes eighties
+    159: ("Musique", "🎙️"),              # Variété française
+    182: ("Musique", "🎸"),              # Johnny Hallyday
+    236: ("Musique", "🪩"),              # Tubes disco
+    238: ("Musique", "🎀"),              # Britney Spears
+    269: ("Musique", "🔊"),              # Artistes electro
+    # Sport
+    26: ("Sport", "🥇"),                 # Jeux olympiques
+    60: ("Sport", "🤾"),                 # Sports collectifs
+    72: ("Sport", "🏀"),                 # NBA : joueurs et franchises
+    73: ("Sport", "⛹️"),                 # Basket européen
+    84: ("Sport", "⚽"),                 # FC Barcelone
+    108: ("Sport", "🏅"),                # Rio 2016
+    138: ("Sport", "🏋️"),                # Haltérophilie
+    143: ("Sport", "🎾"),                # Maria Sharapova
+    144: ("Sport", "🥊"),                # Boxe
+    150: ("Sport", "🏟️"),                # Foot dantan
+    153: ("Sport", "🤸"),                # Sports pour tous
+    176: ("Sport", "🚴"),                # Ironman
+    191: ("Sport", "🧗"),                # Escalade
+    211: ("Sport", "⛷️"),                # PyeongChang 2018
+    212: ("Sport", "⛳"),                # Golf
+    245: ("Sport", "🏆"),                # Russia 2018
+    262: ("Sport", "🎾"),                # John McEnroe
+    264: ("Sport", "⚽"),                # Foot 2010-2020
+    268: ("Sport", "🥅"),                # Foot 2000-2010
+    272: ("Sport", "👟"),                # Foot 1990-2000
+    383: ("Sport", "🎾"),                # Sur le court
+    # Cinéma
+    2: ("Cinéma", "👑"),                 # Princesses Disney
+    4: ("Cinéma", "🦸"),                 # Héros Marvel
+    7: ("Cinéma", "💋"),                 # Marilyn Monroe
+    15: ("Cinéma", "💕"),                # Couples mythiques du cinéma
+    16: ("Cinéma", "🎬"),                # Steven Spielberg
+    34: ("Cinéma", "🤠"),                # Clint Eastwood
+    43: ("Cinéma", "🌹"),                # Belles du cinéma
+    46: ("Cinéma", "🕶️"),                # Bruce Willis
+    47: ("Cinéma", "🛸"),                # Le Cinquième Élément
+    51: ("Cinéma", "🐬"),                # Le Grand Bleu
+    52: ("Cinéma", "🦁"),                # Le Roi Lion
+    55: ("Cinéma", "🎭"),                # Sophie Marceau
+    57: ("Cinéma", "🎥"),                # Réalisatrices françaises
+    59: ("Cinéma", "🏰"),                # Les Visiteurs
+    63: ("Cinéma", "🦖"),                # Jurassic Park
+    81: ("Cinéma", "🏹"),                # Hunger Games
+    88: ("Cinéma", "🧸"),                # Toy Story a 20 ans
+    89: ("Cinéma", "🌠"),                # Héros de Star Wars
+    90: ("Cinéma", "🌌"),                # Star Wars
+    92: ("Cinéma", "🎞️"),                # Petits secrets du cinéma
+    163: ("Cinéma", "😂"),               # Comédies françaises
+    201: ("Cinéma", "🦹"),               # Super-héroïnes
+    214: ("Cinéma", "🏆"),               # Cérémonie des César
+    241: ("Cinéma", "👾"),               # Alien : la saga
+    243: ("Cinéma", "🧔"),               # Brad Pitt au cinéma
+    256: ("Cinéma", "🍿"),               # Comédies au cinéma
+    257: ("Cinéma", "💎"),               # Charlize Theron
+    # Séries TV
+    5: ("Séries TV", "📺"),              # Séries américaines
+    18: ("Séries TV", "🖖"),             # Star Trek
+    29: ("Séries TV", "🎉"),             # Patrick Sébastien
+    31: ("Séries TV", "👽"),             # X-Files : la série
+    36: ("Séries TV", "🧪"),             # Breaking Bad
+    41: ("Séries TV", "🗡️"),             # Game of Thrones
+    114: ("Séries TV", "🧽"),            # Bob l'éponge
+    267: ("Séries TV", "💰"),            # La Casa de Papel
+    273: ("Séries TV", "🎦"),            # Virginie à l'écran
+    # Histoire
+    8: ("Histoire", "⚱️"),               # Toutânkhamon
+    70: ("Histoire", "⚔️"),              # Guerres et batailles
+    94: ("Histoire", "🦌"),              # Chambord
+    98: ("Histoire", "📅"),              # Grandes dates du 20e siècle
+    120: ("Histoire", "🏺"),             # Égypte ancienne
+    127: ("Histoire", "🏛️"),             # Histoire politique
+    133: ("Histoire", "🐺"),             # Rome
+    160: ("Histoire", "⚜️"),             # Histoire de France
+    183: ("Histoire", "🌞"),             # Teotihuacan
+    188: ("Histoire", "🛡️"),             # Gladiateurs
+    # Géographie
+    14: ("Géographie", "🐚"),            # Bretagne
+    22: ("Géographie", "🗼"),            # Monuments du monde
+    30: ("Géographie", "🏙️"),            # Bruxelles de nos jours
+    61: ("Géographie", "📸"),            # Sites touristiques
+    66: ("Géographie", "🕌"),            # Istanbul
+    82: ("Géographie", "🪶"),            # Peuples du monde
+    100: ("Géographie", "⛵"),           # L'appel du large
+    104: ("Géographie", "🍁"),           # Canada
+    105: ("Géographie", "🌅"),           # Méditerranée
+    109: ("Géographie", "🇮🇹"),           # Italie
+    112: ("Géographie", "🌴"),           # Nice
+    115: ("Géographie", "🌍"),           # Géo pour tous
+    117: ("Géographie", "🏞️"),           # La Durance
+    121: ("Géographie", "🇧🇪"),           # Belgique
+    130: ("Géographie", "🇬🇧"),           # Royaume-Uni
+    134: ("Géographie", "🌊"),           # Histoires d'eaux
+    135: ("Géographie", "❄️"),           # Antarctique
+    208: ("Géographie", "🧘"),           # Auroville
+    221: ("Géographie", "🦆"),           # Périgord
+    231: ("Géographie", "🏘️"),           # Mouscron
+    247: ("Géographie", "🌳"),           # Central Park
+    251: ("Géographie", "🪧"),           # Surnoms des villes
+    255: ("Géographie", "⛪"),           # Mont Saint-Michel
+    # Jeux vidéo
+    35: ("Jeux vidéo", "🎮"),            # Jeux et consoles Nintendo
+    102: ("Jeux vidéo", "⚡"),           # Pokemon
+    204: ("Jeux vidéo", "🕹️"),           # PlayStation 2
+    261: ("Jeux vidéo", "🧝"),           # World of Warcraft
+    # Littérature
+    3: ("Littérature", "🪄"),            # Harry Potter
+    87: ("Littérature", "🖋️"),           # Maxime Chattam
+    124: ("Littérature", "🐕"),          # Tintin
+    128: ("Littérature", "🕯️"),          # Romantisme
+    139: ("Littérature", "📖"),          # Citations littéraires
+    140: ("Littérature", "✒️"),           # Auteurs classiques
+    233: ("Littérature", "💬"),          # Citations courtes
+    244: ("Littérature", "📚"),          # Fiction pour tous
+    # Gastronomie
+    6: ("Gastronomie", "🍺"),            # Bières belges
+    9: ("Gastronomie", "🧀"),            # Fromages de France
+    11: ("Gastronomie", "🍰"),           # Desserts et pâtisseries
+    17: ("Gastronomie", "🍬"),           # Sucre
+    19: ("Gastronomie", "🍫"),           # Chocolat
+    28: ("Gastronomie", "🌿"),           # Herbes et épices
+    53: ("Gastronomie", "💧"),           # Eaux minérales
+    67: ("Gastronomie", "🍎"),           # Pommes
+    80: ("Gastronomie", "🌮"),           # Gastronomie étrangère
+    96: ("Gastronomie", "🍷"),           # Vins divins
+    99: ("Gastronomie", "🧃"),           # Boissons sans alcool
+    158: ("Gastronomie", "🍇"),          # Vins d'ailleurs
+    181: ("Gastronomie", "☕"),          # Garçon un café
+    205: ("Gastronomie", "🥤"),          # Coca-Cola Company
+    207: ("Gastronomie", "🥐"),          # Déjeuner du matin
+    209: ("Gastronomie", "🍸"),          # Gin
+    260: ("Gastronomie", "🥔"),          # Pomme de terre
+    # Nature
+    10: ("Nature", "🦈"),                # Requins
+    12: ("Nature", "🍒"),                # Arbres fruitiers
+    48: ("Nature", "🐜"),                # Fourmis
+    49: ("Nature", "🦊"),                # Animaux et habitats
+    50: ("Nature", "🐱"),                # Nos amis les chats
+    65: ("Nature", "🌾"),                # Faune et flore des champs
+    116: ("Nature", "🐾"),               # Animaux célèbres
+    145: ("Nature", "🐦"),               # Oiseaux
+    199: ("Nature", "🌋"),               # Volcans en activité
+    203: ("Nature", "🌲"),               # Forêts de France
+    224: ("Nature", "🌵"),               # Cactus
+    237: ("Nature", "🐝"),               # Abeilles du rucher
+    263: ("Nature", "🎍"),               # Jardin japonais
+    413: ("Nature", "🕊️"),               # Colombophilie
+    # People
+    42: ("People", "💬"),                # Potins de stars 2014
+    64: ("People", "📰"),                # Actu people : août 2015
+    74: ("People", "🗞️"),                # Actu people : février 2015
+    76: ("People", "✨"),                # Actu people : janvier 2015
+    78: ("People", "⭐"),                # Célébrités
+    83: ("People", "💅"),                # Actu people : septembre 2015
+    131: ("People", "🇺🇸"),               # Donald Trump
+    137: ("People", "📰"),               # Actu people : février 2017
+    141: ("People", "🗞️"),               # Actu people : janvier 2017
+    146: ("People", "✨"),               # Actu people : mars 2017
+    148: ("People", "💅"),               # Actu people : avril 2017
+    149: ("People", "📰"),               # Actu people : mai 2017
+    152: ("People", "🗞️"),               # Actu people : juin 2017
+    170: ("People", "✨"),               # Actu people : août 2017
+    171: ("People", "💅"),               # Actu people : septembre 2017
+    178: ("People", "📰"),               # Actu people : octobre 2017
+    198: ("People", "🗞️"),               # Actu people : janvier 2018
+    210: ("People", "✨"),               # Actu people : février 2018
+    213: ("People", "🌟"),               # Stars mondiales
+    215: ("People", "💅"),               # Actu people : mars 2018
+    217: ("People", "💫"),               # Stars mondiales 2
+    218: ("People", "📰"),               # Actu people : avril 2018
+    220: ("People", "🎇"),               # Stars mondiales 3
+    222: ("People", "🗞️"),               # Actu people : mai 2018
+    225: ("People", "👸"),               # Meghan Markle
+    227: ("People", "🌠"),               # Stars mondiales 4
+    229: ("People", "💍"),               # Wags
+    230: ("People", "✨"),               # Actu people : juin 2018
+    242: ("People", "📰"),               # Actu people : juillet 2018
+    248: ("People", "🏖️"),               # Pamela Anderson
+    252: ("People", "🗞️"),               # Actu people : août 2018
+    253: ("People", "🤣"),               # Florence Foresti
+    258: ("People", "✨"),               # Actu people : septembre 2018
+    270: ("People", "🃏"),               # Jean-Marie Bigard
+    429: ("People", "📰"),               # People : février 2021
+    434: ("People", "🗞️"),               # People : mars 2021
+    441: ("People", "✨"),               # People : avril 2021
+    452: ("People", "📰"),               # People : mai 2021
+    463: ("People", "🗞️"),               # People : juin 2021
+    # High-tech
+    32: ("High-tech", "💻"),             # Logiciels et applications web
+    37: ("High-tech", "🐧"),             # Linux
+    45: ("High-tech", "📱"),             # Les réseaux sociaux
+    223: ("High-tech", "🪙"),            # Crypto-monnaies
+    232: ("High-tech", "🐡"),            # OpenBSD
+    234: ("High-tech", "⌨️"),             # Franglais du net
+    239: ("High-tech", "🤳"),            # Instagram
+    403: ("High-tech", "🍏"),            # iPhone
 }
 
 MAX_TITLE = 80
@@ -142,11 +388,16 @@ def run(directory: str) -> None:
             if not title or not questions:
                 print(f"- {path.name} : titre ou questions manquants, ignoré")
                 continue
-            if conn.execute(
-                "SELECT 1 FROM quizzes WHERE owner_id = ? AND title = ?", (owner_id, title)
-            ).fetchone():
+            existing = conn.execute(
+                "SELECT id FROM quizzes WHERE owner_id = ? AND title = ?", (owner_id, title)
+            ).fetchone()
+            if existing:
+                conn.execute(
+                    "UPDATE quizzes SET category = ?, emoji = ? WHERE id = ?",
+                    (category, emoji, existing["id"]),
+                )
                 skipped += 1
-                print(f"- {title} : déjà importé")
+                print(f"- {title} : déjà importé (catégorie/emoji alignés sur le manifeste)")
                 continue
             cur = conn.execute(
                 "INSERT INTO quizzes (owner_id, title, emoji, category) VALUES (?, ?, ?, ?)",
