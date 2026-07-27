@@ -72,6 +72,13 @@ export function PlayingView() {
             {question.total !== null && ` / ${question.total}`}
           </span>
         </div>
+        {question.theme && (
+          <div className="flex h-11 max-w-[240px] items-center rounded-full bg-violet/14 px-4">
+            <span className="truncate text-[13px] font-semibold text-violet">
+              🎯 {question.theme}
+            </span>
+          </div>
+        )}
         {survival && me && (
           <div className="flex h-11 items-center rounded-full bg-coral/12 px-4">
             <span className="text-[13px] font-semibold text-coral-soft">

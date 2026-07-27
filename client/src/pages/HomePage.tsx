@@ -15,6 +15,8 @@ export function HomePage() {
   const [quizzes, setQuizzes] = useState<QuizSummary[]>([])
   const [categories, setCategories] = useState<string[]>([])
   const [category, setCategory] = useState<string | null>(null)
+  const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [busyQuizId, setBusyQuizId] = useState<number | null>(null)
   const [busyRandom, setBusyRandom] = useState(false)
 
@@ -23,10 +25,16 @@ export function HomePage() {
   }, [])
 
   useEffect(() => {
-    const params = new URLSearchParams({ limit: '12', sort: 'popular' })
+    const t = setTimeout(() => setDebouncedSearch(search.trim()), 250)
+    return () => clearTimeout(t)
+  }, [search])
+
+  useEffect(() => {
+    const params = new URLSearchParams({ limit: debouncedSearch ? '50' : '12', sort: 'popular' })
     if (category) params.set('category', category)
+    if (debouncedSearch) params.set('search', debouncedSearch)
     api.get<QuizSummary[]>(`/api/quizzes?${params}`).then(setQuizzes).catch(() => {})
-  }, [category])
+  }, [category, debouncedSearch])
 
   const playRandom = async () => {
     if (!user) {
@@ -100,29 +108,23 @@ export function HomePage() {
 
       {/* quiz populaires */}
       <div className="relative mx-auto max-w-[1080px] pb-16 pt-16 md:pt-24">
-        <div className="mb-6 flex items-baseline gap-3">
+        <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <span className="font-display text-[26px] font-semibold text-cream">Quizz populaires</span>
+          <div className="relative w-full sm:w-[300px]">
+            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-muted">
+              🔍
+            </span>
+            <input
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Chercher un thème…"
+              className="h-11 w-full rounded-full border-[1.5px] border-cream/15 bg-card pl-11 pr-5 text-sm font-medium text-cream outline-none transition placeholder:text-muted-deep focus:border-citron/60"
+            />
+          </div>
         </div>
 
-        {quizzes.length === 0 ? (
-          <div className="rounded-[28px] bg-card p-10 text-center text-muted">
-            Aucun quiz pour l'instant — reviens bientôt !
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {quizzes.map((quiz, i) => (
-              <QuizCard
-                key={quiz.id}
-                quiz={quiz}
-                index={i}
-                busy={busyQuizId === quiz.id}
-                onPlay={() => playQuiz(quiz)}
-              />
-            ))}
-          </div>
-        )}
-
-        <div className="mt-6 flex flex-wrap gap-2.5">
+        <div className="mb-6 flex flex-wrap gap-2.5">
           <button
             type="button"
             onClick={() => setCategory(null)}
@@ -149,6 +151,26 @@ export function HomePage() {
             </button>
           ))}
         </div>
+
+        {quizzes.length === 0 ? (
+          <div className="rounded-[28px] bg-card p-10 text-center text-muted">
+            {debouncedSearch || category
+              ? 'Aucun quiz ne correspond à ta recherche.'
+              : "Aucun quiz pour l'instant — reviens bientôt !"}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {quizzes.map((quiz, i) => (
+              <QuizCard
+                key={quiz.id}
+                quiz={quiz}
+                index={i}
+                busy={busyQuizId === quiz.id}
+                onPlay={() => playQuiz(quiz)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <footer className="relative mx-auto max-w-[1080px] border-t border-cream/10 pb-10 pt-6 text-[13px] leading-relaxed text-muted">

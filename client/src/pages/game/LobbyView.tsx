@@ -99,10 +99,29 @@ export function LobbyView() {
   const { code, youId, hostId, players, settings, errorMsg, clearError } = useGameStore()
   const [copied, setCopied] = useState<'code' | 'link' | null>(null)
   const [pickerOpen, setPickerOpen] = useState(false)
+  const [allCategories, setAllCategories] = useState<string[]>([])
 
   const isHost = youId !== null && youId === hostId
   const you = players.find((p) => p.id === youId)
   const shareUrl = `${location.origin}/game/${code}`
+
+  const themedMode = (settings?.randomMix ?? false) || (settings?.survival ?? false)
+  const selectedCategories = settings?.categories ?? null
+
+  useEffect(() => {
+    if (themedMode && allCategories.length === 0) {
+      api.get<string[]>('/api/categories').then(setAllCategories).catch(() => {})
+    }
+  }, [themedMode, allCategories.length])
+
+  const toggleCategory = (c: string) => {
+    const current = selectedCategories ?? []
+    const next = current.includes(c) ? current.filter((x) => x !== c) : [...current, c]
+    gameSocket.send({
+      type: 'update_settings',
+      settings: { categories: next.length > 0 ? next : null },
+    })
+  }
 
   const copy = async (text: string, kind: 'code' | 'link') => {
     if (navigator.share && kind === 'link') {
@@ -240,10 +259,58 @@ export function LobbyView() {
         </div>
       </div>
 
+      {/* thèmes des questions (modes Aléatoire / Survie) */}
+      {themedMode && (
+        <div className="relative mt-4 w-full max-w-[720px] rounded-[28px] bg-card px-5 py-4">
+          <div className="mb-3 flex items-baseline justify-between gap-3">
+            <span className="text-[13px] text-muted">Thèmes des questions</span>
+            <span className="text-xs text-muted">
+              {selectedCategories === null
+                ? 'Tous les thèmes'
+                : `${selectedCategories.length} thème${selectedCategories.length > 1 ? 's' : ''}`}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              disabled={!isHost}
+              onClick={() =>
+                gameSocket.send({ type: 'update_settings', settings: { categories: null } })
+              }
+              className={`flex h-8 items-center rounded-full px-3.5 text-[12.5px] transition ${
+                selectedCategories === null
+                  ? 'bg-cream font-semibold text-ink'
+                  : 'border border-cream/25 text-cream-soft'
+              } ${isHost ? 'cursor-pointer hover:border-cream/50' : ''}`}
+            >
+              Tous
+            </button>
+            {allCategories.map((c) => {
+              const active = selectedCategories?.includes(c) ?? false
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  disabled={!isHost}
+                  onClick={() => toggleCategory(c)}
+                  className={`flex h-8 items-center rounded-full px-3.5 text-[12.5px] transition ${
+                    active
+                      ? 'bg-cream font-semibold text-ink'
+                      : 'border border-cream/25 text-cream-soft'
+                  } ${isHost ? 'cursor-pointer hover:border-cream/50' : ''}`}
+                >
+                  {c}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
       {settings?.survival && (
         <p className="relative mt-4 text-center text-[13px] text-coral-soft">
-          💀 Mode Survie : 3 vies chacun, questions en chaîne toutes catégories — mauvaise réponse ou
-          silence = une vie en moins. Le dernier debout gagne.
+          💀 Mode Survie : 3 vies chacun, questions en chaîne sur les thèmes choisis — mauvaise
+          réponse ou silence = une vie en moins. Le dernier debout gagne.
         </p>
       )}
 

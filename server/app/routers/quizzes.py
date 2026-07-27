@@ -39,15 +39,23 @@ def categories():
 @router.get("/quizzes")
 def list_quizzes(
     category: str | None = None,
+    search: str | None = Query(default=None, max_length=80),
     sort: str = Query(default="popular", pattern="^(popular|recent)$"),
     limit: int = Query(default=12, ge=1, le=50),
     db: sqlite3.Connection = Depends(get_db),
 ):
     sql = _LIST_SQL
+    where: list[str] = []
     params: list = []
     if category:
-        sql += " WHERE q.category = ?"
+        where.append("q.category = ?")
         params.append(category)
+    if search and search.strip():
+        escaped = search.strip().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        where.append(r"q.title LIKE ? ESCAPE '\'")
+        params.append(f"%{escaped}%")
+    if where:
+        sql += " WHERE " + " AND ".join(where)
     sql += " ORDER BY " + ("q.play_count DESC, q.created_at DESC" if sort == "popular" else "q.created_at DESC")
     sql += " LIMIT ?"
     params.append(limit)

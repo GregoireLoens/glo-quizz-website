@@ -52,6 +52,7 @@ class GameRoom:
             "quizQuestionTotal": None,
             "randomMix": False,
             "survival": False,
+            "categories": None,  # modes Aléatoire/Survie : thèmes autorisés (None = tous)
             **settings,
         }
         self.phase: str = "lobby"  # lobby | question | reveal | finished
@@ -131,6 +132,8 @@ class GameRoom:
             "total": None if self.settings["survival"] else len(self.questions),
             "text": q["text"],
             "answers": q["answers"],
+            # titre du quiz d'origine — contexte affiché en modes Aléatoire/Survie uniquement
+            "theme": q.get("theme"),
             "duration": self.settings["timePerQuestion"],
         }
 
@@ -277,6 +280,14 @@ class GameRoom:
             if quiz_info is None:
                 await self._error(user_id, "quiz_not_found", "Ce quiz n'existe pas.")
                 return
+        categories_update: tuple[list[str] | None, int] | None = None
+        if "categories" in incoming:
+            categories = _clean_categories(incoming.get("categories"))
+            pool_total = await asyncio.to_thread(_count_question_pool, categories)
+            if pool_total == 0:
+                await self._error(user_id, "no_questions", "Aucune question dans ces thèmes.")
+                return
+            categories_update = (categories, pool_total)
         async with self.lock:
             if self.phase != "lobby":
                 return
@@ -288,6 +299,10 @@ class GameRoom:
                 self.settings["timePerQuestion"] = tpq
             if quiz_info is not None:
                 self.settings.update(quiz_info)
+            if categories_update is not None and (self.settings["randomMix"] or self.settings["survival"]):
+                self.settings["categories"], pool_total = categories_update
+                if self.settings["randomMix"]:
+                    self.settings["quizQuestionTotal"] = min(config.RANDOM_MIX_SIZE, pool_total)
             self.touch()
             await self.broadcast({"type": "settings_updated", "settings": self.settings})
 
@@ -414,7 +429,9 @@ class GameRoom:
                         break
                     # Survie : recharge un lot de questions inédites ; pool épuisé → fin
                     seen = {q["text"].lower() for q in self.questions}
-                    more = await asyncio.to_thread(_load_more_survival_questions, seen)
+                    more = await asyncio.to_thread(
+                        _load_more_survival_questions, seen, self.settings["categories"]
+                    )
                     if not more:
                         break
                     random.shuffle(more)
@@ -524,6 +541,34 @@ class GameRoom:
 
 # ---------- accès DB synchrones (appelés via asyncio.to_thread) ----------
 
+def _clean_categories(value: Any) -> list[str] | None:
+    """Normalise une sélection de thèmes : inconnus écartés, vide/invalide = None (tous)."""
+    if not isinstance(value, list):
+        return None
+    picked = [c for c in config.CATEGORIES if c in value]
+    return picked or None
+
+
+def _pool_where(categories: list[str] | None) -> tuple[str, list]:
+    """Clause WHERE du pool aléatoire (questions t jointes à leur quiz z)."""
+    if not categories:
+        return "", []
+    return f" WHERE z.category IN ({','.join('?' * len(categories))})", list(categories)
+
+
+def _count_question_pool(categories: list[str] | None) -> int:
+    conn = db.connect()
+    try:
+        where, params = _pool_where(categories)
+        return conn.execute(
+            "SELECT COUNT(DISTINCT lower(t.text)) AS n FROM questions t"
+            " JOIN quizzes z ON z.id = t.quiz_id" + where,
+            params,
+        ).fetchone()["n"]
+    finally:
+        conn.close()
+
+
 def _load_quiz_info(quiz_id: int) -> dict | None:
     conn = db.connect()
     try:
@@ -541,6 +586,7 @@ def _load_quiz_info(quiz_id: int) -> dict | None:
             "quizQuestionTotal": row["question_count"],
             "randomMix": False,
             "survival": False,
+            "categories": None,
         }
     finally:
         conn.close()
@@ -553,6 +599,7 @@ def random_mix_settings(question_total: int) -> dict:
         "quizQuestionTotal": min(config.RANDOM_MIX_SIZE, question_total),
         "randomMix": True,
         "survival": False,
+        "categories": None,
     }
 
 
@@ -563,25 +610,17 @@ def survival_settings() -> dict:
         "quizQuestionTotal": None,  # illimité : jusqu'au dernier survivant
         "randomMix": False,
         "survival": True,
+        "categories": None,
     }
 
 
 def _survival_info() -> dict | None:
-    conn = db.connect()
-    try:
-        total = conn.execute("SELECT COUNT(DISTINCT lower(text)) AS n FROM questions").fetchone()["n"]
-        return survival_settings() if total else None
-    finally:
-        conn.close()
+    return survival_settings() if _count_question_pool(None) else None
 
 
 def _random_mix_info() -> dict | None:
-    conn = db.connect()
-    try:
-        total = conn.execute("SELECT COUNT(DISTINCT lower(text)) AS n FROM questions").fetchone()["n"]
-        return random_mix_settings(total) if total else None
-    finally:
-        conn.close()
+    total = _count_question_pool(None)
+    return random_mix_settings(total) if total else None
 
 
 def _load_questions(quiz_id: int, game_id: int, settings: dict) -> list[dict]:
@@ -605,14 +644,29 @@ def _load_questions(quiz_id: int, game_id: int, settings: dict) -> list[dict]:
         conn.close()
 
 
+def _pool_rows_to_questions(rows: list) -> list[dict]:
+    return [
+        {
+            "text": r["text"],
+            "answers": json.loads(r["answers"]),
+            "correct_index": r["correct_index"],
+            "theme": r["theme"],
+        }
+        for r in rows
+    ]
+
+
 def _load_random_questions(game_id: int, settings: dict) -> list[dict]:
-    """Quiz virtuel « Mix aléatoire » : questions distinctes piochées toutes catégories."""
+    """Quiz virtuel « Mix aléatoire » : questions distinctes piochées dans les thèmes choisis."""
     conn = db.connect()
     try:
+        where, params = _pool_where(settings["categories"])
         rows = conn.execute(
-            "SELECT text, answers, correct_index FROM questions"
-            " GROUP BY lower(text) ORDER BY RANDOM() LIMIT ?",
-            (config.RANDOM_MIX_SIZE,),
+            "SELECT t.text, t.answers, t.correct_index, z.title AS theme"
+            " FROM questions t JOIN quizzes z ON z.id = t.quiz_id"
+            + where
+            + " GROUP BY lower(t.text) ORDER BY RANDOM() LIMIT ?",
+            (*params, config.RANDOM_MIX_SIZE),
         ).fetchall()
         conn.execute(
             "UPDATE games SET status = 'playing', quiz_id = NULL, question_count = ?,"
@@ -620,22 +674,22 @@ def _load_random_questions(game_id: int, settings: dict) -> list[dict]:
             (settings["questionCount"], settings["timePerQuestion"], game_id),
         )
         conn.commit()
-        return [
-            {"text": r["text"], "answers": json.loads(r["answers"]), "correct_index": r["correct_index"]}
-            for r in rows
-        ]
+        return _pool_rows_to_questions(rows)
     finally:
         conn.close()
 
 
 def _load_survival_questions(game_id: int, settings: dict) -> list[dict]:
-    """Mode Survie : premier lot de questions aléatoires toutes catégories."""
+    """Mode Survie : premier lot de questions aléatoires dans les thèmes choisis."""
     conn = db.connect()
     try:
+        where, params = _pool_where(settings["categories"])
         rows = conn.execute(
-            "SELECT text, answers, correct_index FROM questions"
-            " GROUP BY lower(text) ORDER BY RANDOM() LIMIT ?",
-            (config.SURVIVAL_BATCH,),
+            "SELECT t.text, t.answers, t.correct_index, z.title AS theme"
+            " FROM questions t JOIN quizzes z ON z.id = t.quiz_id"
+            + where
+            + " GROUP BY lower(t.text) ORDER BY RANDOM() LIMIT ?",
+            (*params, config.SURVIVAL_BATCH),
         ).fetchall()
         conn.execute(
             "UPDATE games SET status = 'playing', quiz_id = NULL, question_count = NULL,"
@@ -643,33 +697,28 @@ def _load_survival_questions(game_id: int, settings: dict) -> list[dict]:
             (settings["timePerQuestion"], game_id),
         )
         conn.commit()
-        return [
-            {"text": r["text"], "answers": json.loads(r["answers"]), "correct_index": r["correct_index"]}
-            for r in rows
-        ]
+        return _pool_rows_to_questions(rows)
     finally:
         conn.close()
 
 
-def _load_more_survival_questions(exclude_texts: set[str]) -> list[dict]:
+def _load_more_survival_questions(exclude_texts: set[str], categories: list[str] | None) -> list[dict]:
     """Lot suivant, sans re-poser une question déjà jouée dans cette partie."""
     conn = db.connect()
     try:
-        where = ""
-        params: list = []
+        where, params = _pool_where(categories)
         if exclude_texts:
-            where = f" WHERE lower(text) NOT IN ({','.join('?' * len(exclude_texts))})"
-            params = list(exclude_texts)
+            where += " AND " if where else " WHERE "
+            where += f"lower(t.text) NOT IN ({','.join('?' * len(exclude_texts))})"
+            params += list(exclude_texts)
         rows = conn.execute(
-            "SELECT text, answers, correct_index FROM questions"
+            "SELECT t.text, t.answers, t.correct_index, z.title AS theme"
+            " FROM questions t JOIN quizzes z ON z.id = t.quiz_id"
             + where
-            + " GROUP BY lower(text) ORDER BY RANDOM() LIMIT ?",
+            + " GROUP BY lower(t.text) ORDER BY RANDOM() LIMIT ?",
             (*params, config.SURVIVAL_BATCH),
         ).fetchall()
-        return [
-            {"text": r["text"], "answers": json.loads(r["answers"]), "correct_index": r["correct_index"]}
-            for r in rows
-        ]
+        return _pool_rows_to_questions(rows)
     finally:
         conn.close()
 

@@ -1,7 +1,7 @@
 /* E2E mode « Mix aléatoire » : 2 joueurs, partie complète jusqu'au podium. */
 const puppeteer = require('puppeteer');
 
-const BASE = 'http://localhost:5173';
+const BASE = process.env.BASE || 'http://localhost:5173';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function api(path, token, body) {

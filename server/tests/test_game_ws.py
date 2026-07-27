@@ -91,6 +91,7 @@ def test_full_game_flow(client, monkeypatch):
             q_guest = _recv_until(ws_guest, "question")
             assert q_host["index"] == q_guest["index"]
             assert "correctIndex" not in q_host
+            assert q_host["theme"] is None  # quiz choisi : pas de contexte à afficher
 
             ws_host.send_json({"type": "answer", "questionIndex": q_host["index"], "answerIndex": 0})
             ws_guest.send_json({"type": "answer", "questionIndex": q_guest["index"], "answerIndex": 1})
@@ -243,3 +244,93 @@ def test_survival_full_flow(client, monkeypatch):
         assert ranking[-1]["lives"] == 0
         assert all(r["lives"] == 3 for r in ranking[:2])
         assert ranking[0]["rank"] == 1
+
+
+def test_random_mix_categories_and_theme(client, monkeypatch):
+    monkeypatch.setattr(config, "REVEAL_SECONDS", 0.05)
+    host = register(client, "Hote")
+    headers = auth_headers(host)
+    sciences = [
+        {"text": f"Sciences {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
+        for i in range(3)
+    ]
+    musique = [
+        {"text": f"Musique {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
+        for i in range(2)
+    ]
+    client.post("/api/quizzes", json=quiz_payload(title="Quiz sciences", questions=sciences), headers=headers)
+    client.post(
+        "/api/quizzes",
+        json=quiz_payload(title="Quiz musique", category="Musique", questions=musique),
+        headers=headers,
+    )
+    code = _create_game(client, host)
+
+    with ws_connect(client, code, host) as ws:
+        assert ws.receive_json()["type"] == "joined"
+        ws.send_json({"type": "update_settings", "settings": {"randomMix": True}})
+        upd = _recv_until(ws, "settings_updated")
+        assert upd["settings"]["categories"] is None
+        assert upd["settings"]["quizQuestionTotal"] == 5
+
+        # restreindre les thèmes : catégorie inconnue écartée, total recalculé
+        ws.send_json({"type": "update_settings", "settings": {"categories": ["Musique", "Inconnue"]}})
+        upd = _recv_until(ws, "settings_updated")
+        assert upd["settings"]["categories"] == ["Musique"]
+        assert upd["settings"]["quizQuestionTotal"] == 2
+
+        # un thème sans aucune question est refusé (la sélection reste inchangée)
+        ws.send_json({"type": "update_settings", "settings": {"categories": ["Nature"]}})
+        err = _recv_until(ws, "error")
+        assert err["code"] == "no_questions"
+
+        ws.send_json({"type": "start"})
+        for _ in range(2):
+            q = _recv_until(ws, "question")
+            assert q["theme"] == "Quiz musique"  # contexte affiché pendant la partie
+            assert q["text"].startswith("Musique")
+            assert "correctIndex" not in q
+            ws.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 0})
+            _recv_until(ws, "reveal")
+        _recv_until(ws, "game_over")
+
+
+def test_survival_categories_across_batches(client, monkeypatch):
+    """La restriction de thèmes tient aussi sur les rechargements de lots en Survie."""
+    monkeypatch.setattr(config, "REVEAL_SECONDS", 0.05)
+    monkeypatch.setattr(config, "SURVIVAL_BATCH", 2)
+
+    host = register(client, "Hote")
+    headers = auth_headers(host)
+    musique = [
+        {"text": f"Musique {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
+        for i in range(4)
+    ]
+    sciences = [
+        {"text": f"Sciences {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
+        for i in range(2)
+    ]
+    client.post(
+        "/api/quizzes",
+        json=quiz_payload(title="Quiz musique", category="Musique", questions=musique),
+        headers=headers,
+    )
+    client.post("/api/quizzes", json=quiz_payload(title="Quiz sciences", questions=sciences), headers=headers)
+    code = _create_game(client, host)
+
+    with ws_connect(client, code, host) as ws:
+        assert ws.receive_json()["type"] == "joined"
+        ws.send_json({"type": "update_settings", "settings": {"survival": True}})
+        _recv_until(ws, "settings_updated")
+        ws.send_json({"type": "update_settings", "settings": {"categories": ["Musique"]}})
+        upd = _recv_until(ws, "settings_updated")
+        assert upd["settings"]["categories"] == ["Musique"]
+
+        ws.send_json({"type": "start"})
+        for _ in range(4):  # 2 lots de 2 : le pool Musique est épuisé sans fuiter d'autres thèmes
+            q = _recv_until(ws, "question")
+            assert q["theme"] == "Quiz musique"
+            ws.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 0})
+            _recv_until(ws, "reveal")
+        over = _recv_until(ws, "game_over")
+        assert over["questionsPlayed"] == 4

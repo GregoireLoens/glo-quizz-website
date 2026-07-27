@@ -80,3 +80,21 @@ def test_validation(client):
     bad_index = quiz_payload()
     bad_index["questions"][0]["correctIndex"] = 5
     assert client.post("/api/quizzes", json=bad_index, headers=headers).status_code == 422
+
+
+def test_search(client):
+    session = register(client, "Auteur")
+    headers = auth_headers(session)
+    client.post("/api/quizzes", json=quiz_payload(title="Pokémon 1re génération"), headers=headers)
+    client.post("/api/quizzes", json=quiz_payload(title="Cinéma français", category="Cinéma"), headers=headers)
+
+    hits = client.get("/api/quizzes", params={"search": "pok"}).json()
+    assert [q["title"] for q in hits] == ["Pokémon 1re génération"]
+
+    # insensible à la casse (ASCII) et combinable avec le filtre catégorie
+    hits = client.get("/api/quizzes", params={"search": "CIN", "category": "Cinéma"}).json()
+    assert [q["title"] for q in hits] == ["Cinéma français"]
+    assert client.get("/api/quizzes", params={"search": "pok", "category": "Cinéma"}).json() == []
+
+    # les jokers SQL sont neutralisés : « % » n'est pas un joker
+    assert client.get("/api/quizzes", params={"search": "%"}).json() == []

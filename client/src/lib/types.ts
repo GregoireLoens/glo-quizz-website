@@ -63,6 +63,7 @@ export interface GameSettings {
   quizQuestionTotal: number | null
   randomMix: boolean
   survival: boolean
+  categories: string[] | null // modes Aléatoire/Survie : thèmes autorisés (null = tous)
 }
 
 export interface GamePlayer {
@@ -81,6 +82,7 @@ export interface GameQuestion {
   total: number | null // null en mode Survie (nombre de questions inconnu d'avance)
   text: string
   answers: string[]
+  theme: string | null // titre du quiz d'origine (modes Aléatoire/Survie), sinon null
   duration: number
   elapsed?: number
 }
