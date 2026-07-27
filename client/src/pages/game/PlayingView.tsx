@@ -72,13 +72,6 @@ export function PlayingView() {
             {question.total !== null && ` / ${question.total}`}
           </span>
         </div>
-        {question.theme && (
-          <div className="flex h-11 max-w-[240px] items-center rounded-full bg-violet/14 px-4">
-            <span className="truncate text-[13px] font-semibold text-violet">
-              🎯 {question.theme}
-            </span>
-          </div>
-        )}
         {survival && me && (
           <div className="flex h-11 items-center rounded-full bg-coral/12 px-4">
             <span className="text-[13px] font-semibold text-coral-soft">
@@ -121,7 +114,20 @@ export function PlayingView() {
         )}
       </div>
 
-      <h1 className="relative mt-7 max-w-[760px] text-center font-display text-[24px] font-semibold leading-[1.2] text-cream sm:mt-9 sm:text-[28px] md:text-[40px]">
+      {/* thème du quiz d'origine (modes Aléatoire/Survie) — contexte de la question */}
+      {question.theme && (
+        <div className="relative mt-6 flex h-9 max-w-[calc(100vw-3rem)] items-center rounded-full bg-violet/16 px-4 sm:mt-8">
+          <span className="truncate text-[13px] font-semibold uppercase tracking-[1.5px] text-violet">
+            🎯 {question.theme}
+          </span>
+        </div>
+      )}
+
+      <h1
+        className={`relative max-w-[760px] text-center font-display text-[24px] font-semibold leading-[1.2] text-cream sm:text-[28px] md:text-[40px] ${
+          question.theme ? 'mt-3.5' : 'mt-7 sm:mt-9'
+        }`}
+      >
         {question.text}
       </h1>
 
