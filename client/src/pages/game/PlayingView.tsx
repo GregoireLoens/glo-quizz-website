@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { Avatar } from '../../components/Avatar'
 import { AnswerCard, type AnswerState } from '../../components/AnswerCard'
 import { CircularTimer } from '../../components/CircularTimer'
@@ -7,6 +9,10 @@ import { gameSocket } from '../../lib/ws'
 import { useGameStore } from '../../stores/gameStore'
 
 const LETTERS = ['A', 'B', 'C', 'D']
+
+// Marge avant la fin du décompte pour que l'envoi automatique atteigne le serveur
+// avant qu'il ne clôture la question (config.ANSWER_GRACE_SECONDS = 0,5 s côté serveur).
+const AUTO_SUBMIT_LEAD_MS = 200
 
 export function PlayingView() {
   const {
@@ -21,6 +27,30 @@ export function PlayingView() {
     reveal,
     select,
   } = useGameStore()
+
+  // Validation automatique : une réponse sélectionnée mais non validée part quand même
+  // à la fin du décompte. Planifié une seule fois par question (l'état est relu à
+  // l'échéance via getState(), donc changer de sélection ne replanifie rien).
+  const questionIndex = question?.index ?? null
+  const questionDuration = question?.duration ?? 0
+  useEffect(() => {
+    if (questionIndex === null || questionStartedAt === null) return
+    const delay = questionStartedAt + questionDuration * 1000 - AUTO_SUBMIT_LEAD_MS - Date.now()
+    if (delay <= 0) return // question déjà terminée (reconnexion tardive) : le serveur refuserait
+    const id = setTimeout(() => {
+      const s = useGameStore.getState()
+      const me = s.players.find((p) => p.id === s.youId)
+      const out = (s.settings?.survival ?? false) && me !== undefined && me.lives <= 0
+      if (s.phase !== 'question' || s.locked || s.selectedAnswer === null || out) return
+      if (s.question?.index !== questionIndex) return
+      gameSocket.send({
+        type: 'answer',
+        questionIndex,
+        answerIndex: s.selectedAnswer,
+      })
+    }, delay)
+    return () => clearTimeout(id)
+  }, [questionIndex, questionDuration, questionStartedAt])
 
   if (!question) return null
 
@@ -154,7 +184,9 @@ export function PlayingView() {
               ? 'Tu es éliminé — la partie continue sans toi, reste pour voir qui survit !'
               : locked
                 ? 'Réponse envoyée — en attente des autres joueurs.'
-                : 'Réponse enregistrée dès validation.'}
+                : selectedAnswer !== null
+                  ? 'Validée automatiquement à la fin du temps si tu ne cliques pas.'
+                  : 'Réponse enregistrée dès validation.'}
         </span>
         {!isReveal && !eliminated && (
           <PillButton
