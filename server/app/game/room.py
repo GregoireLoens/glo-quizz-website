@@ -101,14 +101,15 @@ class GameRoom:
         salon les départage à l'affichage, mais ne doit pas peser sur l'Elo.
         """
         if self.settings["survival"]:
-            # survivants d'abord, puis par longévité (éliminé le plus tard), puis au score
+            # survivants d'abord, puis par longévité (éliminé le plus tard), puis aux
+            # bonnes réponses ; le score (vitesse) ne départage que les vrais ex æquo
             return (
                 0 if p.lives > 0 else 1,
                 -(p.eliminated_at if p.eliminated_at is not None else 10**9),
-                -p.score,
                 -p.correct_count,
+                -p.score,
             )
-        return (-p.score, -p.correct_count)
+        return (-p.correct_count, -p.score)
 
     def _ordered_players(self) -> list[PlayerState]:
         return sorted(self.players.values(), key=lambda p: (self._rank_key(p), p.joined_at))

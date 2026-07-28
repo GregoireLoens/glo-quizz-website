@@ -23,8 +23,8 @@ export function Podium({ ranking }: { ranking: RankingEntry[] }) {
             >
               {entry.username}
             </span>
-            <span className="text-xs text-muted">
-              {formatPoints(entry.score)} pts
+            <span className="max-w-full truncate text-xs text-muted">
+              {entry.correctCount} bonnes · {formatPoints(entry.score)} pts
               {entry.eloDelta != null && (
                 <>
                   {' · '}
