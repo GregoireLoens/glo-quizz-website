@@ -7,6 +7,7 @@ import { PillButton } from '../components/PillButton'
 import { QuizCard } from '../components/QuizCard'
 import { api } from '../lib/api'
 import type { QuizSummary } from '../lib/types'
+import { APP_VERSION } from '../lib/version'
 import { useAuthStore } from '../stores/authStore'
 
 export function HomePage() {
@@ -173,7 +174,8 @@ export function HomePage() {
         )}
       </div>
 
-      <footer className="relative mx-auto max-w-[1080px] border-t border-cream/10 pb-10 pt-6 text-[13px] leading-relaxed text-muted">
+      <footer className="relative mx-auto flex max-w-[1080px] flex-col gap-3 border-t border-cream/10 pb-10 pt-6 text-[13px] leading-relaxed text-muted sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+        <p>
         Les quiz signés « OpenQuizzDB » proviennent d'
         <a
           href="https://www.openquizzdb.org"
@@ -193,6 +195,10 @@ export function HomePage() {
           CC BY-SA 4.0
         </a>
         .
+        </p>
+        <span className="flex-none whitespace-nowrap font-medium text-muted-deep">
+          Midi Quizz v{APP_VERSION}
+        </span>
       </footer>
     </div>
   )

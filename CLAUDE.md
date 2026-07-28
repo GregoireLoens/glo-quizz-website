@@ -59,5 +59,6 @@ Prod : **https://midi-quizz.gloens.fr** — VPS OVH, reverse proxy **Traefik v3*
 ## Divers
 
 - Identité git : configurée en local (`glo` / gregoire.loens59670@gmail.com). Remote : `origin` → `git@github.com:GregoireLoens/glo-quizz-website.git`.
+- **Versionnage** (depuis le 28/07/2026, `v0.1`) : `client/src/lib/version.ts` (`APP_VERSION`) est la source de vérité, affichée dans le footer de l'accueil. Une version publiée = cette constante **et** un tag git annoté du même nom (`git tag -a v0.2 -m "…" && git push origin v0.2`) — les deux se bumpent ensemble, sinon le site ment sur ce qu'il exécute. `gh` n'est pas installé (rien ne s'installe sur l'hôte) : les Releases GitHub se créent depuis le site à partir du tag.
 - `changelog.md` : journal local **non versionné** (dans `.gitignore`) — le tenir à jour à chaque itération.
 - Plan d'origine : `~/.claude/plans/structured-napping-boot.md`.
