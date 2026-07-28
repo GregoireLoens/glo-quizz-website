@@ -36,7 +36,8 @@ export interface LeaderboardEntry {
   userId: number
   username: string
   gamesPlayed: number
-  totalPoints: number
+  elo: number
+  eloDelta: number | null // progression sur la période (null sur « Depuis toujours »)
 }
 
 export interface LeaderboardResponse {
@@ -103,6 +104,10 @@ export interface RankingEntry {
   score: number
   correctCount: number
   lives: number
+  // Renseignés sur le classement final uniquement, et null si la partie n'est pas
+  // classée (partie solo) — absents des classements intermédiaires.
+  eloBefore?: number | null
+  eloDelta?: number | null
 }
 
 export interface GameStateSnapshot {

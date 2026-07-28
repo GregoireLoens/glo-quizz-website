@@ -14,6 +14,12 @@ export function formatPoints(n: number): string {
   return n.toLocaleString('fr-FR')
 }
 
+/** Variation d'Elo, signe toujours visible : +24, -18, ±0. */
+export function formatEloDelta(delta: number): string {
+  if (delta === 0) return '±0'
+  return delta > 0 ? `+${delta}` : `${delta}`
+}
+
 export function formatPlays(n: number): string {
   if (n >= 1000) return `${(n / 1000).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} k`
   return `${n}`

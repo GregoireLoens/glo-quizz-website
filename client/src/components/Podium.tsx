@@ -1,6 +1,7 @@
 import type { RankingEntry } from '../lib/types'
 import { formatPoints } from '../lib/utils'
 import { Avatar } from './Avatar'
+import { EloDelta } from './EloDelta'
 
 const SPOTS = [
   { rank: 2, color: '#9C8DF2', height: 100, avatar: 64, number: 34 },
@@ -22,7 +23,15 @@ export function Podium({ ranking }: { ranking: RankingEntry[] }) {
             >
               {entry.username}
             </span>
-            <span className="text-xs text-muted">{formatPoints(entry.score)} pts</span>
+            <span className="text-xs text-muted">
+              {formatPoints(entry.score)} pts
+              {entry.eloDelta != null && (
+                <>
+                  {' · '}
+                  <EloDelta delta={entry.eloDelta} />
+                </>
+              )}
+            </span>
             <div
               className="flex w-full items-center justify-center rounded-t-[24px]"
               style={{ height: spot.height, background: spot.color }}

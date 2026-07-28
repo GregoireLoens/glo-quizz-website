@@ -45,6 +45,14 @@ DEFAULT_TIME_PER_QUESTION = 30
 
 POINTS_BASE = 1000
 POINTS_FLOOR = 250
+
+# Classement Elo — alimenté par les seules parties multijoueurs (le solo ne compte pas).
+# Les points restent la mécanique interne d'une partie ; l'Elo est le classement durable.
+ELO_START = 1000               # rating de départ (doit rester aligné sur le DEFAULT de schema.sql)
+ELO_K = 32                     # amplitude d'ajustement par partie une fois le rating calibré
+ELO_K_PROVISIONAL = 48         # amplitude renforcée pendant les premières parties
+ELO_PROVISIONAL_GAMES = 10     # parties classées avant de passer au K normal
+ELO_FLOOR = 100                # plancher : un rating ne descend jamais en dessous
 REVEAL_SECONDS = 4.0
 ANSWER_GRACE_SECONDS = 0.5
 

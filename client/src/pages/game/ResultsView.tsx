@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
+import { EloDelta } from '../../components/EloDelta'
 import { PillButton } from '../../components/PillButton'
 import { Podium } from '../../components/Podium'
 import { RankingList } from '../../components/RankingList'
@@ -19,6 +20,9 @@ export function ResultsView() {
   const questionTotal = questionsPlayed ?? question?.total ?? settings?.questionCount ?? 10
   const isHost = youId !== null && youId === hostId
   const survival = settings?.survival ?? false
+  // Une partie solo n'est pas classée : le serveur renvoie alors des deltas nuls.
+  const rated = finalRanking.some((entry) => entry.eloDelta != null)
+  const you = finalRanking.find((entry) => entry.playerId === youId)
 
   const newQuiz = async () => {
     const res = await api.post<{ code: string }>('/api/games', {})
@@ -36,6 +40,17 @@ export function ResultsView() {
           {questionTotal} questions · {players.length} joueur{players.length > 1 ? 's' : ''} ·{' '}
           {formatDuration(durationSec)}
         </span>
+        {you?.eloDelta != null && you.eloBefore != null && (
+          <span className="mt-1 inline-flex items-center gap-2 rounded-full bg-cream/10 px-4 py-1.5 text-[13px] text-cream">
+            Ton Elo : <strong className="font-semibold">{you.eloBefore + you.eloDelta}</strong>
+            <EloDelta delta={you.eloDelta} />
+          </span>
+        )}
+        {!rated && (
+          <span className="mt-1 text-[13px] text-muted-deep">
+            Partie solo — le classement Elo n'est pas impacté.
+          </span>
+        )}
       </div>
 
       <div className="relative mt-11">

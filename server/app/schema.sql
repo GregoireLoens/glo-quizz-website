@@ -3,6 +3,9 @@ CREATE TABLE IF NOT EXISTS users (
   username      TEXT NOT NULL,
   username_norm TEXT NOT NULL UNIQUE,
   code_hash     TEXT NOT NULL,
+  -- rating Elo et nombre de parties classées (voir config.ELO_START pour le défaut)
+  elo           INTEGER NOT NULL DEFAULT 1000,
+  elo_games     INTEGER NOT NULL DEFAULT 0,
   created_at    TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
@@ -43,6 +46,9 @@ CREATE TABLE IF NOT EXISTS game_players (
   score         INTEGER NOT NULL,
   correct_count INTEGER NOT NULL,
   rank          INTEGER NOT NULL,
+  -- NULL = partie non classée (solo) ; sinon rating avant la partie et delta appliqué
+  elo_before    INTEGER,
+  elo_delta     INTEGER,
   PRIMARY KEY (game_id, user_id)
 );
 

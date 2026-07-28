@@ -2,6 +2,11 @@
 
 Site de quiz multijoueur temps réel (façon Kahoot). Auth « no-KYC » : pseudo + code unique `XXXX-XXXX` généré serveur, montré une seule fois. V1 complète et vérifiée E2E (voir `changelog.md`, local non versionné).
 
+## Façon de travailler
+
+- **Effort de réflexion : `high` par défaut**, et **monter en `max`** dès que ça devient coton — bug non reproductible, race condition temps réel (boucle `run()`, reconnexion WS), refonte d'architecture, arbitrage design system, sécurité/durcissement VPS. Ne pas rester en effort bas « pour aller vite » sur ces sujets.
+- **Réponses concises.** Le strict nécessaire pour comprendre : le résultat d'abord, puis seulement ce qui change la suite. Pas de préambule, pas de reformulation de la demande, pas de récap de ce qui vient d'être lu à l'écran, pas de tableau ni de titres pour trois lignes. Effort maximal sur le travail, minimal sur le volume de texte — concis ne veut pas dire télégraphique : phrases complètes, termes techniques explicites.
+
 ## Contraintes non négociables
 
 1. **Tout en Docker, rien ne s'installe sur la machine hôte.** Pas de `npm`/`pip`/navigateur installé localement : toute commande passe par `docker compose exec` ou un conteneur jetable (`docker run --rm`). Les vérifs navigateur se font avec `zenika/alpine-chrome` (screenshots) ou `zenika/alpine-chrome:with-puppeteer` (E2E), en `--network host`.
@@ -10,6 +15,7 @@ Site de quiz multijoueur temps réel (façon Kahoot). Auth « no-KYC » : pseudo
 4. **Le code unique utilisateur n'existe en clair qu'une fois** : réponse du register, puis uniquement le hash bcrypt en base. Côté client il ne transite que par le state de navigation React (`navigate(state)`) — jamais URL, jamais storage, pas de re-fetch possible.
 5. **`front/` est la référence design, ne pas y toucher.** Design system : fond `ink #211F1A`, cartes `card #28261F`, texte `cream #F5F3EC`, accents `citron #C7F45C` / `violet #9C8DF2` / `coral #F0492E`, Fredoka (titres) + Inter (UI), pilules `rounded-full`, cartes 24–28px, halos flous (`GlowBackdrop`), **aucune ombre portée** (`shadow-*` interdit). Tokens déclarés dans `client/src/index.css` (`@theme` Tailwind v4) — les réutiliser, pas de couleurs en dur.
 6. Codes (partie 6 chars, user 8 chars) sur l'alphabet sans ambigus `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (`server/app/config.py`) ; toute saisie est normalisée (upper, sans tirets/espaces).
+7. **Points ≠ classement.** Les points (`compute_points`) restent la mécanique *interne* d'une partie : ils déterminent qui gagne. Le classement durable, lui, est l'**Elo** (`server/app/elo.py`). Deux invariants : une partie à moins de 2 joueurs n'est **jamais** classée, et l'ordre d'arrivée dans le salon ne départage jamais l'Elo (vrais ex æquo = nul).
 
 ## Commandes
 
@@ -25,9 +31,11 @@ docker compose restart client                      # après modification de pack
 ## Architecture
 
 - `server/app/` — FastAPI + SQLite (sqlite3 stdlib, pas d'ORM, schéma dans `schema.sql`, idempotent, exécuté au lifespan). Endpoints REST **sync** (`def`, threadpool) ; depuis l'asyncio du jeu, accès DB via `asyncio.to_thread`.
+  - `db.py` : `init_db()` = `schema.sql` puis `_migrate()`. `CREATE TABLE IF NOT EXISTS` n'ajoute rien à une table existante → toute nouvelle colonne se greffe là, en testant `PRAGMA table_info` avant l'`ALTER TABLE`. C'est le seul mécanisme de migration du projet.
   - `security.py` : bcrypt du code, tokens itsdangerous **datés** (`URLSafeTimedSerializer`, expiration `TOKEN_MAX_AGE` = 30 j), génération des codes.
-  - `routers/` : `auth` (register/login/me), `quizzes` (CRUD, `correctIndex` renvoyé à l'owner uniquement, 403 sinon), `leaderboard` (agrégation `game_players` × période), `games` (création de salon → crée la `GameRoom` mémoire).
-  - `game/room.py` : cœur du temps réel — `GameRoom` (players, settings, `asyncio.Lock`), boucle `run()` autoritaire (question → `all_answered`/timeout → reveal → sleep 4s), `compute_points()` = `max(250, round(1000 × (durée−écoulé)/durée))` si correct sinon 0, persistance en fin de partie seulement. `play_again` crée une **nouvelle ligne `games`** avec le même code (le code n'est pas UNIQUE en base ; l'unicité des salons actifs = clés du dict du manager).
+  - `elo.py` : classement Elo, pur (aucun accès DB, donc testable seul). Une partie à N joueurs vaut les N(N-1)/2 duels, somme divisée par (N−1) pour qu'une partie à 8 pèse autant qu'un duel ; K = 48 pendant les 10 premières parties classées puis 32 ; départ 1000, plancher 100. Les parties antérieures à l'Elo ne sont **pas** rejouées : tout le monde est parti de 1000 à la mise en service (choix de glo, 28/07).
+  - `routers/` : `auth` (register/login/me), `quizzes` (CRUD, `correctIndex` renvoyé à l'owner uniquement, 403 sinon), `leaderboard` (Elo courant sur « depuis toujours » ; sur semaine/mois un rating instantané n'aurait pas de sens → tri sur la progression `SUM(elo_delta)`), `games` (création de salon → crée la `GameRoom` mémoire).
+  - `game/room.py` : cœur du temps réel — `GameRoom` (players, settings, `asyncio.Lock`), boucle `run()` autoritaire (question → `all_answered`/timeout → reveal → sleep 4s), `compute_points()` = `max(250, round(1000 × (durée−écoulé)/durée))` si correct sinon 0, persistance en fin de partie seulement. `_apply_elo()` boucle dans la même transaction que l'insertion des `game_players` (dont il complète `elo_before`/`elo_delta`, laissés à NULL si la partie n'est pas classée) et met à jour `users.elo`/`elo_games` ; les places viennent de `_elo_groups()`, qui regroupe les `_rank_key` identiques — c'est là que se joue l'invariant « pas de départage par ordre d'arrivée ». `play_again` crée une **nouvelle ligne `games`** avec le même code (le code n'est pas UNIQUE en base ; l'unicité des salons actifs = clés du dict du manager).
   - `game/ws.py` : `/ws/game/{code}` — **auth par premier message** `{"type":"auth","token":…}` (timeout 5 s ; le token ne transite jamais en query string → pas dans les logs). La connexion vaut join ; une nouvelle socket du même user **remplace** l'ancienne (close 4000) = mécanisme de reconnexion ; snapshot complet `joined` à chaque (re)connexion. Codes de close applicatifs : 4001 token, 4003 partie commencée, 4004 salon inconnu, 4005 purge.
 - `client/src/` — React 19 + Vite + TS strict + Tailwind v4 + Zustand.
   - `stores/gameStore.ts` : miroir client de l'état de partie, **une seule** porte d'entrée `apply(msg)` (style reducer) alimentée par `lib/ws.ts` (reconnexion auto backoff 0.5→5s).

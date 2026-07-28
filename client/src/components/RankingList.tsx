@@ -1,5 +1,6 @@
 import type { RankingEntry } from '../lib/types'
 import { formatPoints, initials } from '../lib/utils'
+import { EloDelta } from './EloDelta'
 
 interface Props {
   ranking: RankingEntry[]
@@ -39,6 +40,9 @@ export function RankingList({ ranking, youId, questionTotal }: Props) {
             <span className={`text-[13.5px] font-bold ${accent}`}>
               {formatPoints(entry.score)} pts
             </span>
+            {entry.eloDelta != null && (
+              <EloDelta delta={entry.eloDelta} className="w-[46px] text-right text-[13px]" />
+            )}
           </div>
         )
       })}

@@ -22,9 +22,29 @@ def init_db() -> None:
         conn.execute("PRAGMA journal_mode = WAL")
         schema = (Path(__file__).parent / "schema.sql").read_text(encoding="utf-8")
         conn.executescript(schema)
+        _migrate(conn)
         conn.commit()
     finally:
         conn.close()
+
+
+def _columns(conn: sqlite3.Connection, table: str) -> set[str]:
+    return {row["name"] for row in conn.execute(f"PRAGMA table_info({table})")}
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    """Greffe les colonnes manquantes sur une base créée avant leur introduction.
+
+    `CREATE TABLE IF NOT EXISTS` ne touche pas à une table existante : c'est ici, et
+    nulle part ailleurs, que les nouvelles colonnes arrivent. Les ratings démarrent
+    tous à `ELO_START` — l'historique des parties d'avant l'Elo n'est pas rejoué.
+    """
+    if "elo" not in _columns(conn, "users"):
+        conn.execute(f"ALTER TABLE users ADD COLUMN elo INTEGER NOT NULL DEFAULT {config.ELO_START}")
+        conn.execute("ALTER TABLE users ADD COLUMN elo_games INTEGER NOT NULL DEFAULT 0")
+    if "elo_delta" not in _columns(conn, "game_players"):
+        conn.execute("ALTER TABLE game_players ADD COLUMN elo_before INTEGER")
+        conn.execute("ALTER TABLE game_players ADD COLUMN elo_delta INTEGER")
 
 
 def get_db():

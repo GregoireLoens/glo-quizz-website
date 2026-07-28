@@ -11,7 +11,7 @@ from typing import Any
 
 from fastapi import WebSocket
 
-from .. import config, db
+from .. import config, db, elo
 
 logger = logging.getLogger("midi-quizz.room")
 
@@ -94,24 +94,31 @@ class GameRoom:
     def _alive(self) -> list[PlayerState]:
         return [p for p in self.players.values() if p.lives > 0]
 
-    def _ranking_payload(self) -> list[dict]:
+    def _rank_key(self, p: PlayerState) -> tuple:
+        """Critères de classement d'un joueur, hors départage arbitraire.
+
+        Deux joueurs de même clé sont réellement ex æquo — l'ordre d'arrivée dans le
+        salon les départage à l'affichage, mais ne doit pas peser sur l'Elo.
+        """
         if self.settings["survival"]:
             # survivants d'abord, puis par longévité (éliminé le plus tard), puis au score
-            ordered = sorted(
-                self.players.values(),
-                key=lambda p: (
-                    0 if p.lives > 0 else 1,
-                    -(p.eliminated_at if p.eliminated_at is not None else 10**9),
-                    -p.score,
-                    -p.correct_count,
-                    p.joined_at,
-                ),
+            return (
+                0 if p.lives > 0 else 1,
+                -(p.eliminated_at if p.eliminated_at is not None else 10**9),
+                -p.score,
+                -p.correct_count,
             )
-        else:
-            ordered = sorted(
-                self.players.values(),
-                key=lambda p: (-p.score, -p.correct_count, p.joined_at),
-            )
+        return (-p.score, -p.correct_count)
+
+    def _ordered_players(self) -> list[PlayerState]:
+        return sorted(self.players.values(), key=lambda p: (self._rank_key(p), p.joined_at))
+
+    def _elo_groups(self) -> list[list[int]]:
+        """Places de la partie, de la 1re à la dernière, ex æquo regroupés."""
+        return elo.group_by_ties([(p.user_id, self._rank_key(p)) for p in self._ordered_players()])
+
+    def _ranking_payload(self) -> list[dict]:
+        ordered = self._ordered_players()
         return [
             {
                 "rank": i + 1,
@@ -463,7 +470,13 @@ class GameRoom:
                 self.final_ranking = self._ranking_payload()
                 self.duration_sec = round(time.monotonic() - self.started_at)
                 self.touch()
-            await asyncio.to_thread(self._persist_results)
+            elo_results = await asyncio.to_thread(self._persist_results)
+            async with self.lock:
+                for entry in self.final_ranking:
+                    rated = elo_results.get(entry["playerId"])
+                    entry["eloBefore"] = rated[0] if rated is not None else None
+                    entry["eloDelta"] = rated[1] if rated is not None else None
+                self.touch()
             await self.broadcast({
                 "type": "game_over",
                 "durationSec": self.duration_sec,
@@ -512,7 +525,39 @@ class GameRoom:
             "ranking": self._ranking_payload(),
         }
 
-    def _persist_results(self) -> None:
+    def _apply_elo(self, conn) -> dict[int, tuple[int, int]]:
+        """Met à jour les ratings à l'issue de la partie → `{user_id: (avant, delta)}`.
+
+        Une partie solo — ou sans la moindre question jouée — ne touche à rien.
+        À appeler après l'insertion des `game_players`, dont il complète les colonnes.
+        """
+        groups = self._elo_groups()
+        ids = [user_id for place in groups for user_id in place]
+        if len(ids) < 2 or self.questions_played < 1:
+            return {}
+        rows = conn.execute(
+            f"SELECT id, elo, elo_games FROM users WHERE id IN ({','.join('?' * len(ids))})",
+            ids,
+        ).fetchall()
+        ratings = {r["id"]: r["elo"] for r in rows}
+        if len(ratings) < 2:
+            return {}  # comptes supprimés entre-temps : plus d'adversaire à classer
+        rated_games = {r["id"]: r["elo_games"] for r in rows}
+        known = [[uid for uid in place if uid in ratings] for place in groups]
+        results = elo.rate_game([place for place in known if place], ratings, rated_games)
+        for user_id, (before, delta) in results.items():
+            conn.execute(
+                "UPDATE users SET elo = ?, elo_games = elo_games + 1 WHERE id = ?",
+                (before + delta, user_id),
+            )
+            conn.execute(
+                "UPDATE game_players SET elo_before = ?, elo_delta = ?"
+                " WHERE game_id = ? AND user_id = ?",
+                (before, delta, self.game_id, user_id),
+            )
+        return results
+
+    def _persist_results(self) -> dict[int, tuple[int, int]]:
         assert self.final_ranking is not None
         conn = db.connect()
         try:
@@ -534,7 +579,9 @@ class GameRoom:
                     "UPDATE quizzes SET play_count = play_count + 1 WHERE id = ?",
                     (self.settings["quizId"],),
                 )
+            elo_results = self._apply_elo(conn)
             conn.commit()
+            return elo_results
         finally:
             conn.close()
 

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 
+import { EloDelta } from '../components/EloDelta'
 import { GlowBackdrop, AUTH_GLOWS } from '../components/GlowBackdrop'
 import { NavPill } from '../components/NavPill'
 import { SegmentedControl } from '../components/SegmentedControl'
 import { api } from '../lib/api'
 import type { LeaderboardEntry, LeaderboardResponse } from '../lib/types'
-import { formatPoints, initials } from '../lib/utils'
+import { initials } from '../lib/utils'
 import { useAuthStore } from '../stores/authStore'
 
 type Period = 'week' | 'month' | 'all'
@@ -27,6 +28,7 @@ function PodiumCard({
 }) {
   const style = PODIUM_STYLES[spot]
   if (!entry) return <div className={`mx-auto w-full max-w-[240px] ${className}`} />
+  const bigSize = style.lift ? 'text-[26px]' : 'text-[22px]'
   return (
     <div
       className={`mx-auto flex w-full max-w-[240px] flex-col items-center gap-2 rounded-3xl bg-card p-5 ${
@@ -55,13 +57,23 @@ function PodiumCard({
       <span className={`text-cream ${style.lift ? 'text-base font-bold' : 'text-[15px] font-semibold'}`}>
         {entry.username}
       </span>
-      <span className="text-[13px] text-muted">{entry.gamesPlayed} parties</span>
-      <span
-        className={`font-display font-semibold ${style.lift ? 'text-[26px]' : 'text-[22px]'}`}
-        style={{ color: style.border }}
-      >
-        {formatPoints(entry.totalPoints)} pts
+      <span className="text-[13px] text-muted">
+        {entry.gamesPlayed} partie{entry.gamesPlayed > 1 ? 's' : ''}
       </span>
+      {/* le grand chiffre est toujours le critère de tri de l'onglet affiché */}
+      {entry.eloDelta === null ? (
+        <span
+          className={`font-display font-semibold ${bigSize}`}
+          style={{ color: style.border }}
+        >
+          {entry.elo} Elo
+        </span>
+      ) : (
+        <>
+          <EloDelta delta={entry.eloDelta} className={`font-display ${bigSize}`} />
+          <span className="-mt-1 text-[13px] text-muted-deep">{entry.elo} Elo</span>
+        </>
+      )}
     </div>
   )
 }
@@ -79,6 +91,7 @@ export function LeaderboardPage() {
   const me = data?.me ?? null
   const listed = entries.slice(3)
   const meOutsideList = me !== null && !entries.some((e) => e.userId === me.userId)
+  const showProgress = period !== 'all'
 
   const row = (entry: LeaderboardEntry) => {
     const isMe = user !== null && entry.userId === user.id
@@ -110,10 +123,15 @@ export function LeaderboardPage() {
         >
           {entry.gamesPlayed}
         </span>
+        {showProgress && (
+          <span className="w-[64px] text-right text-[13px] sm:w-[100px]">
+            {entry.eloDelta !== null && <EloDelta delta={entry.eloDelta} />}
+          </span>
+        )}
         <span
-          className={`w-[84px] text-right text-sm sm:w-[120px] ${isMe ? 'font-bold text-citron' : 'font-semibold text-cream'}`}
+          className={`w-[64px] text-right text-sm sm:w-[100px] ${isMe ? 'font-bold text-citron' : 'font-semibold text-cream'}`}
         >
-          {formatPoints(entry.totalPoints)} pts
+          {entry.elo}
         </span>
       </div>
     )
@@ -128,14 +146,16 @@ export function LeaderboardPage() {
         <div className="inline-flex h-[30px] items-center gap-2 rounded-full bg-citron/14 px-3.5">
           <span className="h-1.5 w-1.5 rounded-full bg-citron" />
           <span className="text-xs font-semibold uppercase tracking-[1.5px] text-citron">
-            Classement général
+            Classement Elo
           </span>
         </div>
         <h1 className="text-center font-display text-[30px] font-semibold text-cream sm:text-[34px] md:text-[46px]">
           Qui domine Midi Quizz ?
         </h1>
         <p className="text-center text-[15px] text-muted-soft">
-          Tous les joueurs, toutes les parties confondues.
+          {showProgress
+            ? 'Progression sur la période — battre plus fort que soi rapporte plus.'
+            : 'Chacun démarre à 1000 — seules les parties à plusieurs font bouger le classement.'}
         </p>
       </div>
 
@@ -154,7 +174,8 @@ export function LeaderboardPage() {
 
       {entries.length === 0 ? (
         <div className="relative mx-auto mt-10 max-w-[560px] rounded-[28px] bg-card p-10 text-center text-muted">
-          Aucune partie terminée sur cette période — lance un quiz pour inaugurer le classement !
+          Aucune partie classée sur cette période — lance un quiz à plusieurs pour inaugurer le
+          classement !
         </div>
       ) : (
         <>
@@ -174,8 +195,13 @@ export function LeaderboardPage() {
                 <span className="hidden w-[100px] text-center text-[11px] font-semibold text-muted-deep sm:block">
                   Parties
                 </span>
-                <span className="w-[84px] text-right text-[11px] font-semibold text-muted-deep sm:w-[120px]">
-                  Points
+                {showProgress && (
+                  <span className="w-[64px] text-right text-[11px] font-semibold text-muted-deep sm:w-[100px]">
+                    Progression
+                  </span>
+                )}
+                <span className="w-[64px] text-right text-[11px] font-semibold text-muted-deep sm:w-[100px]">
+                  Elo
                 </span>
               </div>
               {listed.map(row)}

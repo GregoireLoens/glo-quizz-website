@@ -102,12 +102,19 @@ def test_full_game_flow(client, monkeypatch):
             _recv_until(ws_guest, "reveal")
 
         over_host = _recv_until(ws_host, "game_over")
-        assert len(over_host["ranking"]) == 2
-        assert over_host["ranking"][0]["rank"] == 1
+        ranking = over_host["ranking"]
+        assert len(ranking) == 2
+        assert ranking[0]["rank"] == 1
 
-    # les scores sont persistés pour le classement
+        # partie multijoueur : l'Elo bouge, et ce que gagne le vainqueur, le perdant le paie
+        assert ranking[0]["eloDelta"] > 0 > ranking[1]["eloDelta"]
+        assert ranking[0]["eloDelta"] + ranking[1]["eloDelta"] == 0
+        assert all(r["eloBefore"] == config.ELO_START for r in ranking)
+
     board = client.get("/api/leaderboard").json()
-    assert len(board["entries"]) >= 1
+    assert [e["userId"] for e in board["entries"]] == [r["playerId"] for r in ranking]
+    assert board["entries"][0]["elo"] == config.ELO_START + ranking[0]["eloDelta"]
+    assert board["entries"][0]["gamesPlayed"] == 1
 
 
 def test_lobby_random_mix_selection(client):
@@ -160,6 +167,11 @@ def test_random_mix_full_flow(client, monkeypatch):
             _recv_until(ws, "reveal")
         over = _recv_until(ws, "game_over")
         assert len(over["ranking"]) == 1
+
+        # jouer seul ne touche pas au classement Elo
+        assert over["ranking"][0]["eloDelta"] is None
+        assert over["ranking"][0]["eloBefore"] is None
+    assert client.get("/api/leaderboard").json()["entries"] == []
 
 
 def test_lobby_survival_selection(client):
