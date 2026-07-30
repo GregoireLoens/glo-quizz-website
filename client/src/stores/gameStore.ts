@@ -107,6 +107,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
         set({
           phase: 'question',
           question,
+          players: get().players.map((p) => (p.answered ? { ...p, answered: false } : p)),
           questionStartedAt: Date.now(),
           selectedAnswer: null,
           locked: false,
