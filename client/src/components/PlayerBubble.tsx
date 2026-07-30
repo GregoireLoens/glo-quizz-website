@@ -2,16 +2,18 @@ import { Avatar } from './Avatar'
 
 interface Props {
   name: string
+  userId?: number | null
   subtitle: string
   ready?: boolean
   pending?: boolean
 }
 
-export function PlayerBubble({ name, subtitle, ready = false, pending = false }: Props) {
+export function PlayerBubble({ name, userId = null, subtitle, ready = false, pending = false }: Props) {
   return (
     <div className="flex flex-col items-center gap-2">
       <Avatar
         name={name}
+        userId={userId}
         size={76}
         ring={ready ? 'citron' : pending ? 'dashed' : 'none'}
         variant={pending ? 'neutral' : 'color'}

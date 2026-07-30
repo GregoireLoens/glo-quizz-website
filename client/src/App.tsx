@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 
 import { GamePage } from './pages/GamePage'
@@ -10,6 +11,7 @@ import { QuizEditorPage } from './pages/QuizEditorPage'
 import { RegisterCodePage } from './pages/RegisterCodePage'
 import { RegisterPage } from './pages/RegisterPage'
 import { useAuthStore } from './stores/authStore'
+import { useLeadersStore } from './stores/leadersStore'
 
 function RequireAuth() {
   const token = useAuthStore((s) => s.token)
@@ -19,6 +21,11 @@ function RequireAuth() {
 }
 
 export default function App() {
+  // top 3 du classement général : les médailles s'affichent sur les avatars de toute l'app
+  useEffect(() => {
+    useLeadersStore.getState().load()
+  }, [])
+
   return (
     <main>
       <Routes>

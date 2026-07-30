@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import { useAuthStore } from '../stores/authStore'
+import { useMedal } from '../stores/leadersStore'
 import { initials } from '../lib/utils'
+import { MedalRing } from './MedalRing'
 
 function AppLink({ to, label }: { to: string; label: string }) {
   const { pathname } = useLocation()
@@ -23,6 +25,7 @@ function AppLink({ to, label }: { to: string; label: string }) {
 
 export function NavPill({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
   const { user, logout } = useAuthStore()
+  const medal = useMedal(user?.id)
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -74,9 +77,11 @@ export function NavPill({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
                 onClick={() => setMenuOpen((v) => !v)}
                 className="flex h-11 cursor-pointer items-center gap-2 rounded-full bg-cream py-0 pl-2.5 pr-5 text-ink"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-xs font-semibold text-cream">
-                  {initials(user.username)}
-                </div>
+                <MedalRing rank={medal} size="sm">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-xs font-semibold text-cream">
+                    {initials(user.username)}
+                  </div>
+                </MedalRing>
                 <span className="max-w-[88px] truncate text-[13.5px] font-semibold sm:max-w-none">
                   {user.username}
                 </span>

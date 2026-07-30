@@ -17,7 +17,7 @@ export function Podium({ ranking }: { ranking: RankingEntry[] }) {
         if (!entry) return <div key={spot.rank} className="w-[96px] sm:w-[150px]" />
         return (
           <div key={spot.rank} className="flex w-[96px] flex-col items-center gap-2.5 sm:w-[150px]">
-            <Avatar name={entry.username} size={spot.avatar} />
+            <Avatar name={entry.username} userId={entry.playerId} size={spot.avatar} />
             <span
               className={`max-w-full truncate text-cream ${spot.rank === 1 ? 'text-[15px] font-bold' : 'text-sm font-semibold'}`}
             >

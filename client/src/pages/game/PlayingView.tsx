@@ -79,6 +79,7 @@ export function PlayingView() {
             <div key={p.id} className="relative">
               <Avatar
                 name={p.username}
+                userId={p.id}
                 size={44}
                 ring={p.id === youId ? 'citron' : 'none'}
                 dim={!p.connected || out}

@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { EloDelta } from '../../components/EloDelta'
@@ -8,11 +9,20 @@ import { api } from '../../lib/api'
 import { formatDuration } from '../../lib/utils'
 import { gameSocket } from '../../lib/ws'
 import { useGameStore } from '../../stores/gameStore'
+import { useLeadersStore } from '../../stores/leadersStore'
 
 export function ResultsView() {
   const navigate = useNavigate()
   const { youId, hostId, finalRanking, durationSec, settings, question, players, questionsPlayed } =
     useGameStore()
+
+  // Une partie solo n'est pas classée : le serveur renvoie alors des deltas nuls.
+  const rated = finalRanking?.some((entry) => entry.eloDelta != null) ?? false
+
+  // l'Elo vient de bouger : le top 3 général (donc les médailles) a pu changer de mains
+  useEffect(() => {
+    if (rated) useLeadersStore.getState().load(true)
+  }, [rated])
 
   if (!finalRanking || finalRanking.length === 0) return null
 
@@ -20,8 +30,6 @@ export function ResultsView() {
   const questionTotal = questionsPlayed ?? question?.total ?? settings?.questionCount ?? 10
   const isHost = youId !== null && youId === hostId
   const survival = settings?.survival ?? false
-  // Une partie solo n'est pas classée : le serveur renvoie alors des deltas nuls.
-  const rated = finalRanking.some((entry) => entry.eloDelta != null)
   const you = finalRanking.find((entry) => entry.playerId === youId)
 
   const newQuiz = async () => {

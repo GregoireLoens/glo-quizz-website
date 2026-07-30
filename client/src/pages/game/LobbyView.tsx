@@ -157,7 +157,7 @@ export function LobbyView() {
           <span className="text-xs font-semibold text-citron">En attente</span>
         </div>
         <div className="flex-1" />
-        {user && <Avatar name={user.username} size={44} />}
+        {user && <Avatar name={user.username} userId={user.id} size={44} />}
       </nav>
 
       {/* code de la partie */}
@@ -184,6 +184,7 @@ export function LobbyView() {
           <PlayerBubble
             key={p.id}
             name={p.username}
+            userId={p.id}
             subtitle={p.id === hostId ? 'Hôte' : p.ready ? 'Prêt' : 'En attente…'}
             ready={p.id === hostId || p.ready}
             pending={!p.connected}

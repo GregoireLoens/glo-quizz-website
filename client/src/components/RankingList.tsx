@@ -1,6 +1,8 @@
 import type { RankingEntry } from '../lib/types'
 import { formatPoints, initials } from '../lib/utils'
+import { useMedals } from '../stores/leadersStore'
 import { EloDelta } from './EloDelta'
+import { MedalRing } from './MedalRing'
 
 interface Props {
   ranking: RankingEntry[]
@@ -9,6 +11,7 @@ interface Props {
 }
 
 export function RankingList({ ranking, youId, questionTotal }: Props) {
+  const medals = useMedals()
   return (
     <div className="flex w-full max-w-[640px] flex-col gap-1 rounded-3xl bg-card p-2">
       {ranking.map((entry) => {
@@ -22,13 +25,15 @@ export function RankingList({ ranking, youId, questionTotal }: Props) {
             <span className={`w-5 text-center text-[13px] font-bold ${winner ? 'text-citron' : 'text-muted'}`}>
               {entry.rank}
             </span>
-            <div
-              className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${
-                winner ? 'bg-citron text-ink' : 'bg-cream/10 text-cream'
-              }`}
-            >
-              {initials(entry.username)}
-            </div>
+            <MedalRing rank={medals[entry.playerId] ?? null} size="sm">
+              <div
+                className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${
+                  winner ? 'bg-citron text-ink' : 'bg-cream/10 text-cream'
+                }`}
+              >
+                {initials(entry.username)}
+              </div>
+            </MedalRing>
             <span className={`min-w-0 flex-1 truncate text-[13.5px] font-semibold ${accent}`}>
               {entry.username}
               {entry.playerId === youId && ' (vous)'}

@@ -1,5 +1,7 @@
 import type { QuizSummary } from '../lib/types'
 import { formatPlays, initials } from '../lib/utils'
+import { useMedal } from '../stores/leadersStore'
+import { MedalRing } from './MedalRing'
 
 const ACCENTS = ['#C7F45C', '#9C8DF2', '#F0492E']
 
@@ -12,6 +14,7 @@ interface Props {
 
 export function QuizCard({ quiz, index = 0, onPlay, busy = false }: Props) {
   const accent = ACCENTS[index % ACCENTS.length]
+  const authorMedal = useMedal(quiz.author.id)
   return (
     <div className="flex flex-col gap-4 rounded-[28px] bg-card p-6">
       <div
@@ -28,9 +31,11 @@ export function QuizCard({ quiz, index = 0, onPlay, busy = false }: Props) {
         </span>
       </div>
       <div className="mt-auto flex items-center gap-2.5">
-        <div className="flex h-[26px] w-[26px] items-center justify-center rounded-full bg-cream/10 text-[11px] font-semibold text-cream">
-          {initials(quiz.author.username)}
-        </div>
+        <MedalRing rank={authorMedal} size="sm" badge={false}>
+          <div className="flex h-[26px] w-[26px] items-center justify-center rounded-full bg-cream/10 text-[11px] font-semibold text-cream">
+            {initials(quiz.author.username)}
+          </div>
+        </MedalRing>
         <span className="flex-1 text-xs text-muted">{quiz.author.username}</span>
         <button
           type="button"

@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react'
 
 import { EloDelta } from '../components/EloDelta'
 import { GlowBackdrop, AUTH_GLOWS } from '../components/GlowBackdrop'
+import { MedalRing } from '../components/MedalRing'
 import { NavPill } from '../components/NavPill'
 import { SegmentedControl } from '../components/SegmentedControl'
 import { api } from '../lib/api'
 import type { LeaderboardEntry, LeaderboardResponse } from '../lib/types'
 import { initials } from '../lib/utils'
 import { useAuthStore } from '../stores/authStore'
+import { useLeadersStore, useMedals, type MedalRank } from '../stores/leadersStore'
 
 type Period = 'week' | 'month' | 'all'
 
@@ -20,10 +22,12 @@ const PODIUM_STYLES = [
 function PodiumCard({
   entry,
   spot,
+  medal,
   className = '',
 }: {
   entry?: LeaderboardEntry
   spot: number
+  medal: MedalRank | null
   className?: string
 }) {
   const style = PODIUM_STYLES[spot]
@@ -43,17 +47,19 @@ function PodiumCard({
           {style.label}
         </span>
       )}
-      <div
-        className="flex items-center justify-center rounded-full font-semibold text-ink"
-        style={{
-          width: style.avatar,
-          height: style.avatar,
-          background: style.border,
-          fontSize: style.avatar * 0.28,
-        }}
-      >
-        {initials(entry.username)}
-      </div>
+      <MedalRing rank={medal} size={style.lift ? 'lg' : 'md'}>
+        <div
+          className="flex items-center justify-center rounded-full font-semibold text-ink"
+          style={{
+            width: style.avatar,
+            height: style.avatar,
+            background: style.border,
+            fontSize: style.avatar * 0.28,
+          }}
+        >
+          {initials(entry.username)}
+        </div>
+      </MedalRing>
       <span className={`text-cream ${style.lift ? 'text-base font-bold' : 'text-[15px] font-semibold'}`}>
         {entry.username}
       </span>
@@ -80,12 +86,18 @@ function PodiumCard({
 
 export function LeaderboardPage() {
   const user = useAuthStore((s) => s.user)
+  const medals = useMedals()
   const [period, setPeriod] = useState<Period>('all')
   const [data, setData] = useState<LeaderboardResponse | null>(null)
 
   useEffect(() => {
     api.get<LeaderboardResponse>(`/api/leaderboard?period=${period}&limit=10`).then(setData).catch(() => {})
   }, [period])
+
+  // les médailles marquent le top 3 général : sur cette page on les veut à jour, pas en cache
+  useEffect(() => {
+    useLeadersStore.getState().load(true)
+  }, [])
 
   const entries = data?.entries ?? []
   const me = data?.me ?? null
@@ -104,13 +116,15 @@ export function LeaderboardPage() {
           {entry.rank}
         </span>
         <div className="flex min-w-0 flex-1 items-center gap-2.5">
-          <div
-            className={`flex h-8 w-8 flex-none items-center justify-center rounded-full text-xs font-semibold ${
-              isMe ? 'bg-citron text-ink' : 'bg-cream/10 text-cream'
-            }`}
-          >
-            {initials(entry.username)}
-          </div>
+          <MedalRing rank={medals[entry.userId] ?? null} size="sm">
+            <div
+              className={`flex h-8 w-8 flex-none items-center justify-center rounded-full text-xs font-semibold ${
+                isMe ? 'bg-citron text-ink' : 'bg-cream/10 text-cream'
+              }`}
+            >
+              {initials(entry.username)}
+            </div>
+          </MedalRing>
           <span
             className={`truncate text-sm ${isMe ? 'font-semibold text-citron' : 'font-medium text-cream'}`}
           >
@@ -180,9 +194,24 @@ export function LeaderboardPage() {
       ) : (
         <>
           <div className="relative mx-auto mt-8 grid max-w-[760px] grid-cols-1 items-start gap-4 sm:grid-cols-3">
-            <PodiumCard entry={entries[1]} spot={0} className="order-2 sm:order-none" />
-            <PodiumCard entry={entries[0]} spot={1} className="order-1 sm:order-none" />
-            <PodiumCard entry={entries[2]} spot={2} className="order-3 sm:order-none" />
+            <PodiumCard
+              entry={entries[1]}
+              spot={0}
+              medal={entries[1] ? medals[entries[1].userId] ?? null : null}
+              className="order-2 sm:order-none"
+            />
+            <PodiumCard
+              entry={entries[0]}
+              spot={1}
+              medal={entries[0] ? medals[entries[0].userId] ?? null : null}
+              className="order-1 sm:order-none"
+            />
+            <PodiumCard
+              entry={entries[2]}
+              spot={2}
+              medal={entries[2] ? medals[entries[2].userId] ?? null : null}
+              className="order-3 sm:order-none"
+            />
           </div>
 
           {(listed.length > 0 || meOutsideList) && (
