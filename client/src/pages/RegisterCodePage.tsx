@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 
-import { GlowBackdrop, GAME_GLOWS } from '../components/GlowBackdrop'
-import { NavPill } from '../components/NavPill'
-import { PillButton } from '../components/PillButton'
+import { Button } from '../components/Button'
+import { GlowBackdrop } from '../components/GlowBackdrop'
+import { Icon } from '../components/Icon'
+import { NavBar } from '../components/NavBar'
 
 function downloadCodeImage(code: string, username: string) {
   const canvas = document.createElement('canvas')
@@ -11,23 +12,23 @@ function downloadCodeImage(code: string, username: string) {
   canvas.height = 450
   const ctx = canvas.getContext('2d')
   if (!ctx) return
-  ctx.fillStyle = '#211F1A'
+  ctx.fillStyle = '#14120D'
   ctx.fillRect(0, 0, 800, 450)
-  ctx.fillStyle = '#28261F'
+  ctx.fillStyle = '#262218'
   ctx.beginPath()
   ctx.roundRect(60, 90, 680, 270, 28)
   ctx.fill()
   ctx.textAlign = 'center'
-  ctx.fillStyle = '#C7F45C'
+  ctx.fillStyle = '#C9F45E'
   ctx.font = '600 26px Fredoka, sans-serif'
   ctx.fillText('midi quizz', 400, 60)
-  ctx.fillStyle = '#9C9788'
+  ctx.fillStyle = '#A29C8B'
   ctx.font = '600 16px Inter, sans-serif'
   ctx.fillText(`CODE UNIQUE DE ${username.toUpperCase()}`, 400, 160)
-  ctx.fillStyle = '#F5F3EC'
+  ctx.fillStyle = '#F7F5EE'
   ctx.font = '600 72px Fredoka, sans-serif'
   ctx.fillText(code, 400, 260)
-  ctx.fillStyle = '#787468'
+  ctx.fillStyle = '#7E7868'
   ctx.font = '400 15px Inter, sans-serif'
   ctx.fillText('Garde ce code précieusement : il ne sera plus jamais affiché.', 400, 320)
   const link = document.createElement('a')
@@ -54,8 +55,8 @@ export function RegisterCodePage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden px-6">
-      <GlowBackdrop glows={GAME_GLOWS} />
-      <NavPill variant="auth" />
+      <GlowBackdrop color="var(--color-citron)" x="50%" y="-4%" size={720} opacity={0.12} />
+      <NavBar variant="auth" />
 
       <div className="relative mx-auto mt-[60px] flex w-full max-w-[560px] flex-col items-center gap-4 pb-20">
         <span className="text-[40px]">🎉</span>
@@ -67,7 +68,7 @@ export function RegisterCodePage() {
           jamais.
         </p>
 
-        <div className="mt-2 flex w-full max-w-full flex-col items-center gap-2 rounded-[28px] bg-card px-5 py-6 sm:w-auto sm:px-10 sm:py-7">
+        <div className="mt-2 flex w-full max-w-full flex-col items-center gap-2 rounded-xl border border-line bg-card px-5 py-6 sm:w-auto sm:px-10 sm:py-7">
           <span className="text-xs font-semibold uppercase tracking-widest text-muted">
             Ton code unique
           </span>
@@ -77,17 +78,17 @@ export function RegisterCodePage() {
         </div>
 
         <div className="mt-1 flex flex-wrap justify-center gap-3">
-          <PillButton variant="cream" onClick={copy}>
+          <Button variant="contour" icon={<Icon name="copier" size={17} />} onClick={copy}>
             {copied ? 'Copié ✓' : 'Copier le code'}
-          </PillButton>
-          <PillButton variant="outline" onClick={() => downloadCodeImage(code, username)}>
+          </Button>
+          <Button variant="ghost" onClick={() => downloadCodeImage(code, username)}>
             Télécharger en image
-          </PillButton>
+          </Button>
         </div>
 
-        <div className="mt-3.5 flex items-center gap-2.5 rounded-2xl bg-coral/12 px-4.5 py-3">
+        <div className="mt-3.5 flex items-center gap-2.5 rounded-lg border border-coral/38 bg-coral/12 px-4.5 py-3">
           <span className="text-lg">⚠️</span>
-          <span className="text-[12.5px] leading-[17px] text-coral-soft">
+          <span className="text-[12.5px] leading-[17px] text-coral">
             Personne ne pourra te le renvoyer si tu le perds — note-le dans un endroit sûr.
           </span>
         </div>
@@ -98,7 +99,7 @@ export function RegisterCodePage() {
           className="mt-4 flex cursor-pointer items-center gap-2.5"
         >
           <span
-            className={`flex h-[22px] w-[22px] items-center justify-center rounded-md border-[1.5px] border-citron ${
+            className={`flex h-[22px] w-[22px] items-center justify-center rounded-[6px] border-[1.5px] border-citron ${
               checked ? 'bg-citron' : ''
             }`}
           >
@@ -107,10 +108,9 @@ export function RegisterCodePage() {
           <span className="text-[13.5px] text-cream">J'ai bien noté mon code</span>
         </button>
 
-        <PillButton size="lg" full disabled={!checked} onClick={() => navigate('/')} className="mt-2">
+        <Button size="hero" full disabled={!checked} onClick={() => navigate('/')} className="mt-2" iconRight="→">
           Commencer à jouer
-          <span className="text-lg">→</span>
-        </PillButton>
+        </Button>
       </div>
     </div>
   )

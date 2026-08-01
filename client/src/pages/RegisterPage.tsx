@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { GlowBackdrop, AUTH_GLOWS } from '../components/GlowBackdrop'
-import { NavPill } from '../components/NavPill'
-import { PillButton } from '../components/PillButton'
-import { PillInput } from '../components/PillInput'
+import { Button } from '../components/Button'
+import { Field } from '../components/Field'
+import { GlowBackdrop } from '../components/GlowBackdrop'
+import { NavBar } from '../components/NavBar'
 import { api, ApiError } from '../lib/api'
 import type { AuthResponse } from '../lib/types'
 import { useAuthStore } from '../stores/authStore'
@@ -40,8 +40,8 @@ export function RegisterPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden px-6">
-      <GlowBackdrop glows={AUTH_GLOWS} />
-      <NavPill variant="auth" />
+      <GlowBackdrop color="var(--color-violet)" x="82%" y="-8%" size={680} opacity={0.13} />
+      <NavBar variant="auth" />
 
       <form
         onSubmit={submit}
@@ -65,7 +65,7 @@ export function RegisterPage() {
         </p>
 
         <div className="mt-2 w-full">
-          <PillInput
+          <Field
             label="Pseudo"
             inputSize="lg"
             placeholder="FalconRouge92"
@@ -78,10 +78,9 @@ export function RegisterPage() {
           />
         </div>
 
-        <PillButton type="submit" size="lg" full disabled={username.trim().length < 3 || loading}>
+        <Button type="submit" size="hero" full iconRight="→" disabled={username.trim().length < 3 || loading}>
           {loading ? 'Création…' : 'Continuer'}
-          <span className="text-lg">→</span>
-        </PillButton>
+        </Button>
 
         <span className="mt-1.5 text-[13px] text-muted">
           Déjà un compte ?{' '}

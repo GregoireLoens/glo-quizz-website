@@ -1,22 +1,46 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #211f1a;
-  --color-card: #28261f;
-  --color-cream: #f5f3ec;
-  --color-cream-soft: #d8d4c8;
-  --color-muted: #9c9788;
-  --color-muted-soft: #b4afa0;
-  --color-muted-deep: #787468;
-  --color-citron: #c7f45c;
-  --color-violet: #9c8df2;
-  --color-coral: #f0492e;
+  /* Refonte v0.3 — voir projet Claude Design « Midi Quizz », uploads/Audit UX Midi Quizz.
+     Fond et carte descendus/remontés pour se détacher (aucune ombre portée) ; trois gris
+     mesurés (muted 5,8:1, muted-soft 4,9:1, muted-deep 3,6:1 sur carte — muted-deep réservé
+     aux placeholders/chrome, jamais à une info). */
+  --color-ink: #14120d;
+  --color-ink-2: #1c1913; /* puits : champs, segmented, tuiles de code */
+  --color-card: #262218;
+  --color-card-2: #302b1f; /* survol de carte */
+  --color-line: rgb(247 245 238 / 8%); /* filet de carte */
+  --color-line-strong: rgb(247 245 238 / 16%); /* bordure de contrôle */
+  --color-cream: #f7f5ee;
+  --color-cream-soft: #d6d1c1;
+  --color-muted: #a29c8b;
+  --color-muted-soft: #948e7f;
+  --color-muted-deep: #7e7868;
+  --color-citron: #c9f45e;
+  --color-violet: #aa9cff;
+  --color-coral: #ff5f41;
   --color-coral-soft: #f0a092;
-  --color-gold: #efc75e;
-  --color-silver: #c9ced9;
-  --color-bronze: #d28e5a;
+  --color-gold: #f0c95f;
+  --color-silver: #cbd0da;
+  --color-bronze: #d5915c;
   --font-display: "Fredoka", sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
+
+  /* 8 marches contre 21 tailles arbitraires auparavant. */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-lg: 17px;
+  --text-xl: 19px;
+  --text-2xl: 30px;
+  --text-3xl: 44px;
+  --text-4xl: 72px;
+
+  /* La pilule (rounded-full) reste réservée aux contrôles ; ces 4 marches couvrent le reste. */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
 }
 
 html,
@@ -30,4 +54,12 @@ body {
   color: var(--color-cream);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Espace réservé sous la nav basse mobile (fixed, 72px) — sous le seuil md de Tailwind (768px),
+   pour que le bas réel des pages ne se retrouve jamais masqué derrière la barre. */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 72px;
+  }
 }

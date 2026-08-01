@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { GlowBackdrop, AUTH_GLOWS } from '../components/GlowBackdrop'
-import { NavPill } from '../components/NavPill'
-import { PillButton } from '../components/PillButton'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { Chip } from '../components/Chip'
+import { Field } from '../components/Field'
+import { NavBar } from '../components/NavBar'
 import { api } from '../lib/api'
 import type { QuestionInput, QuizDetail } from '../lib/types'
 
@@ -93,8 +95,7 @@ export function QuizEditorPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden px-6">
-      <GlowBackdrop glows={AUTH_GLOWS} />
-      <NavPill />
+      <NavBar />
 
       <div className="relative mx-auto max-w-[760px] pb-32 pt-14">
         <h1 className="mb-8 font-display text-[30px] font-semibold text-cream sm:text-[38px]">
@@ -102,28 +103,19 @@ export function QuizEditorPage() {
         </h1>
 
         {/* infos générales */}
-        <div className="flex flex-col gap-6 rounded-[28px] bg-card p-5 sm:p-7">
-          <div className="flex flex-col gap-2">
-            <span className="text-[12.5px] font-semibold text-muted">Titre</span>
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Capitales du monde"
-              maxLength={80}
-              className="h-14 w-full rounded-full border-[1.5px] border-cream/15 bg-ink px-6 text-base font-medium text-cream outline-none transition placeholder:text-muted-deep focus:border-citron/60"
-            />
-          </div>
+        <Card className="flex flex-col gap-6">
+          <Field label="Titre" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Capitales du monde" maxLength={80} />
 
           <div className="flex flex-col gap-2">
-            <span className="text-[12.5px] font-semibold text-muted">Emoji</span>
+            <span className="px-1 text-xs font-semibold uppercase tracking-[1.2px] text-muted">Emoji</span>
             <div className="flex flex-wrap gap-2">
               {EMOJIS.map((e) => (
                 <button
                   key={e}
                   type="button"
                   onClick={() => setEmoji(e)}
-                  className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-2xl text-xl transition ${
-                    emoji === e ? 'bg-citron' : 'bg-ink hover:bg-cream/10'
+                  className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-md text-xl transition ${
+                    emoji === e ? 'bg-citron' : 'bg-ink-2 hover:bg-cream/10'
                   }`}
                 >
                   {e}
@@ -133,51 +125,40 @@ export function QuizEditorPage() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <span className="text-[12.5px] font-semibold text-muted">Catégorie</span>
+            <span className="px-1 text-xs font-semibold uppercase tracking-[1.2px] text-muted">Catégorie</span>
             <div className="flex flex-wrap gap-2">
               {categories.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setCategory(c)}
-                  className={`flex h-9 cursor-pointer items-center rounded-full px-4 text-[13.5px] transition ${
-                    category === c
-                      ? 'bg-cream font-semibold text-ink'
-                      : 'border border-cream/25 text-cream-soft hover:border-cream/50'
-                  }`}
-                >
+                <Chip key={c} active={category === c} onClick={() => setCategory(c)}>
                   {c}
-                </button>
+                </Chip>
               ))}
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* questions */}
         {questions.map((q, qi) => (
-          <div key={qi} className="mt-6 flex flex-col gap-5 rounded-[28px] bg-card p-5 sm:p-7">
+          <Card key={qi} className="mt-6 flex flex-col gap-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-8 items-center rounded-full bg-citron/14 px-3.5 text-[13px] font-semibold text-citron">
+              <span className="flex h-8 items-center rounded-full bg-citron/14 px-3.5 text-sm font-semibold text-citron">
                 Question {qi + 1}
               </span>
               <div className="flex-1" />
               {questions.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => setQuestions((qs) => qs.filter((_, i) => i !== qi))}
-                  className="cursor-pointer text-[13px] font-semibold text-coral hover:underline"
-                >
+                <Button size="compact" variant="coral" onClick={() => setQuestions((qs) => qs.filter((_, i) => i !== qi))}>
                   Supprimer
-                </button>
+                </Button>
               )}
             </div>
 
-            <input
+            <Field
+              multiline
+              rows={2}
               value={q.text}
               onChange={(e) => patchQuestion(qi, { text: e.target.value })}
               placeholder="Quelle est la capitale de l'Australie ?"
               maxLength={300}
-              className="h-14 w-full rounded-full border-[1.5px] border-cream/15 bg-ink px-6 text-base font-medium text-cream outline-none transition placeholder:text-muted-deep focus:border-citron/60"
+              counter={`${q.text.length} / 300`}
             />
 
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -186,16 +167,16 @@ export function QuizEditorPage() {
                 return (
                   <div
                     key={ai}
-                    className={`flex items-center gap-3 rounded-full border-[1.5px] py-1.5 pl-1.5 pr-4 transition ${
-                      correct ? 'border-citron bg-citron/10' : 'border-cream/15 bg-ink'
+                    className={`flex items-center gap-3 rounded-lg border-[1.5px] py-1.5 pl-1.5 pr-4 transition ${
+                      correct ? 'border-citron/45 bg-citron/9' : 'border-line-strong bg-ink-2'
                     }`}
                   >
                     <button
                       type="button"
                       title="Marquer comme bonne réponse"
                       onClick={() => patchQuestion(qi, { correctIndex: ai })}
-                      className={`flex h-9 w-9 flex-none cursor-pointer items-center justify-center rounded-full text-sm font-semibold transition ${
-                        correct ? 'bg-citron text-ink' : 'bg-cream/10 text-cream hover:bg-cream/20'
+                      className={`flex h-9 w-9 flex-none cursor-pointer items-center justify-center rounded-sm text-sm font-semibold transition ${
+                        correct ? 'bg-citron text-ink' : 'bg-cream/7 text-cream-soft hover:bg-cream/15'
                       }`}
                     >
                       {correct ? '✓' : LETTERS[ai]}
@@ -214,29 +195,29 @@ export function QuizEditorPage() {
             <span className="text-xs text-muted-deep">
               Clique sur la lettre pour marquer la bonne réponse.
             </span>
-          </div>
+          </Card>
         ))}
 
         <button
           type="button"
           onClick={() => setQuestions((qs) => [...qs, emptyQuestion()])}
-          className="mt-6 flex h-14 w-full cursor-pointer items-center justify-center rounded-full border-[2px] border-dashed border-cream/20 text-[15px] font-semibold text-muted transition hover:border-cream/40 hover:text-cream"
+          className="mt-6 flex h-14 w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-line-strong text-[15px] font-semibold text-muted transition hover:border-cream/40 hover:text-cream"
         >
           + Ajouter une question
         </button>
 
         {/* barre d'action */}
-        <div className="sticky bottom-6 mt-8 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 rounded-[28px] border border-cream/10 bg-card px-5 py-3 sm:rounded-full sm:px-6">
+        <div className="sticky bottom-6 mt-8 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 rounded-xl border border-line bg-card px-5 py-3 sm:rounded-full sm:px-6">
           <span className="min-w-[110px] flex-1 text-[13px] text-muted">
             {questions.length} question{questions.length > 1 ? 's' : ''}
             {error && <span className="ml-3 font-medium text-coral">{error}</span>}
           </span>
-          <PillButton variant="ghost" onClick={() => navigate(-1)}>
+          <Button variant="ghost" onClick={() => navigate(-1)}>
             Annuler
-          </PillButton>
-          <PillButton onClick={save} disabled={saving}>
+          </Button>
+          <Button onClick={save} disabled={saving}>
             {saving ? 'Enregistrement…' : 'Enregistrer'}
-          </PillButton>
+          </Button>
         </div>
       </div>
     </div>

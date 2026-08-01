@@ -1,47 +1,46 @@
-import type { RankingEntry } from '../lib/types'
-import { formatPoints } from '../lib/utils'
-import { Avatar } from './Avatar'
-import { EloDelta } from './EloDelta'
+interface PodiumPlayer {
+  rank: 1 | 2 | 3
+  name: string
+  initials: string
+  detail: string
+  points: string
+}
 
-const SPOTS = [
-  { rank: 2, color: '#9C8DF2', height: 100, avatar: 64, number: 34 },
-  { rank: 1, color: '#C7F45C', height: 140, avatar: 76, number: 44 },
-  { rank: 3, color: '#F0492E', height: 72, avatar: 64, number: 30 },
-]
+const CFG: Record<1 | 2 | 3, { height: number; bar: string; avatar: number; rank: number }> = {
+  1: { height: 172, bar: 'var(--color-citron)', avatar: 84, rank: 40 },
+  2: { height: 130, bar: 'var(--color-violet)', avatar: 68, rank: 30 },
+  3: { height: 100, bar: 'var(--color-bronze)', avatar: 62, rank: 26 },
+}
 
-export function Podium({ ranking }: { ranking: RankingEntry[] }) {
+/** Top 3 uniquement — le reste de la liste passe par LeaderboardRow. Plus de double affichage
+ * classement/podium. */
+export function Podium({ players }: { players: PodiumPlayer[] }) {
+  const by = (rank: 1 | 2 | 3) => players.find((p) => p.rank === rank)
+  const order = [by(2), by(1), by(3)].filter((p): p is PodiumPlayer => Boolean(p))
   return (
-    <div className="flex items-end gap-2 sm:gap-[18px]">
-      {SPOTS.map((spot) => {
-        const entry = ranking.find((r) => r.rank === spot.rank)
-        if (!entry) return <div key={spot.rank} className="w-[96px] sm:w-[150px]" />
+    <div className="flex items-end justify-center gap-3 sm:gap-4">
+      {order.map((p) => {
+        const c = CFG[p.rank]
         return (
-          <div key={spot.rank} className="flex w-[96px] flex-col items-center gap-2.5 sm:w-[150px]">
-            <Avatar name={entry.username} userId={entry.playerId} size={spot.avatar} />
-            <span
-              className={`max-w-full truncate text-cream ${spot.rank === 1 ? 'text-[15px] font-bold' : 'text-sm font-semibold'}`}
-            >
-              {entry.username}
-            </span>
-            <span className="max-w-full truncate text-xs text-muted">
-              {entry.correctCount} bonnes · {formatPoints(entry.score)} pts
-              {entry.eloDelta != null && (
-                <>
-                  {' · '}
-                  <EloDelta delta={entry.eloDelta} />
-                </>
-              )}
-            </span>
+          <div key={p.rank} className="flex w-[110px] flex-col items-center gap-2.5 sm:w-[160px]">
             <div
-              className="flex w-full items-center justify-center rounded-t-[24px]"
-              style={{ height: spot.height, background: spot.color }}
+              className="flex flex-none items-center justify-center rounded-full border-2 bg-card font-display font-semibold text-cream"
+              style={{ width: c.avatar, height: c.avatar, borderColor: c.bar, fontSize: Math.round(c.avatar * 0.3) }}
             >
-              <span
-                className="font-display font-semibold text-ink"
-                style={{ fontSize: spot.number }}
-              >
-                {spot.rank}
+              {p.initials}
+            </div>
+            <div className="flex flex-col items-center gap-0.5 text-center">
+              <span className="max-w-full truncate text-base font-semibold text-cream">{p.name}</span>
+              <span className="max-w-full truncate text-sm text-muted-soft">{p.detail}</span>
+            </div>
+            <div
+              className="flex w-full flex-col items-center justify-center gap-1.5 rounded-t-xl border-x border-t border-line bg-card"
+              style={{ height: c.height, borderTopColor: c.bar, borderTopWidth: 3 }}
+            >
+              <span className="font-display font-semibold" style={{ fontSize: c.rank, color: c.bar }}>
+                {p.rank}
               </span>
+              <span className="text-base font-semibold tabular-nums text-cream-soft">{p.points}</span>
             </div>
           </div>
         )

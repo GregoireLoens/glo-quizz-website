@@ -1,12 +1,13 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { Button } from '../../components/Button'
 import { EloDelta } from '../../components/EloDelta'
-import { PillButton } from '../../components/PillButton'
+import { Icon } from '../../components/Icon'
+import { LeaderboardRow } from '../../components/LeaderboardRow'
 import { Podium } from '../../components/Podium'
-import { RankingList } from '../../components/RankingList'
 import { api } from '../../lib/api'
-import { formatDuration } from '../../lib/utils'
+import { formatDuration, formatPoints, initials } from '../../lib/utils'
 import { gameSocket } from '../../lib/ws'
 import { useGameStore } from '../../stores/gameStore'
 import { useLeadersStore } from '../../stores/leadersStore'
@@ -31,6 +32,8 @@ export function ResultsView() {
   const isHost = youId !== null && youId === hostId
   const survival = settings?.survival ?? false
   const you = finalRanking.find((entry) => entry.playerId === youId)
+  const podium = finalRanking.filter((e) => e.rank <= 3)
+  const rest = finalRanking.filter((e) => e.rank > 3)
 
   const newQuiz = async () => {
     const res = await api.post<{ code: string }>('/api/games', {})
@@ -62,25 +65,48 @@ export function ResultsView() {
       </div>
 
       <div className="relative mt-11">
-        <Podium ranking={finalRanking} />
+        <Podium
+          players={podium.map((e) => ({
+            rank: e.rank as 1 | 2 | 3,
+            name: e.username,
+            initials: initials(e.username),
+            detail: `${e.correctCount} bonne${e.correctCount > 1 ? 's' : ''}`,
+            points: `${formatPoints(e.score)} pts`,
+          }))}
+        />
       </div>
 
-      <div className="relative mt-11 w-full max-w-[640px]">
-        <RankingList ranking={finalRanking} youId={youId} questionTotal={questionTotal} />
-      </div>
+      {rest.length > 0 && (
+        <div className="relative mt-11 flex w-full max-w-[640px] flex-col gap-2">
+          {rest.map((entry) => (
+            <LeaderboardRow
+              key={entry.playerId}
+              rank={entry.rank}
+              initials={initials(entry.username)}
+              name={entry.username}
+              meta={`${entry.correctCount}/${questionTotal} bonnes réponses`}
+              value={`${formatPoints(entry.score)} pts`}
+              delta={entry.eloDelta}
+              me={entry.playerId === youId}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="relative mb-14 mt-9 flex flex-wrap items-center justify-center gap-3.5">
         {isHost ? (
-          <PillButton onClick={() => gameSocket.send({ type: 'play_again' })}>Rejouer</PillButton>
+          <Button icon={<Icon name="jouer" size={18} />} onClick={() => gameSocket.send({ type: 'play_again' })}>
+            Rejouer
+          </Button>
         ) : (
           <span className="text-[13px] text-muted">L'hôte peut relancer la partie —</span>
         )}
-        <PillButton variant="outline" onClick={newQuiz}>
+        <Button variant="contour" onClick={newQuiz}>
           Nouveau quiz
-        </PillButton>
-        <PillButton variant="ghost" onClick={() => navigate('/')}>
+        </Button>
+        <Button variant="ghost" onClick={() => navigate('/')}>
           Quitter le salon
-        </PillButton>
+        </Button>
       </div>
     </div>
   )

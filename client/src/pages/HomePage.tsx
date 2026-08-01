@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { GlowBackdrop, HOME_GLOWS } from '../components/GlowBackdrop'
-import { NavPill } from '../components/NavPill'
-import { PillButton } from '../components/PillButton'
+import { Button } from '../components/Button'
+import { Chip } from '../components/Chip'
+import { GlowBackdrop } from '../components/GlowBackdrop'
+import { Icon } from '../components/Icon'
+import { NavBar } from '../components/NavBar'
 import { QuizCard } from '../components/QuizCard'
 import { api } from '../lib/api'
 import type { QuizSummary } from '../lib/types'
 import { APP_VERSION } from '../lib/version'
+import { formatPlays, initials } from '../lib/utils'
 import { useAuthStore } from '../stores/authStore'
+
+const ACCENTS = ['var(--color-citron)', 'var(--color-violet)', 'var(--color-coral)']
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -67,8 +72,8 @@ export function HomePage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden px-6">
-      <GlowBackdrop glows={HOME_GLOWS} />
-      <NavPill />
+      <GlowBackdrop color="var(--color-citron)" x="28%" y="-6%" size={640} opacity={0.14} />
+      <NavBar />
 
       {/* hero */}
       <div className="relative mx-auto max-w-[1080px] pt-16 md:pt-[100px]">
@@ -78,7 +83,7 @@ export function HomePage() {
             Quiz multijoueur
           </span>
         </div>
-        <h1 className="max-w-[820px] font-display text-[42px] font-semibold leading-[1.02] tracking-[-1px] text-cream sm:text-[52px] md:text-[76px]">
+        <h1 className="max-w-[820px] font-display text-4xl font-semibold leading-[1.02] tracking-[-1px] text-cream md:text-[76px]">
           Lance un quizz.
           <br />
           Défie tes potes
@@ -90,71 +95,53 @@ export function HomePage() {
           soient.
         </p>
         <div className="mt-8 flex flex-col gap-3.5 sm:flex-row sm:flex-wrap">
-          <PillButton size="lg" onClick={() => navigate('/join')}>
+          <Button size="hero" iconRight="↗" onClick={() => navigate('/join')}>
             Rejoindre une partie
-            <span className="text-lg">↗</span>
-          </PillButton>
-          <PillButton
-            size="lg"
-            variant="outline"
+          </Button>
+          <Button
+            size="hero"
+            variant="contour"
             className="border-violet/50 text-violet hover:bg-violet/10"
             disabled={busyRandom}
             onClick={playRandom}
+            iconRight="🎲"
           >
             Partie aléatoire
-            <span className="text-lg">🎲</span>
-          </PillButton>
+          </Button>
         </div>
       </div>
 
       {/* quiz populaires */}
       <div className="relative mx-auto max-w-[1080px] pb-16 pt-16 md:pt-24">
         <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <span className="font-display text-[26px] font-semibold text-cream">Quizz populaires</span>
+          <span className="font-display text-2xl font-semibold text-cream">Quizz populaires</span>
           <div className="relative w-full sm:w-[300px]">
-            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-muted">
-              🔍
+            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted">
+              <Icon name="chercher" size={16} />
             </span>
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Chercher un thème…"
-              className="h-11 w-full rounded-full border-[1.5px] border-cream/15 bg-card pl-11 pr-5 text-sm font-medium text-cream outline-none transition placeholder:text-muted-deep focus:border-citron/60"
+              className="h-11 w-full rounded-full border-[1.5px] border-line-strong bg-ink-2 pl-11 pr-5 text-sm font-medium text-cream outline-none transition placeholder:text-muted-deep focus:border-citron/60"
             />
           </div>
         </div>
 
         <div className="mb-6 flex flex-wrap gap-2.5">
-          <button
-            type="button"
-            onClick={() => setCategory(null)}
-            className={`flex h-9 cursor-pointer items-center rounded-full px-[18px] text-[13.5px] transition ${
-              category === null
-                ? 'bg-cream font-semibold text-ink'
-                : 'border border-cream/25 text-cream-soft hover:border-cream/50'
-            }`}
-          >
+          <Chip active={category === null} onClick={() => setCategory(null)}>
             Tous
-          </button>
+          </Chip>
           {categories.map((c) => (
-            <button
-              key={c}
-              type="button"
-              onClick={() => setCategory(c)}
-              className={`flex h-9 cursor-pointer items-center rounded-full px-[18px] text-[13.5px] transition ${
-                category === c
-                  ? 'bg-cream font-semibold text-ink'
-                  : 'border border-cream/25 text-cream-soft hover:border-cream/50'
-              }`}
-            >
+            <Chip key={c} active={category === c} onClick={() => setCategory(c)}>
               {c}
-            </button>
+            </Chip>
           ))}
         </div>
 
         {quizzes.length === 0 ? (
-          <div className="rounded-[28px] bg-card p-10 text-center text-muted">
+          <div className="rounded-xl border border-line bg-card p-10 text-center text-muted">
             {debouncedSearch || category
               ? 'Aucun quiz ne correspond à ta recherche.'
               : "Aucun quiz pour l'instant — reviens bientôt !"}
@@ -164,17 +151,30 @@ export function HomePage() {
             {quizzes.map((quiz, i) => (
               <QuizCard
                 key={quiz.id}
-                quiz={quiz}
-                index={i}
-                busy={busyQuizId === quiz.id}
-                onPlay={() => playQuiz(quiz)}
+                emoji={quiz.emoji}
+                category={quiz.category}
+                title={quiz.title}
+                meta={`${quiz.questionCount} question${quiz.questionCount > 1 ? 's' : ''} · ${formatPlays(quiz.playCount)} partie${quiz.playCount > 1 ? 's' : ''}`}
+                author={quiz.author.username}
+                initials={initials(quiz.author.username)}
+                accent={ACCENTS[i % ACCENTS.length]}
+                action={
+                  <Button
+                    size="compact"
+                    disabled={busyQuizId === quiz.id}
+                    onClick={() => playQuiz(quiz)}
+                    icon={<Icon name="jouer" size={14} />}
+                  >
+                    Jouer
+                  </Button>
+                }
               />
             ))}
           </div>
         )}
       </div>
 
-      <footer className="relative mx-auto flex max-w-[1080px] flex-col gap-3 border-t border-cream/10 pb-10 pt-6 text-[13px] leading-relaxed text-muted sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+      <footer className="relative mx-auto flex max-w-[1080px] flex-col gap-3 border-t border-line pb-10 pt-6 text-sm leading-relaxed text-muted sm:flex-row sm:items-end sm:justify-between sm:gap-8">
         <p>
         Les quiz signés « OpenQuizzDB » proviennent d'
         <a

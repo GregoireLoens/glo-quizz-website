@@ -1,52 +1,40 @@
-import type { QuizSummary } from '../lib/types'
-import { formatPlays, initials } from '../lib/utils'
-import { useMedal } from '../stores/leadersStore'
-import { MedalRing } from './MedalRing'
-
-const ACCENTS = ['#C7F45C', '#9C8DF2', '#F0492E']
+import type { ReactNode } from 'react'
 
 interface Props {
-  quiz: QuizSummary
-  index?: number
-  onPlay?: () => void
-  busy?: boolean
+  emoji: string
+  category: string
+  title: string
+  meta: string
+  author: string
+  initials: string
+  accent?: string
+  action?: ReactNode
 }
 
-export function QuizCard({ quiz, index = 0, onPlay, busy = false }: Props) {
-  const accent = ACCENTS[index % ACCENTS.length]
-  const authorMedal = useMedal(quiz.author.id)
+export function QuizCard({ emoji, category, title, meta, author, initials, accent = 'var(--color-citron)', action }: Props) {
   return (
-    <div className="flex flex-col gap-4 rounded-[28px] bg-card p-6">
-      <div
-        className="flex h-14 w-14 items-center justify-center rounded-[20px] text-[26px]"
-        style={{ background: accent }}
-      >
-        {quiz.emoji}
-      </div>
-      <div className="flex flex-col gap-1">
-        <span className="font-display text-[19px] font-semibold text-cream">{quiz.title}</span>
-        <span className="text-[13px] text-muted">
-          {quiz.questionCount} question{quiz.questionCount > 1 ? 's' : ''} ·{' '}
-          {formatPlays(quiz.playCount)} partie{quiz.playCount > 1 ? 's' : ''}
+    <div className="flex flex-col gap-4 rounded-xl border border-line bg-card p-5 transition-colors hover:bg-card-2">
+      <div className="flex items-center gap-3">
+        <div
+          className="flex h-[52px] w-[52px] flex-none items-center justify-center rounded-md text-[26px]"
+          style={{ background: `color-mix(in oklab, ${accent} 15%, transparent)`, border: `1px solid color-mix(in oklab, ${accent} 30%, transparent)` }}
+        >
+          {emoji}
+        </div>
+        <span className="text-xs font-semibold uppercase tracking-[1.2px]" style={{ color: accent }}>
+          {category}
         </span>
       </div>
-      <div className="mt-auto flex items-center gap-2.5">
-        <MedalRing rank={authorMedal} size="sm" badge={false}>
-          <div className="flex h-[26px] w-[26px] items-center justify-center rounded-full bg-cream/10 text-[11px] font-semibold text-cream">
-            {initials(quiz.author.username)}
-          </div>
-        </MedalRing>
-        <span className="flex-1 text-xs text-muted">{quiz.author.username}</span>
-        <button
-          type="button"
-          onClick={onPlay}
-          disabled={busy}
-          title="Lancer une partie avec ce quiz"
-          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-ink text-base transition hover:brightness-125 disabled:opacity-40"
-          style={{ color: accent }}
-        >
-          ▶
-        </button>
+      <div className="flex flex-col gap-1.5">
+        <span className="font-display text-xl font-semibold text-cream">{title}</span>
+        <span className="text-sm text-muted-soft">{meta}</span>
+      </div>
+      <div className="mt-auto flex items-center gap-2.5 border-t border-line pt-3.5">
+        <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-cream/9 text-xs font-semibold text-cream-soft">
+          {initials}
+        </span>
+        <span className="flex-1 truncate text-sm text-muted">{author}</span>
+        {action}
       </div>
     </div>
   )

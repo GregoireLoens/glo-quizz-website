@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { GlowBackdrop, LOBBY_GLOWS } from '../components/GlowBackdrop'
-import { NavPill } from '../components/NavPill'
-import { PillButton } from '../components/PillButton'
+import { Button } from '../components/Button'
+import { GlowBackdrop } from '../components/GlowBackdrop'
+import { NavBar } from '../components/NavBar'
 import { api, ApiError } from '../lib/api'
 import type { GameInfo } from '../lib/types'
 import { normalizeGameCode } from '../lib/utils'
@@ -50,8 +50,8 @@ export function JoinPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden px-6">
-      <GlowBackdrop glows={LOBBY_GLOWS} />
-      <NavPill />
+      <GlowBackdrop color="var(--color-violet)" x="50%" y="20%" size={680} opacity={0.13} />
+      <NavBar />
 
       <form
         onSubmit={join}
@@ -72,26 +72,25 @@ export function JoinPage() {
           }}
           placeholder="XK4P9Q"
           autoFocus
-          className={`h-16 w-full rounded-full border-[1.5px] bg-card text-center font-display text-3xl font-semibold tracking-[7px] text-cream outline-none transition placeholder:text-muted-deep/50 focus:border-citron/60 sm:h-20 sm:text-4xl sm:tracking-[10px] ${
-            error ? 'border-coral' : 'border-cream/15'
+          className={`h-16 w-full rounded-full border-[1.5px] bg-ink-2 text-center font-display text-[30px] font-semibold tracking-[7px] text-cream outline-none transition placeholder:text-muted-deep/50 focus:border-citron/60 sm:h-20 sm:text-[36px] sm:tracking-[10px] ${
+            error ? 'border-coral' : 'border-line-strong'
           }`}
         />
         {error && <span className="text-center text-[13px] font-medium text-coral">{error}</span>}
 
-        <PillButton type="submit" size="lg" full disabled={busy || code.length < 6}>
+        <Button type="submit" size="hero" full iconRight="→" disabled={busy || code.length < 6}>
           Rejoindre
-          <span className="text-lg">→</span>
-        </PillButton>
+        </Button>
 
         <div className="mt-2 flex items-center gap-3 self-stretch">
-          <div className="h-px flex-1 bg-cream/10" />
+          <div className="h-px flex-1 bg-line" />
           <span className="text-xs uppercase tracking-wider text-muted-deep">ou</span>
-          <div className="h-px flex-1 bg-cream/10" />
+          <div className="h-px flex-1 bg-line" />
         </div>
 
-        <PillButton variant="outline" size="lg" full onClick={createGame} disabled={busy}>
+        <Button variant="contour" size="hero" full onClick={createGame} disabled={busy}>
           Créer un salon
-        </PillButton>
+        </Button>
       </form>
     </div>
   )

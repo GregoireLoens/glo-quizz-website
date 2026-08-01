@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 
-import { Avatar } from '../../components/Avatar'
 import { AnswerCard, type AnswerState } from '../../components/AnswerCard'
-import { CircularTimer } from '../../components/CircularTimer'
-import { PillButton } from '../../components/PillButton'
+import { Avatar } from '../../components/Avatar'
+import { Button } from '../../components/Button'
+import { Timer } from '../../components/Timer'
 import { formatPoints } from '../../lib/utils'
 import { gameSocket } from '../../lib/ws'
 import { useGameStore } from '../../stores/gameStore'
@@ -62,11 +62,11 @@ export function PlayingView() {
 
   const answerState = (index: number): AnswerState => {
     if (isReveal && reveal) {
-      if (index === reveal.correctIndex) return 'correct'
-      if (index === selectedAnswer) return 'wrong'
-      return 'dimmed'
+      if (index === reveal.correctIndex) return 'correcte'
+      if (index === selectedAnswer) return 'fausse'
+      return 'estompee'
     }
-    return index === selectedAnswer ? 'selected' : 'idle'
+    return index === selectedAnswer ? 'choisie' : 'idle'
   }
 
   return (
@@ -105,7 +105,7 @@ export function PlayingView() {
         </div>
         {survival && me && (
           <div className="flex h-11 items-center rounded-full bg-coral/12 px-4">
-            <span className="text-[13px] font-semibold text-coral-soft">
+            <span className="text-[13px] font-semibold text-coral">
               {eliminated ? '💀 Éliminé' : '❤️'.repeat(me.lives)}
             </span>
           </div>
@@ -119,7 +119,7 @@ export function PlayingView() {
             {myResult ? (
               <>
                 <span
-                  className={`font-display text-4xl font-semibold ${myResult.correct ? 'text-citron' : 'text-coral'}`}
+                  className={`font-display text-[36px] font-semibold ${myResult.correct ? 'text-citron' : 'text-coral'}`}
                 >
                   {myResult.correct ? `+${formatPoints(myResult.pointsEarned)}` : '+0'}
                 </span>
@@ -139,9 +139,7 @@ export function PlayingView() {
             )}
           </div>
         ) : (
-          questionStartedAt && (
-            <CircularTimer duration={question.duration} startedAt={questionStartedAt} />
-          )
+          questionStartedAt && <Timer duration={question.duration} startedAt={questionStartedAt} />
         )}
       </div>
 
@@ -168,11 +166,12 @@ export function PlayingView() {
           <AnswerCard
             key={i}
             letter={LETTERS[i]}
-            text={answer}
             state={answerState(i)}
             disabled={locked || isReveal || eliminated}
             onClick={() => select(i)}
-          />
+          >
+            {answer}
+          </AnswerCard>
         ))}
       </div>
 
@@ -190,8 +189,8 @@ export function PlayingView() {
                   : 'Réponse enregistrée dès validation.'}
         </span>
         {!isReveal && !eliminated && (
-          <PillButton
-            variant="cream"
+          <Button
+            variant="contour"
             disabled={selectedAnswer === null || locked}
             onClick={() => {
               if (selectedAnswer !== null) {
@@ -204,7 +203,7 @@ export function PlayingView() {
             }}
           >
             Valider →
-          </PillButton>
+          </Button>
         )}
       </div>
     </div>

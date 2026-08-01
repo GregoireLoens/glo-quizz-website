@@ -1,13 +1,8 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import {
-  GlowBackdrop,
-  GAME_GLOWS,
-  LOBBY_GLOWS,
-  RESULT_GLOWS,
-} from '../components/GlowBackdrop'
-import { PillButton } from '../components/PillButton'
+import { Button } from '../components/Button'
+import { GlowBackdrop } from '../components/GlowBackdrop'
 import { gameSocket } from '../lib/ws'
 import { useGameStore } from '../stores/gameStore'
 import { LobbyView } from './game/LobbyView'
@@ -19,6 +14,13 @@ const END_MESSAGES: Record<string, string> = {
   already_started: 'La partie a déjà commencé sans toi.',
   room_closed: 'Le salon a été fermé pour cause d’inactivité.',
   invalid_token: 'Ta session a expiré — reconnecte-toi.',
+}
+
+const GLOWS: Record<string, { color: string; x: string; y: string; size: number; opacity: number }> = {
+  lobby: { color: 'var(--color-citron)', x: '78%', y: '8%', size: 600, opacity: 0.12 },
+  question: { color: 'var(--color-citron)', x: '50%', y: '0%', size: 760, opacity: 0.12 },
+  reveal: { color: 'var(--color-coral)', x: '50%', y: '2%', size: 700, opacity: 0.1 },
+  finished: { color: 'var(--color-gold)', x: '50%', y: '6%', size: 720, opacity: 0.13 },
 }
 
 export function GamePage() {
@@ -41,16 +43,16 @@ export function GamePage() {
   if (connection === 'ended') {
     return (
       <div className="relative flex min-h-screen flex-col items-center justify-center gap-6 overflow-hidden px-6">
-        <GlowBackdrop glows={LOBBY_GLOWS} />
+        <GlowBackdrop {...GLOWS.lobby} />
         <span className="relative text-[44px]">😕</span>
         <p className="relative max-w-md text-center text-lg text-cream-soft">
           {END_MESSAGES[endReason ?? ''] ?? 'La connexion à la partie a été interrompue.'}
         </p>
         <div className="relative flex flex-wrap justify-center gap-3">
-          <PillButton onClick={() => navigate('/join')}>Rejoindre une autre partie</PillButton>
-          <PillButton variant="outline" onClick={() => navigate('/')}>
+          <Button onClick={() => navigate('/join')}>Rejoindre une autre partie</Button>
+          <Button variant="contour" onClick={() => navigate('/')}>
             Retour à l'accueil
-          </PillButton>
+          </Button>
         </div>
       </div>
     )
@@ -67,11 +69,11 @@ export function GamePage() {
     )
   }
 
-  const glows = phase === 'lobby' ? LOBBY_GLOWS : phase === 'finished' ? RESULT_GLOWS : GAME_GLOWS
+  const glow = GLOWS[phase === 'question' || phase === 'reveal' ? phase : phase === 'finished' ? 'finished' : 'lobby']
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <GlowBackdrop glows={glows} />
+      <GlowBackdrop {...glow} />
       {connection === 'reconnecting' && (
         <div className="fixed left-1/2 top-4 z-50 -translate-x-1/2 rounded-full bg-coral/90 px-5 py-2 text-[13px] font-semibold text-cream">
           Connexion perdue — reconnexion en cours…

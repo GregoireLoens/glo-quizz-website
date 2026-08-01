@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-import { GlowBackdrop, LOBBY_GLOWS } from '../components/GlowBackdrop'
-import { NavPill } from '../components/NavPill'
-import { PillButton } from '../components/PillButton'
-import { PillInput } from '../components/PillInput'
+import { Button } from '../components/Button'
+import { Field } from '../components/Field'
+import { GlowBackdrop } from '../components/GlowBackdrop'
+import { NavBar } from '../components/NavBar'
 import { api, ApiError } from '../lib/api'
 import type { AuthResponse } from '../lib/types'
 import { formatUserCodeInput } from '../lib/utils'
@@ -43,8 +43,8 @@ export function LoginPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden px-6">
-      <GlowBackdrop glows={LOBBY_GLOWS} />
-      <NavPill variant="auth" />
+      <GlowBackdrop color="var(--color-violet)" x="50%" y="10%" size={680} opacity={0.13} />
+      <NavBar variant="auth" />
 
       <form
         onSubmit={submit}
@@ -58,7 +58,7 @@ export function LoginPage() {
         </p>
 
         <div className="mt-2 flex w-full flex-col gap-[22px]">
-          <PillInput
+          <Field
             label="Pseudo"
             placeholder="FalconRouge92"
             value={username}
@@ -67,7 +67,7 @@ export function LoginPage() {
             autoFocus
             maxLength={20}
           />
-          <PillInput
+          <Field
             label="Code unique"
             placeholder="7F3K-9QRT"
             value={code}
@@ -77,15 +77,15 @@ export function LoginPage() {
           />
         </div>
 
-        <PillButton
+        <Button
           type="submit"
-          size="lg"
+          size="hero"
           full
+          iconRight="→"
           disabled={loading || username.trim().length < 3 || code.replace('-', '').length < 8}
         >
           {loading ? 'Connexion…' : 'Se connecter'}
-          <span className="text-lg">→</span>
-        </PillButton>
+        </Button>
 
         <span className="mt-1 text-center text-[12.5px] leading-[18px] text-muted">
           Code oublié ? Il n'y a aucun moyen de le récupérer.
