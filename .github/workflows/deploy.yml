@@ -1,0 +1,40 @@
+name: Déploiement prod
+
+# Déclenché uniquement par un tag de version, conformément à la règle « demander
+# la version à glo avant chaque déploiement » : le tag matérialise cet accord.
+# Un push sur main ne déploie donc rien.
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    name: Déclenche le déploiement Coolify
+    runs-on: ubuntu-latest
+    steps:
+      # Le dashboard Coolify n'est pas exposé sur Internet (port 8000 fermé au
+      # public). On passe donc par SSH : la clé est verrouillée côté serveur sur
+      # /usr/local/sbin/trigger-midi-quizz-deploy.sh via command="…" dans
+      # authorized_keys — elle ne donne ni shell, ni forwarding, ni PTY.
+      - name: Installe la clé de déploiement
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.VPS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.VPS_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Déclenche le déploiement
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              -o IdentitiesOnly=yes \
+              -o BatchMode=yes \
+              -o ConnectTimeout=15 \
+              debian@217.182.65.235
+
+      # Coolify construit la branche configurée (main), pas le contenu du tag :
+      # ce workflow n'est correct que si le tag est posé sur main, ce qui est la
+      # procédure en vigueur (bump APP_VERSION, commit, tag, push, déploiement).
+      - name: Rappel
+        run: echo "Déploiement demandé pour ${{ github.ref_name }} — suivi dans Coolify."
