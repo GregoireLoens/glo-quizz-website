@@ -54,9 +54,18 @@ docker compose restart client                      # après modification de pack
 
 ## Déploiement (fait le 21/07/2026)
 
-Prod : **https://midi-quizz.glocorp.fr** (basculé depuis gloens.fr le 01/08/2026, coupure nette — decision glo) — VPS OVH, reverse proxy **Traefik v3** existant (TLS Let's Encrypt, routage par labels Docker, réseau externe `n8n_default`), domaine proxifié Cloudflare. Un seul conteneur `midi-quizz` (image multi-stage : build client → uvicorn 1 worker qui sert API + WS + SPA via `STATIC_DIR`). Tout est dans **`deploy/` (gitignoré**, contient secrets et notes VPS) : `Dockerfile`, `docker-compose.prod.yml`, `deploy.sh` (redéploiement = `./deploy/deploy.sh`, sync tar-over-ssh + build), `.env` (`SECRET_KEY` — ne jamais régénérer), et l'état des lieux complet `01-etat-des-lieux-vps.md`. En prod : `DOCS_ENABLED=0` (pas de `/docs`). Backup SQLite (`VACUUM INTO`) : pas encore de cron.
+Prod : **https://midi-quizz.glocorp.fr** (basculé depuis gloens.fr le 01/08/2026, coupure nette — decision glo) — VPS OVH, domaine proxifié Cloudflare. Un seul conteneur (image multi-stage : build client → uvicorn 1 worker qui sert API + WS + SPA via `STATIC_DIR`). En prod : `DOCS_ENABLED=0` (pas de `/docs`). Backup SQLite (`VACUUM INTO`) : pas encore de cron.
 
-**Demander la version à glo avant CHAQUE déploiement** (consigne du 28/07/2026) — avant de lancer `./deploy/deploy.sh`, jamais après. Lui proposer le numéro visé (ex. `0.2` pour une fonctionnalité, `0.1.1` pour un correctif) ou le maintien de la version courante s'il s'agit d'un simple redéploiement ; c'est **lui** qui tranche, ne pas décider seul. S'il y a bump : mettre à jour `APP_VERSION` (`client/src/lib/version.ts`), commiter, poser le tag annoté et le pousser, **puis** déployer — dans cet ordre, pour que le tag pointe exactement sur ce qui tourne en prod.
+**Depuis le 03/08/2026 le déploiement est géré par Coolify** — le Traefik monté à la main dans la stack n8n a disparu avec elle, ainsi que le réseau `n8n_default` :
+- `deploy/Dockerfile` et `deploy/docker-compose.prod.yml` sont désormais **versionnés** : Coolify construit depuis GitHub et doit y accéder. Restent gitignorés `deploy/.env` et les notes VPS.
+- `SECRET_KEY` vit dans les variables d'environnement Coolify (**ne jamais la régénérer**). La base SQLite est sur un volume Coolify monté sur `/data`.
+- **Le routage ET les headers de sécurité sont dans les « custom labels » de l'application Coolify**, plus dans le compose. Piège : ces labels **remplacent** ceux que Coolify génère — ils doivent donc inclure aussi `traefik.enable`, les routers, les règles de host et les services. En oublier un met le site en 404 (constaté lors de la migration).
+- TLS : **certificat d'origine Cloudflare** (expire le 30/07/2041) posé dans `/data/coolify/proxy/dynamic/`, sans ACME — Let's Encrypt ne peut pas aboutir derrière le proxy Cloudflare.
+- Le dashboard Coolify n'est **pas exposé** (port 8000 fermé au public) : passer par un tunnel SSH `ssh -L 8000:localhost:8000 -L 6001:localhost:6001 -L 6002:localhost:6002 -i ~/.ssh/vps debian@217.182.65.235`.
+
+**Déployer = pousser un tag `v*`** : `.github/workflows/deploy.yml` déclenche Coolify via SSH. Coolify construit la branche `main`, le tag doit donc être posé dessus.
+
+**Demander la version à glo avant CHAQUE déploiement** (consigne du 28/07/2026) — avant de pousser le tag, jamais après. Lui proposer le numéro visé (ex. `0.2` pour une fonctionnalité, `0.1.1` pour un correctif) ou le maintien de la version courante s'il s'agit d'un simple redéploiement ; c'est **lui** qui tranche, ne pas décider seul. S'il y a bump : mettre à jour `APP_VERSION` (`client/src/lib/version.ts`), commiter, poser le tag annoté et le pousser, **puis** déployer — dans cet ordre, pour que le tag pointe exactement sur ce qui tourne en prod.
 
 ## Divers
 
