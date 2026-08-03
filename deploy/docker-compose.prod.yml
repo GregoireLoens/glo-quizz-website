@@ -1,0 +1,38 @@
+# Déploiement prod Midi Quizz — géré par Coolify.
+#
+# Coolify build ce compose depuis le dépôt GitHub et se charge lui-même du
+# routage : le domaine (midi-quizz.glocorp.fr), le TLS et les labels Traefik de
+# routing sont configurés côté Coolify, pas ici. D'où l'absence de labels
+# `traefik.http.routers.*` et de réseau externe, qui étaient nécessaires du temps
+# du Traefik monté à la main via la stack n8n.
+#
+# SECRET_KEY est fourni par les variables d'environnement Coolify (jamais
+# versionnée) — elle signe les tokens itsdangerous : NE PAS la régénérer, ça
+# invaliderait toutes les sessions en cours.
+name: midi-quizz
+services:
+  midi-quizz:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: midi-quizz:latest
+    container_name: midi-quizz
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - SECRET_KEY=${SECRET_KEY:?SECRET_KEY manquant (variables Coolify)}
+      - DB_PATH=/data/quizz.db
+      - STATIC_DIR=/app/static
+      - DOCS_ENABLED=0
+    # Un seul worker uvicorn : l'état des parties vit en mémoire.
+    expose:
+      - "8000"
+    volumes:
+      - midi_quizz_db:/data
+
+volumes:
+  midi_quizz_db:

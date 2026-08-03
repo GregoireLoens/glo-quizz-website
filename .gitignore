@@ -7,6 +7,9 @@ server/data/
 .env
 changelog.md
 
-# Déploiement — local, non versionné (contient secrets + notes VPS)
+# Déploiement — le Dockerfile et le compose sont versionnés : Coolify build
+# depuis GitHub et a besoin d'y accéder. Le reste (secrets, notes VPS) non.
 vps-pass.txt
-deploy/
+deploy/.env
+deploy/*.md
+deploy/deploy.sh
