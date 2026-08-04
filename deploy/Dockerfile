@@ -16,6 +16,7 @@ COPY server/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY server/app ./app
 COPY server/openquizzdb ./openquizzdb
+COPY server/quiz_maison ./quiz_maison
 COPY --from=client-build /client/dist ./static
 ENV STATIC_DIR=/app/static \
     DB_PATH=/data/quizz.db \

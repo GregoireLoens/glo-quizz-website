@@ -24,6 +24,7 @@ CATEGORIES = [
     "Nature",
     "People",
     "High-tech",
+    "Manga & Anime",
 ]
 
 # Alphabet sans caractères ambigus (pas de O/0, I/1/L)
