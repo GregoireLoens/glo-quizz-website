@@ -1,0 +1,6053 @@
+{
+  "response_code": 0,
+  "results": [
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle entreprise a lancé la première console PlayStation en 1994 ?",
+      "correct_answer": "Sony",
+      "incorrect_answers": [
+        "Nintendo",
+        "Sega",
+        "Microsoft"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En 2017, Nintendo a lancé une console hybride, à la fois portable et de salon. Quel est son nom ?",
+      "correct_answer": "Nintendo Switch",
+      "incorrect_answers": [
+        "Wii U",
+        "Nintendo 3DS",
+        "GameCube"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Qui est le créateur du personnage de Mario ?",
+      "correct_answer": "Shigeru Miyamoto",
+      "incorrect_answers": [
+        "Hideo Kojima",
+        "Satoru Iwata",
+        "Gabe Newell"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel éditeur japonais développe la série \"Metal Gear Solid\", créée par Hideo Kojima ?",
+      "correct_answer": "Konami",
+      "incorrect_answers": [
+        "Capcom",
+        "Square Enix",
+        "Sega"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du moteur de jeu créé par l'entreprise Epic Games ?",
+      "correct_answer": "Unreal Engine",
+      "incorrect_answers": [
+        "CryEngine",
+        "Frostbite",
+        "id Tech"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle entreprise a lancé sa première console de jeu, la Xbox, en 2001 ?",
+      "correct_answer": "Microsoft",
+      "incorrect_answers": [
+        "Sony",
+        "Nintendo",
+        "Sega"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Sur quelle console est sorti le jeu \"Super Mario Bros.\" en 1985 ?",
+      "correct_answer": "NES (Nintendo Entertainment System)",
+      "incorrect_answers": [
+        "Super Nintendo",
+        "Game Boy",
+        "Sega Master System"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Qui est l'animateur et créateur de la cérémonie \"The Game Awards\" ?",
+      "correct_answer": "Geoff Keighley",
+      "incorrect_answers": [
+        "Hideo Kojima",
+        "Reggie Fils-Aimé",
+        "Shigeru Miyamoto"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Qui a inventé le jeu \"Tetris\" en 1984 ?",
+      "correct_answer": "Alexey Pajitnov",
+      "incorrect_answers": [
+        "Toru Iwatani",
+        "Shigeru Miyamoto",
+        "Sid Meier"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio français, fondé en 1986 par les frères Guillemot, est notamment connu pour la série \"Assassin's Creed\" ?",
+      "correct_answer": "Ubisoft",
+      "incorrect_answers": [
+        "Quantic Dream",
+        "Dontnod Entertainment",
+        "Asobo Studio"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel éditeur détient la franchise \"Call of Duty\" ?",
+      "correct_answer": "Activision",
+      "incorrect_answers": [
+        "Electronic Arts",
+        "Ubisoft",
+        "Take-Two Interactive"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio américain a développé la série \"Grand Theft Auto\" ?",
+      "correct_answer": "Rockstar Games",
+      "incorrect_answers": [
+        "Electronic Arts",
+        "Bethesda Game Studios",
+        "Ubisoft"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du créateur suédois du jeu \"Minecraft\", surnommé \"Notch\" ?",
+      "correct_answer": "Markus Persson",
+      "incorrect_answers": [
+        "Gabe Newell",
+        "Tim Sweeney",
+        "John Carmack"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle entreprise édite les franchises \"The Elder Scrolls\" et \"Fallout\" ?",
+      "correct_answer": "Bethesda Softworks",
+      "incorrect_answers": [
+        "Electronic Arts",
+        "Ubisoft",
+        "2K Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année la Nintendo Entertainment System (NES) est-elle sortie en Amérique du Nord ?",
+      "correct_answer": "1985",
+      "incorrect_answers": [
+        "1983",
+        "1987",
+        "1989"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle entreprise a développé la console Dreamcast, sortie en 1998 ?",
+      "correct_answer": "Sega",
+      "incorrect_answers": [
+        "Atari",
+        "NEC",
+        "Nintendo"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel ingénieur est surnommé le \"père de la PlayStation\" pour son rôle central dans sa conception chez Sony ?",
+      "correct_answer": "Ken Kutaragi",
+      "incorrect_answers": [
+        "Hiroshi Yamauchi",
+        "Gabe Newell",
+        "Satoru Iwata"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Gabe Newell a cofondé Valve en 1996 après avoir quitté quelle entreprise ?",
+      "correct_answer": "Microsoft",
+      "incorrect_answers": [
+        "Atari",
+        "IBM",
+        "Apple"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel jeu développé par id Software et sorti en 1993 est considéré comme un tournant majeur pour le genre du jeu de tir à la première personne ?",
+      "correct_answer": "Doom",
+      "incorrect_answers": [
+        "Quake",
+        "Wolfenstein 3D",
+        "Half-Life"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle entreprise, fondée en 1979 par d'anciens employés d'Atari, est considérée comme le tout premier éditeur tiers de jeux vidéo ?",
+      "correct_answer": "Activision",
+      "incorrect_answers": [
+        "Electronic Arts",
+        "THQ",
+        "Konami"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel moteur de jeu a été développé par Unity Technologies, entreprise fondée au Danemark en 2004 ?",
+      "correct_answer": "Unity",
+      "incorrect_answers": [
+        "Godot",
+        "GameMaker",
+        "Source"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année s'est produit le krach du jeu vidéo qui a durement frappé le marché nord-américain ?",
+      "correct_answer": "1983",
+      "incorrect_answers": [
+        "1977",
+        "1985",
+        "1991"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dans le jeu \"Donkey Kong\" sorti en 1981, sous quel nom le personnage devenu Mario apparaissait-il à l'origine ?",
+      "correct_answer": "Jumpman",
+      "incorrect_answers": [
+        "Luigi",
+        "Wario",
+        "Pauline"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle entreprise japonaise, fondée en 1889 à Kyoto, fabriquait à l'origine des cartes à jouer \"hanafuda\" avant de devenir un géant du jeu vidéo ?",
+      "correct_answer": "Nintendo",
+      "incorrect_answers": [
+        "Sega",
+        "Bandai",
+        "Konami"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel jeu d'arcade, créé par Toru Iwatani, a été publié par Namco en 1980 ?",
+      "correct_answer": "Pac-Man",
+      "incorrect_answers": [
+        "Donkey Kong",
+        "Space Invaders",
+        "Galaga"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Activision Blizzard est né en 2008 de la fusion d'Activision avec quelle entreprise, propriétaire de Blizzard Entertainment ?",
+      "correct_answer": "Vivendi Games",
+      "incorrect_answers": [
+        "Sierra Entertainment",
+        "Electronic Arts",
+        "Sony Online Entertainment"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel salon professionnel du jeu vidéo, créé en 1995 à Los Angeles, a définitivement cessé d'exister en 2023 ?",
+      "correct_answer": "E3 (Electronic Entertainment Expo)",
+      "incorrect_answers": [
+        "Gamescom",
+        "PAX",
+        "Tokyo Game Show"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle console portable de Nintendo, sortie en 1989 et conçue par Gunpei Yokoi, s'est vendue à des dizaines de millions d'exemplaires ?",
+      "correct_answer": "Game Boy",
+      "incorrect_answers": [
+        "Game Gear",
+        "Game Boy Advance",
+        "Atari Lynx"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel cofondateur d'id Software a coconçu les jeux \"Doom\" et \"Quake\" aux côtés de John Carmack ?",
+      "correct_answer": "John Romero",
+      "incorrect_answers": [
+        "Tom Hall",
+        "Adrian Carmack",
+        "Sandy Petersen"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel studio britannique, fondé par le concepteur Peter Molyneux, a développé la série \"Fable\" ?",
+      "correct_answer": "Lionhead Studios",
+      "incorrect_answers": [
+        "Bullfrog Productions",
+        "Rare",
+        "Codemasters"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel studio, filiale d'Electronic Arts, a développé le moteur de jeu \"Frostbite\", utilisé notamment pour la série \"Battlefield\" ?",
+      "correct_answer": "DICE",
+      "incorrect_answers": [
+        "Crytek",
+        "id Software",
+        "Epic Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Qui a programmé le jeu \"Pong\" en 1972 pour Atari, sous la direction de Nolan Bushnell ?",
+      "correct_answer": "Allan Alcorn",
+      "incorrect_answers": [
+        "Ralph Baer",
+        "Ted Dabney",
+        "Steve Wozniak"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle console, sortie en 1972 et conçue par Ralph Baer, est considérée comme la toute première console de jeu vidéo domestique ?",
+      "correct_answer": "Magnavox Odyssey",
+      "incorrect_answers": [
+        "Atari 2600",
+        "Fairchild Channel F",
+        "Coleco Telstar"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle année Square et Enix ont-ils fusionné pour former Square Enix ?",
+      "correct_answer": "2003",
+      "incorrect_answers": [
+        "2000",
+        "2005",
+        "2008"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel jeu, sorti en 1991 chez Sega, a été conçu par Yuji Naka et a donné naissance à la mascotte de l'entreprise ?",
+      "correct_answer": "Sonic the Hedgehog",
+      "incorrect_answers": [
+        "Alex Kidd",
+        "Ristar",
+        "NiGHTS into Dreams"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle entreprise allemande a développé le moteur de jeu \"CryEngine\", utilisé pour la série \"Crysis\" ?",
+      "correct_answer": "Crytek",
+      "incorrect_answers": [
+        "DICE",
+        "Epic Games",
+        "id Software"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel jeu, développé par id Software et sorti en 1996 sous la direction de John Carmack, a marqué une avancée majeure dans le rendu 3D en temps réel ?",
+      "correct_answer": "Quake",
+      "incorrect_answers": [
+        "Duke Nukem 3D",
+        "Unreal",
+        "Half-Life"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Le jeu \"Civilization\", conçu par Sid Meier et sorti en 1991, a été publié par quel éditeur ?",
+      "correct_answer": "MicroProse",
+      "incorrect_answers": [
+        "Firaxis Games",
+        "Maxis",
+        "Electronic Arts"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel président de Nintendo, ancien programmeur chez HAL Laboratory, est décédé en fonction en 2015 ?",
+      "correct_answer": "Satoru Iwata",
+      "incorrect_answers": [
+        "Hiroshi Yamauchi",
+        "Reggie Fils-Aimé",
+        "Genyo Takeda"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En 2021, Microsoft a finalisé le rachat de quelle société, propriétaire de Bethesda et id Software, pour environ 7,5 milliards de dollars ?",
+      "correct_answer": "ZeniMax Media",
+      "incorrect_answers": [
+        "Activision Blizzard",
+        "Take-Two Interactive",
+        "Electronic Arts"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel studio japonais, dirigé par Kazunori Yamauchi, développe la série de jeux de course \"Gran Turismo\" ?",
+      "correct_answer": "Polyphony Digital",
+      "incorrect_answers": [
+        "Turn 10 Studios",
+        "Codemasters",
+        "Sega Racing Studio"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Histoire & Culture générale",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel jeu, développé par le studio cofondé par Gabe Newell et sorti en 1998, est considéré comme une référence du jeu de tir narratif ?",
+      "correct_answer": "Half-Life",
+      "incorrect_answers": [
+        "Portal",
+        "Team Fortress Classic",
+        "Counter-Strike"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Qui est le créateur de la série Super Mario ?",
+      "correct_answer": "Shigeru Miyamoto",
+      "incorrect_answers": [
+        "Masahiro Sakurai",
+        "Satoru Iwata",
+        "Eiji Aonuma"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le métier officiel de Mario, exercé avant de devenir un héros ?",
+      "correct_answer": "Plombier",
+      "incorrect_answers": [
+        "Charpentier",
+        "Maçon",
+        "Électricien"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment s'appelle le frère de Mario ?",
+      "correct_answer": "Luigi",
+      "incorrect_answers": [
+        "Wario",
+        "Toad",
+        "Yoshi"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle princesse Mario doit-il généralement délivrer dans les jeux Super Mario Bros. ?",
+      "correct_answer": "La princesse Peach",
+      "incorrect_answers": [
+        "La princesse Daisy",
+        "La princesse Zelda",
+        "La princesse Rosalina"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Qui est le principal antagoniste de la série Mario, roi des Koopas ?",
+      "correct_answer": "Bowser",
+      "incorrect_answers": [
+        "Bowser Jr.",
+        "King K. Rool",
+        "Wario"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel power-up permet à Mario de lancer des boules de feu ?",
+      "correct_answer": "La Fleur de feu",
+      "incorrect_answers": [
+        "Le Super Champignon",
+        "L'Étoile",
+        "La Super Feuille"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel objet rend Mario invincible pendant une courte durée ?",
+      "correct_answer": "L'Étoile",
+      "incorrect_answers": [
+        "Le Champignon 1-Up",
+        "La Fleur de feu",
+        "La Carapace bleue"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du chapeau vivant qui accompagne Mario dans Super Mario Odyssey ?",
+      "correct_answer": "Cappy",
+      "incorrect_answers": [
+        "Tiara",
+        "Broode",
+        "Topper"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "De quelle couleur est Yoshi lors de sa toute première apparition dans Super Mario World ?",
+      "correct_answer": "Vert",
+      "incorrect_answers": [
+        "Rouge",
+        "Bleu",
+        "Jaune"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le métier de Luigi dans la série de jeux Luigi's Mansion ?",
+      "correct_answer": "Chasseur de fantômes",
+      "incorrect_answers": [
+        "Plombier",
+        "Chercheur d'or",
+        "Explorateur"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Sur quelle console Super Mario 64 est-il sorti à l'origine ?",
+      "correct_answer": "Nintendo 64",
+      "incorrect_answers": [
+        "Super Nintendo",
+        "GameCube",
+        "Nintendo DS"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment s'appelle le vaisseau pilotable par Mario dans Super Mario Odyssey ?",
+      "correct_answer": "L'Odyssey",
+      "incorrect_answers": [
+        "Le Comète",
+        "Le Champignon Express",
+        "L'Étoile Filante"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dans Super Mario Bros. 3, quel power-up donne à Mario des oreilles et une queue de raton laveur ?",
+      "correct_answer": "La Super Feuille",
+      "incorrect_answers": [
+        "La Fleur de feu",
+        "Le Champignon Poison",
+        "La Carapace verte"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel power-up donne à Mario des oreilles de chat et la capacité de grimper aux surfaces dans Super Mario 3D World ?",
+      "correct_answer": "La Super Cloche",
+      "incorrect_answers": [
+        "La Super Feuille",
+        "La Fleur de feu",
+        "Le Champignon Doré"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Sur quelle console est sorti le tout premier jeu Mario Kart, Super Mario Kart ?",
+      "correct_answer": "Super Nintendo (SNES)",
+      "incorrect_answers": [
+        "Nintendo 64",
+        "NES",
+        "Game Boy"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment s'appelle le circuit étoilé et sans barrières de sécurité, présent dans presque tous les jeux Mario Kart ?",
+      "correct_answer": "Circuit Arc-en-ciel (Rainbow Road)",
+      "incorrect_answers": [
+        "Circuit Bowser",
+        "Circuit Champignon",
+        "Circuit Étoile"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel personnage capture Pauline au sommet d'un chantier dans le jeu d'arcade Donkey Kong sorti en 1981 ?",
+      "correct_answer": "Donkey Kong",
+      "incorrect_answers": [
+        "Bowser",
+        "King K. Rool",
+        "un Kremling"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment s'appelle le jeune singe, fidèle compagnon d'aventure de Donkey Kong ?",
+      "correct_answer": "Diddy Kong",
+      "incorrect_answers": [
+        "Dixie Kong",
+        "Funky Kong",
+        "Cranky Kong"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle année le jeu Super Mario Bros. est-il sorti au Japon ?",
+      "correct_answer": "1985",
+      "incorrect_answers": [
+        "1983",
+        "1987",
+        "1990"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Sur quelle console est sorti le tout premier jeu Mario Party, en 1998 ?",
+      "correct_answer": "Nintendo 64",
+      "incorrect_answers": [
+        "PlayStation",
+        "Super Nintendo",
+        "Game Boy Color"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment s'appelle l'aspirateur à fantômes utilisé par Luigi dans la série Luigi's Mansion ?",
+      "correct_answer": "Le Poltergust",
+      "incorrect_answers": [
+        "Le Spectroscope",
+        "L'Ectoblaster",
+        "Le Fantomatic"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Combien d'étoiles de puissance faut-il collecter au minimum pour affronter Bowser dans le niveau final de Super Mario 64 ?",
+      "correct_answer": "70",
+      "incorrect_answers": [
+        "50",
+        "100",
+        "120"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom du professeur excentrique qui équipe Luigi dans la série Luigi's Mansion ?",
+      "correct_answer": "Professeur K. Tastroff (E. Gadd)",
+      "incorrect_answers": [
+        "Professeur Champignon",
+        "Professeur Koopa",
+        "Docteur Mario"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle année le tout premier jeu Luigi's Mansion est-il sorti sur GameCube ?",
+      "correct_answer": "2001",
+      "incorrect_answers": [
+        "1999",
+        "2004",
+        "2013"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom du roi des Kremlings, principal antagoniste de la série Donkey Kong Country ?",
+      "correct_answer": "King K. Rool",
+      "incorrect_answers": [
+        "King Boo",
+        "Bowser Jr.",
+        "Kaptain Skurvy"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel studio britannique a développé le jeu original Donkey Kong Country, sorti en 1994 ?",
+      "correct_answer": "Rare",
+      "incorrect_answers": [
+        "HAL Laboratory",
+        "Retro Studios",
+        "Intelligent Systems"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Combien de joueurs peuvent participer simultanément à une course en local dans Mario Kart 8 Deluxe ?",
+      "correct_answer": "12",
+      "incorrect_answers": [
+        "8",
+        "10",
+        "16"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment s'appelle la petite amie de Diddy Kong, jouable notamment dans Donkey Kong Country 2 ?",
+      "correct_answer": "Dixie Kong",
+      "incorrect_answers": [
+        "Candy Kong",
+        "Tiny Kong",
+        "Wrinkly Kong"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "De quelle couleur est la peau de Kirby ?",
+      "correct_answer": "Rose",
+      "incorrect_answers": [
+        "Blanc",
+        "Bleu",
+        "Jaune"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment Kirby absorbe-t-il généralement ses ennemis pour copier leurs pouvoirs ?",
+      "correct_answer": "En les aspirant",
+      "incorrect_answers": [
+        "En leur sautant dessus",
+        "En les frappant avec une épée",
+        "En leur lançant une étoile"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du chevalier masqué à l'épée, rival récurrent de Kirby ?",
+      "correct_answer": "Meta Knight",
+      "incorrect_answers": [
+        "Le Roi Dadidou",
+        "Waddle Dee",
+        "Bandana Waddle Dee"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel roi glouton et égoïste, souverain autoproclamé de Dream Land, est le rival comique de Kirby ?",
+      "correct_answer": "Le Roi Dadidou (King Dedede)",
+      "incorrect_answers": [
+        "Meta Knight",
+        "Waddle Dee",
+        "Kracko"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Sur quelle planète vit Kirby ?",
+      "correct_answer": "Popstar",
+      "incorrect_answers": [
+        "Mushroom Kingdom",
+        "Zebes",
+        "Hyrule"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel pouvoir de copie Kirby obtient-il en avalant un ennemi armé d'une épée ?",
+      "correct_answer": "Le pouvoir Épée",
+      "incorrect_answers": [
+        "Le pouvoir Marteau",
+        "Le pouvoir Glace",
+        "Le pouvoir Feu"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Sur quelle console est sorti le tout premier jeu Kirby, Kirby's Dream Land ?",
+      "correct_answer": "Game Boy",
+      "incorrect_answers": [
+        "NES",
+        "Super Nintendo",
+        "Game Boy Advance"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Qui est le créateur de la série Kirby ?",
+      "correct_answer": "Masahiro Sakurai",
+      "incorrect_answers": [
+        "Shigeru Miyamoto",
+        "Satoru Iwata",
+        "Takashi Tezuka"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel pouvoir de copie permet à Kirby de geler ses adversaires ?",
+      "correct_answer": "Le pouvoir Glace",
+      "incorrect_answers": [
+        "Le pouvoir Épée",
+        "Le pouvoir Marteau",
+        "Le pouvoir Ciseaux"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio japonais développe la série Kirby depuis ses débuts ?",
+      "correct_answer": "HAL Laboratory",
+      "incorrect_answers": [
+        "Intelligent Systems",
+        "Game Freak",
+        "Retro Studios"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment s'appelle le vaisseau de guerre volant piloté par Meta Knight ?",
+      "correct_answer": "Le Halberd",
+      "incorrect_answers": [
+        "L'Odyssey",
+        "La Grande Étoile",
+        "Le Starcutter"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Sur quelle console est sorti Kirby 64 : The Crystal Shards ?",
+      "correct_answer": "Nintendo 64",
+      "incorrect_answers": [
+        "Game Boy Color",
+        "GameCube",
+        "Super Nintendo"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans quel jeu Kirby est-il transformé en pelote de laine ?",
+      "correct_answer": "Kirby's Epic Yarn",
+      "incorrect_answers": [
+        "Kirby et le Monde Oublié",
+        "Kirby Star Allies",
+        "Kirby's Return to Dream Land"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Nintendo (Mario & Kirby)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment s'appelle l'étoile que Kirby utilise comme moyen de transport rapide ?",
+      "correct_answer": "L'Étoile Warp (Warp Star)",
+      "incorrect_answers": [
+        "L'Étoile de Puissance",
+        "La Comète Filante",
+        "L'Astronef"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du héros principal de la série The Legend of Zelda ?",
+      "correct_answer": "Link",
+      "incorrect_answers": [
+        "Zelda",
+        "Ganondorf",
+        "Impa"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Dans quel royaume se déroulent la plupart des aventures de la série The Legend of Zelda ?",
+      "correct_answer": "Hyrule",
+      "incorrect_answers": [
+        "Termina",
+        "Lorule",
+        "Koholint"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom de l'ennemi juré de Link, principal antagoniste de la série ?",
+      "correct_answer": "Ganon",
+      "incorrect_answers": [
+        "Vaati",
+        "Zant",
+        "Demise"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le titre du tout premier jeu de la série The Legend of Zelda ?",
+      "correct_answer": "The Legend of Zelda",
+      "incorrect_answers": [
+        "Zelda II: The Adventure of Link",
+        "A Link to the Past",
+        "Link's Awakening"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle entreprise développe et édite la série The Legend of Zelda ?",
+      "correct_answer": "Nintendo",
+      "incorrect_answers": [
+        "Game Freak",
+        "Capcom",
+        "Square Enix"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment s'appelle la fée qui accompagne Link tout au long d'Ocarina of Time ?",
+      "correct_answer": "Navi",
+      "incorrect_answers": [
+        "Tatl",
+        "Fi",
+        "Ciela"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel objet magique permet à Link de voyager entre le passé et le futur dans Ocarina of Time ?",
+      "correct_answer": "L'Ocarina du Temps",
+      "incorrect_answers": [
+        "La Flûte des Oiseaux",
+        "Le Sablier du Temps",
+        "La Baguette de Sagesse"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Combien de pierres spirituelles Link doit-il rassembler dans Ocarina of Time pour ouvrir la Porte du Temps ?",
+      "correct_answer": "Trois",
+      "incorrect_answers": [
+        "Deux",
+        "Quatre",
+        "Cinq"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment s'appelle, en français, l'épée légendaire que seul un héros au cœur pur peut manier pour repousser le mal ?",
+      "correct_answer": "L'Épée de Légende",
+      "incorrect_answers": [
+        "L'Épée Biggoron",
+        "L'Épée Kokiri",
+        "La Lame des Ténèbres"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment s'appelle le lieu où Link se réveille au début de Breath of the Wild, après cent ans de sommeil ?",
+      "correct_answer": "Le Sanctuaire de la Résurrection",
+      "incorrect_answers": [
+        "Le Temple du Temps",
+        "Le Sanctuaire de Cristal",
+        "La Tour d'Hyrule"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dans Breath of the Wild, combien de Bêtes Divines Link doit-il libérer avant d'affronter Ganon ?",
+      "correct_answer": "Quatre",
+      "incorrect_answers": [
+        "Trois",
+        "Cinq",
+        "Deux"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dans quel jeu la princesse Zelda se déguise-t-elle en ninja sous le nom de Sheik ?",
+      "correct_answer": "Ocarina of Time",
+      "incorrect_answers": [
+        "Twilight Princess",
+        "Skyward Sword",
+        "Breath of the Wild"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment appelle-t-on la vaste zone souterraine explorable sous Hyrule dans Tears of the Kingdom ?",
+      "correct_answer": "Les Profondeurs",
+      "incorrect_answers": [
+        "Les Abysses",
+        "Le Royaume Obscur",
+        "Les Terres Perdues"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment appelle-t-on les zones flottantes situées au-dessus d'Hyrule dans Tears of the Kingdom ?",
+      "correct_answer": "Les Îles Célestes",
+      "incorrect_answers": [
+        "Les Terres Perdues",
+        "Le Royaume Céleste",
+        "Les Cieux Sacrés"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle créature la princesse Zelda se transforme-t-elle après avoir voyagé dans le passé, dans Tears of the Kingdom ?",
+      "correct_answer": "Un dragon",
+      "incorrect_answers": [
+        "Un phénix",
+        "Une licorne",
+        "Une fée géante"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quels sont les trois éléments symbolisés par les triangles dorés de la Triforce ?",
+      "correct_answer": "La Force, la Sagesse et le Courage",
+      "incorrect_answers": [
+        "La Force, la Magie et la Vitesse",
+        "Le Courage, l'Intelligence et la Force",
+        "La Sagesse, la Puissance et la Vitesse"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans Ocarina of Time, quel Goron devient l'un des sages en tant que Sage du Feu ?",
+      "correct_answer": "Darunia",
+      "incorrect_answers": [
+        "Ruto",
+        "Impa",
+        "Nabooru"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : The Legend of Zelda",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans Ocarina of Time, quelle princesse Gerudo devient la Sage de l'Esprit ?",
+      "correct_answer": "Nabooru",
+      "incorrect_answers": [
+        "Impa",
+        "Ruto",
+        "Saria"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Metroid",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom de la chasseuse de primes héroïne de la série Metroid ?",
+      "correct_answer": "Samus Aran",
+      "incorrect_answers": [
+        "Anthony Higgs",
+        "Sylux",
+        "Gandrayda"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Metroid",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle race extraterrestre ancienne a créé la combinaison de puissance portée par Samus Aran ?",
+      "correct_answer": "Les Chozo",
+      "incorrect_answers": [
+        "Les Pirates de l'Espace",
+        "Les Luminoth",
+        "Les Ing"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Metroid",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Sur quelle console le tout premier jeu Metroid est-il sorti en Occident ?",
+      "correct_answer": "La NES",
+      "incorrect_answers": [
+        "La Super Nintendo",
+        "La Game Boy",
+        "La Nintendo 64"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Metroid",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio américain a développé la trilogie Metroid Prime en collaboration avec Nintendo ?",
+      "correct_answer": "Retro Studios",
+      "incorrect_answers": [
+        "Game Freak",
+        "Intelligent Systems",
+        "HAL Laboratory"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Metroid",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel est le titre du premier jeu Metroid en vue subjective, sorti en 2002 sur GameCube ?",
+      "correct_answer": "Metroid Prime",
+      "incorrect_answers": [
+        "Metroid Fusion",
+        "Metroid Zero Mission",
+        "Metroid Other M"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Metroid",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dans Super Metroid, quel Pirate de l'Espace reptilien ailé est le rival juré de Samus ?",
+      "correct_answer": "Ridley",
+      "incorrect_answers": [
+        "Kraid",
+        "Draygon",
+        "Crocomire"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Metroid",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle planète est présentée comme le monde natal des Metroids dans Metroid II: Return of Samus ?",
+      "correct_answer": "SR388",
+      "incorrect_answers": [
+        "Zebes",
+        "Tallon IV",
+        "Aether"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Metroid",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans Metroid Fusion, comment se nomme le clone hostile de Samus créé à partir du parasite X ?",
+      "correct_answer": "Le SA-X",
+      "incorrect_answers": [
+        "Mother Brain",
+        "Dark Samus",
+        "La Reine Metroid"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Metroid",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom du commandant qui accompagne Samus dans Metroid: Other M ?",
+      "correct_answer": "Adam Malkovich",
+      "incorrect_answers": [
+        "Anthony Higgs",
+        "Sylux",
+        "Gandrayda"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Metroid",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom du cerveau organique qui dirige les Pirates de l'Espace sur la planète Zebes ?",
+      "correct_answer": "Mother Brain",
+      "incorrect_answers": [
+        "Ridley",
+        "Kraid",
+        "La Reine Metroid"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du studio japonais qui développe les jeux vidéo principaux de la série Pokémon ?",
+      "correct_answer": "Game Freak",
+      "incorrect_answers": [
+        "Nintendo",
+        "HAL Laboratory",
+        "Creatures Inc."
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quels sont les deux jeux qui ont lancé la première génération de Pokémon en Europe et en Amérique du Nord ?",
+      "correct_answer": "Pokémon Rouge et Pokémon Bleu",
+      "incorrect_answers": [
+        "Pokémon Or et Pokémon Argent",
+        "Pokémon Rubis et Pokémon Saphir",
+        "Pokémon Vert et Pokémon Jaune"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Dans quelle région se déroulent les événements de Pokémon Rouge et Bleu ?",
+      "correct_answer": "Kanto",
+      "incorrect_answers": [
+        "Johto",
+        "Hoenn",
+        "Sinnoh"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Combien de Pokémon de départ (starters) sont proposés au joueur au début de la plupart des jeux principaux ?",
+      "correct_answer": "Trois",
+      "incorrect_answers": [
+        "Deux",
+        "Quatre",
+        "Cinq"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du Pokémon de type Électrik devenu la mascotte de la franchise ?",
+      "correct_answer": "Pikachu",
+      "incorrect_answers": [
+        "Évoli",
+        "Raichu",
+        "Mew"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel est le nom du professeur qui remet le premier Pokémon au héros dans la région de Kanto ?",
+      "correct_answer": "Professeur Chen",
+      "incorrect_answers": [
+        "Professeur Orme",
+        "Professeur Laurier",
+        "Professeur Platane"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Pokémon Rubis et Saphir, sortis sur Game Boy Advance, se déroulent dans quelle région ?",
+      "correct_answer": "Hoenn",
+      "incorrect_answers": [
+        "Johto",
+        "Sinnoh",
+        "Unys"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dans quelle région se déroulent les jeux Pokémon Épée et Bouclier ?",
+      "correct_answer": "Galar",
+      "incorrect_answers": [
+        "Alola",
+        "Kalos",
+        "Unys"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dans quelle région se déroulent les jeux Pokémon Écarlate et Violet ?",
+      "correct_answer": "Paldea",
+      "incorrect_answers": [
+        "Galar",
+        "Alola",
+        "Hisui"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment appelle-t-on le phénomène par lequel un Pokémon change de forme et devient plus fort, généralement en montant de niveau ?",
+      "correct_answer": "L'évolution",
+      "incorrect_answers": [
+        "La mutation",
+        "La métamorphose",
+        "La transcendance"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Combien de types de Pokémon existe-t-il au total depuis l'introduction du type Fée à la sixième génération ?",
+      "correct_answer": "Dix-huit",
+      "incorrect_answers": [
+        "Seize",
+        "Dix-sept",
+        "Vingt"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom de la mécanique de combat, introduite dans Pokémon Épée et Bouclier, qui permet à un Pokémon de devenir géant temporairement ?",
+      "correct_answer": "Le Dynamax",
+      "incorrect_answers": [
+        "La Méga-Évolution",
+        "La Téracristallisation",
+        "Le Move Z"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom de la mécanique de combat, introduite dans Pokémon Écarlate et Violet, qui modifie temporairement le type d'un Pokémon ?",
+      "correct_answer": "La Téracristallisation",
+      "incorrect_answers": [
+        "Le Dynamax",
+        "La Méga-Évolution",
+        "La Fusion"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Pokémon (jeux)",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quels sont les noms des deux premiers jeux Pokémon sortis au Japon en 1996, avant leur adaptation occidentale sous le nom de Rouge et Bleu ?",
+      "correct_answer": "Pokémon Rouge et Pokémon Vert",
+      "incorrect_answers": [
+        "Pokémon Rouge et Pokémon Bleu",
+        "Pokémon Or et Pokémon Argent",
+        "Pokémon Rubis et Pokémon Saphir"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du protagoniste principal de la série de jeux vidéo God of War ?",
+      "correct_answer": "Kratos",
+      "incorrect_answers": [
+        "Atreus",
+        "Deimos",
+        "Zeus"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quels sont les deux personnages principaux du jeu The Last of Us (2013) ?",
+      "correct_answer": "Joel et Ellie",
+      "incorrect_answers": [
+        "Nathan et Elena",
+        "Aloy et Rost",
+        "Jin et Yuna"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme le héros chasseur de trésors de la série Uncharted ?",
+      "correct_answer": "Nathan Drake",
+      "incorrect_answers": [
+        "Victor Sullivan",
+        "Sam Drake",
+        "Chloe Frazer"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle est l'héroïne principale de la série Horizon (Zero Dawn et Forbidden West) ?",
+      "correct_answer": "Aloy",
+      "incorrect_answers": [
+        "Elena Fisher",
+        "Ellie Williams",
+        "Chloe Frazer"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "À quel genre de jeu vidéo appartient la série Gran Turismo ?",
+      "correct_answer": "Un jeu de course automobile",
+      "incorrect_answers": [
+        "Un jeu de tir à la première personne",
+        "Un jeu de rôle",
+        "Un jeu de plateforme"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel personnage incarne-t-on principalement dans Marvel's Spider-Man (2018) ?",
+      "correct_answer": "Peter Parker",
+      "incorrect_answers": [
+        "Miles Morales",
+        "Harry Osborn",
+        "Otto Octavius"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "À quelle espèce appartient Ratchet dans la série Ratchet & Clank ?",
+      "correct_answer": "Un Lombax",
+      "incorrect_answers": [
+        "Un robot",
+        "Un extraterrestre reptilien",
+        "Un mutant génétique"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du samouraï protagoniste de Ghost of Tsushima ?",
+      "correct_answer": "Jin Sakai",
+      "incorrect_answers": [
+        "Yuna",
+        "Ryuzo",
+        "Lord Shimura"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du petit robot qui accompagne Ratchet tout au long de la série ?",
+      "correct_answer": "Clank",
+      "incorrect_answers": [
+        "Docteur Nefarious",
+        "Capitaine Qwark",
+        "Talwyn Apogée"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En quelle année la première console PlayStation est-elle sortie au Japon ?",
+      "correct_answer": "1994",
+      "incorrect_answers": [
+        "1990",
+        "1992",
+        "1996"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle console PlayStation est considérée comme la console de jeu vidéo la plus vendue de l'histoire ?",
+      "correct_answer": "La PlayStation 2",
+      "incorrect_answers": [
+        "La PlayStation",
+        "La PlayStation 3",
+        "La PlayStation 4"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel personnage devient le héros jouable dans Marvel's Spider-Man: Miles Morales ?",
+      "correct_answer": "Miles Morales",
+      "incorrect_answers": [
+        "Peter Parker",
+        "Harry Osborn",
+        "Otto Octavius"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment sont appelées les créatures robotiques qui peuplent le monde d'Horizon Zero Dawn ?",
+      "correct_answer": "Des machines",
+      "incorrect_answers": [
+        "Des golems",
+        "Des automates",
+        "Des drones"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En quelle année la PlayStation 5 est-elle sortie ?",
+      "correct_answer": "2020",
+      "incorrect_answers": [
+        "2018",
+        "2019",
+        "2021"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle mythologie est explorée dans God of War (2018) et God of War Ragnarök ?",
+      "correct_answer": "La mythologie nordique",
+      "incorrect_answers": [
+        "La mythologie grecque",
+        "La mythologie égyptienne",
+        "La mythologie celte"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio de développement, propriété de Sony, est à l'origine de la série God of War ?",
+      "correct_answer": "Santa Monica Studio",
+      "incorrect_answers": [
+        "Naughty Dog",
+        "Guerrilla Games",
+        "Insomniac Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel est le prénom du fils de Kratos dans God of War (2018) et God of War Ragnarök ?",
+      "correct_answer": "Atreus",
+      "incorrect_answers": [
+        "Baldur",
+        "Modi",
+        "Magni"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio néerlandais développe la série Horizon ?",
+      "correct_answer": "Guerrilla Games",
+      "incorrect_answers": [
+        "Naughty Dog",
+        "Sucker Punch Productions",
+        "Insomniac Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio a développé Ghost of Tsushima ?",
+      "correct_answer": "Sucker Punch Productions",
+      "incorrect_answers": [
+        "Naughty Dog",
+        "Insomniac Games",
+        "Guerrilla Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio a développé Marvel's Spider-Man (2018) ?",
+      "correct_answer": "Insomniac Games",
+      "incorrect_answers": [
+        "Naughty Dog",
+        "Sucker Punch Productions",
+        "Santa Monica Studio"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio japonais a développé Bloodborne ?",
+      "correct_answer": "FromSoftware",
+      "incorrect_answers": [
+        "Naughty Dog",
+        "Team Ico",
+        "Sucker Punch Productions"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel champignon fictif est à l'origine de l'infection dans l'univers de The Last of Us ?",
+      "correct_answer": "Le Cordyceps",
+      "incorrect_answers": [
+        "La truffe",
+        "Le Penicillium",
+        "L'ergot"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel est le surnom de Victor Sullivan, mentor et ami de Nathan Drake dans Uncharted ?",
+      "correct_answer": "Sully",
+      "incorrect_answers": [
+        "Sam",
+        "Rafe",
+        "Cutter"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "À quelle tribu Aloy appartient-elle en tant qu'exclue dans Horizon Zero Dawn ?",
+      "correct_answer": "Les Nora",
+      "incorrect_answers": [
+        "Les Oseram",
+        "Les Carja",
+        "Les Banuk"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Qui est le créateur et producteur emblématique de la série Gran Turismo ?",
+      "correct_answer": "Kazunori Yamauchi",
+      "incorrect_answers": [
+        "Hideo Kojima",
+        "Shigeru Miyamoto",
+        "Fumito Ueda"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dans quelle ville gothique et maudite se déroule l'action de Bloodborne ?",
+      "correct_answer": "Yharnam",
+      "incorrect_answers": [
+        "Lordran",
+        "Drangleic",
+        "Boletaria"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle invasion historique constitue la toile de fond de Ghost of Tsushima ?",
+      "correct_answer": "L'invasion mongole du Japon",
+      "incorrect_answers": [
+        "L'invasion chinoise du Japon",
+        "L'invasion coréenne du Japon",
+        "L'invasion russe du Japon"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année la PlayStation 4 est-elle sortie ?",
+      "correct_answer": "2013",
+      "incorrect_answers": [
+        "2011",
+        "2015",
+        "2009"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel personnage, réduit à une tête coupée, sert de guide et de narrateur à Kratos et Atreus dans God of War (2018) ?",
+      "correct_answer": "Mimir",
+      "incorrect_answers": [
+        "Brok",
+        "Sindri",
+        "Tyr"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans quelle ville américaine se déroule la majeure partie de l'histoire de The Last of Us Part II ?",
+      "correct_answer": "Seattle",
+      "incorrect_answers": [
+        "Boston",
+        "Salt Lake City",
+        "Denver"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le prénom de la nouvelle protagoniste jouable, aux côtés d'Ellie, dans The Last of Us Part II ?",
+      "correct_answer": "Abby",
+      "incorrect_answers": [
+        "Riley",
+        "Tess",
+        "Dina"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelles sont les deux héroïnes principales du jeu Uncharted: The Lost Legacy ?",
+      "correct_answer": "Chloe Frazer et Nadine Ross",
+      "incorrect_answers": [
+        "Elena Fisher et Chloe Frazer",
+        "Nathan Drake et Chloe Frazer",
+        "Elena Fisher et Nadine Ross"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "De quel explorateur anglais Nathan Drake prétend-il être un descendant dans la série Uncharted ?",
+      "correct_answer": "Francis Drake",
+      "incorrect_answers": [
+        "Christophe Colomb",
+        "Vasco de Gama",
+        "Marco Polo"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom de l'intelligence artificielle centrale à l'origine du programme de restauration de la Terre dans Horizon Zero Dawn ?",
+      "correct_answer": "GAIA",
+      "incorrect_answers": [
+        "HADES",
+        "APOLLO",
+        "ARTEMIS"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle année le tout premier jeu Gran Turismo est-il sorti au Japon ?",
+      "correct_answer": "1997",
+      "incorrect_answers": [
+        "1994",
+        "1999",
+        "2000"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans Marvel's Spider-Man 2 (2023), quel symbiote devient l'un des antagonistes majeurs ?",
+      "correct_answer": "Venom",
+      "incorrect_answers": [
+        "Carnage",
+        "Kraven le Chasseur",
+        "Le Bouffon vert"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel réalisateur japonais, également président de FromSoftware, a dirigé le développement de Bloodborne ?",
+      "correct_answer": "Hidetaka Miyazaki",
+      "incorrect_answers": [
+        "Fumito Ueda",
+        "Hideo Kojima",
+        "Shuhei Yoshida"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle année se déroule la première invasion mongole représentée dans Ghost of Tsushima ?",
+      "correct_answer": "1274",
+      "incorrect_answers": [
+        "1185",
+        "1336",
+        "1467"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle est la planète natale de Ratchet dans la série Ratchet & Clank ?",
+      "correct_answer": "Veldin",
+      "incorrect_answers": [
+        "Kerwan",
+        "Umbris",
+        "Novalis"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom du frère de Nathan Drake, révélé dans Uncharted 4: A Thief's End ?",
+      "correct_answer": "Samuel Drake",
+      "incorrect_answers": [
+        "Rafe Adler",
+        "Charlie Cutter",
+        "Victor Sullivan"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel ingénieur, surnommé « le père de la PlayStation », est à l'origine de la conception de la console originale ?",
+      "correct_answer": "Ken Kutaragi",
+      "incorrect_answers": [
+        "Hideo Kojima",
+        "Shigeru Miyamoto",
+        "Satoru Iwata"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : PlayStation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle année la PlayStation 3 est-elle sortie pour la première fois, au Japon ?",
+      "correct_answer": "2006",
+      "incorrect_answers": [
+        "2004",
+        "2005",
+        "2008"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du protagoniste principal de la saga Halo, un super-soldat Spartan ?",
+      "correct_answer": "Master Chief",
+      "incorrect_answers": [
+        "Sergeant Johnson",
+        "L'Arbiter",
+        "Cortana"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio a développé le tout premier jeu de la saga, Halo: Combat Evolved, sorti en 2001 ?",
+      "correct_answer": "Bungie",
+      "incorrect_answers": [
+        "343 Industries",
+        "id Software",
+        "Infinity Ward"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Halo: Combat Evolved est sorti en 2001 comme jeu de lancement exclusif de quelle console ?",
+      "correct_answer": "la Xbox",
+      "incorrect_answers": [
+        "la PlayStation 2",
+        "la Xbox 360",
+        "le GameCube"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme l'intelligence artificielle qui guide et accompagne Master Chief tout au long de la trilogie originale de Halo ?",
+      "correct_answer": "Cortana",
+      "incorrect_answers": [
+        "GLaDOS",
+        "EDI",
+        "l'Oracle Guilty Spark"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio a pris en charge le développement de la licence Halo à partir de Halo 4, sorti en 2012 ?",
+      "correct_answer": "343 Industries",
+      "incorrect_answers": [
+        "Bungie",
+        "Certain Affinity",
+        "Turn 10 Studios"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "À quelle espèce extraterrestre appartient le personnage de l'Arbiter, allié de Master Chief dans Halo 2 et Halo 3 ?",
+      "correct_answer": "les Sangheili (Elites)",
+      "incorrect_answers": [
+        "les Brutes (Jiralhanae)",
+        "les Grognards (Unggoy)",
+        "les Prométhéens"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel épisode de la saga a été le premier à proposer le jeu en ligne via le service Xbox Live, en 2004 ?",
+      "correct_answer": "Halo 2",
+      "incorrect_answers": [
+        "Halo: Combat Evolved",
+        "Halo 3",
+        "Halo: Reach"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans l'univers de Halo, comment se nomme le parasite extraterrestre capable d'infecter et de transformer des organismes vivants, antagoniste majeur de la trilogie originale ?",
+      "correct_answer": "le Flood",
+      "incorrect_answers": [
+        "le Covenant",
+        "les Prométhéens",
+        "les Banished"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio a développé le tout premier Call of Duty, sorti en 2003 ?",
+      "correct_answer": "Infinity Ward",
+      "incorrect_answers": [
+        "Treyarch",
+        "Sledgehammer Games",
+        "Raven Software"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Le tout premier Call of Duty, sorti en 2003, se déroule pendant quel conflit historique ?",
+      "correct_answer": "la Seconde Guerre mondiale",
+      "incorrect_answers": [
+        "la guerre du Vietnam",
+        "la guerre froide",
+        "la guerre d'Irak"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme le mode battle royale gratuit de Call of Duty, lancé en 2020 ?",
+      "correct_answer": "Warzone",
+      "incorrect_answers": [
+        "Blackout",
+        "Ground War",
+        "Outbreak"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel personnage, reconnaissable à son masque orné d'un crâne, est surnommé 'Ghost' dans la série Modern Warfare ?",
+      "correct_answer": "Simon Riley",
+      "incorrect_answers": [
+        "John Price",
+        "John 'Soap' MacTavish",
+        "Kyle Garrick"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio a développé Call of Duty: Black Ops, sorti en 2010 ?",
+      "correct_answer": "Treyarch",
+      "incorrect_answers": [
+        "Infinity Ward",
+        "Sledgehammer Games",
+        "Raven Software"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel opus de Call of Duty, sorti en 2014, a introduit pour la première fois un cadre futuriste avec des exosquelettes de combat ?",
+      "correct_answer": "Call of Duty: Advanced Warfare",
+      "incorrect_answers": [
+        "Call of Duty: Ghosts",
+        "Call of Duty: Infinite Warfare",
+        "Call of Duty: Black Ops III"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle année est sorti Call of Duty 4: Modern Warfare, qui a marqué le tournant de la série vers les conflits contemporains ?",
+      "correct_answer": "2007",
+      "incorrect_answers": [
+        "2005",
+        "2009",
+        "2011"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Le mode coopératif 'Zombies', devenu un pilier de la sous-série Black Ops, est apparu pour la première fois dans quel jeu, sorti en 2008 ?",
+      "correct_answer": "Call of Duty: World at War",
+      "incorrect_answers": [
+        "Call of Duty: Black Ops",
+        "Call of Duty: Modern Warfare 2",
+        "Call of Duty: Black Ops II"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio américain a créé la licence DOOM en 1993 ?",
+      "correct_answer": "id Software",
+      "incorrect_answers": [
+        "Bethesda Softworks",
+        "3D Realms",
+        "Bungie"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment est surnommé le protagoniste silencieux de DOOM (2016) et DOOM Eternal ?",
+      "correct_answer": "le Doom Slayer",
+      "incorrect_answers": [
+        "le Master Chief",
+        "le Praetor",
+        "le Marine spatial"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Le DOOM original de 1993 se déroule initialement sur les lunes de quelle planète, avant que l'action ne bascule en Enfer ?",
+      "correct_answer": "Mars",
+      "incorrect_answers": [
+        "Vénus",
+        "Jupiter",
+        "la Terre"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année est sorti le reboot DOOM qui a relancé la licence sur les consoles modernes, dont la Xbox One ?",
+      "correct_answer": "2016",
+      "incorrect_answers": [
+        "2014",
+        "2018",
+        "2020"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme le colossal antagoniste démoniaque affronté à la fin de la campagne de DOOM Eternal (2020) ?",
+      "correct_answer": "l'Icon of Sin",
+      "incorrect_answers": [
+        "le Cyberdemon",
+        "le Spider Mastermind",
+        "le Baron of Hell"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel jeu de tir de 1992, développé par id Software, est considéré comme un précurseur direct de DOOM et a contribué à populariser le genre FPS ?",
+      "correct_answer": "Wolfenstein 3D",
+      "incorrect_answers": [
+        "Quake",
+        "Duke Nukem 3D",
+        "Half-Life"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel cofondateur d'id Software est reconnu comme le programmeur principal derrière DOOM et Quake ?",
+      "correct_answer": "John Carmack",
+      "incorrect_answers": [
+        "John Romero",
+        "Todd Howard",
+        "Cliff Bleszinski"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel éditeur, propriété du groupe Microsoft, publie les jeux DOOM et emploie id Software comme studio interne ?",
+      "correct_answer": "Bethesda Softworks",
+      "incorrect_answers": [
+        "Activision",
+        "Electronic Arts",
+        "2K Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Counter-Strike est né en 1999 comme une modification (mod) de quel jeu ?",
+      "correct_answer": "Half-Life",
+      "incorrect_answers": [
+        "Doom",
+        "Quake",
+        "Unreal Tournament"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Dans le mode de jeu classique de Counter-Strike, quels sont les deux camps qui s'affrontent ?",
+      "correct_answer": "les Terroristes et les Antiterroristes",
+      "incorrect_answers": [
+        "les Alliés et l'Axe",
+        "les Rebelles et l'Empire",
+        "les Mercenaires et la Police"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio a développé et édité Counter-Strike: Global Offensive, sorti en 2012 ?",
+      "correct_answer": "Valve",
+      "incorrect_answers": [
+        "id Software",
+        "Ubisoft",
+        "Riot Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle carte emblématique, se déroulant dans une ville italienne avec deux sites à faire exploser, est l'une des plus jouées de l'histoire compétitive de Counter-Strike ?",
+      "correct_answer": "Dust II",
+      "incorrect_answers": [
+        "Inferno",
+        "Mirage",
+        "Nuke"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année Counter-Strike 2 est-il sorti, remplaçant progressivement CS:GO ?",
+      "correct_answer": "2023",
+      "incorrect_answers": [
+        "2021",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme l'explosif que l'équipe des Terroristes doit poser sur un site pour remporter une manche en mode Bombe ?",
+      "correct_answer": "la C4",
+      "incorrect_answers": [
+        "la mine Claymore",
+        "la grenade incendiaire",
+        "le détonateur EMP"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment appelle-t-on les tournois Counter-Strike directement organisés et sponsorisés par Valve, considérés comme les compétitions les plus prestigieuses du circuit esport ?",
+      "correct_answer": "les Majors",
+      "incorrect_answers": [
+        "les Minors",
+        "les Masters",
+        "les Franchise Cups"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel fusil d'assaut soviétique, peu coûteux et à forte cadence de tir, est l'arme signature du camp Terroriste dans Counter-Strike ?",
+      "correct_answer": "l'AK-47",
+      "incorrect_answers": [
+        "le M4A4",
+        "l'AWP",
+        "le Desert Eagle"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio a développé Overwatch, sorti en 2016 ?",
+      "correct_answer": "Blizzard Entertainment",
+      "incorrect_answers": [
+        "Riot Games",
+        "Valve",
+        "Respawn Entertainment"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel héros d'Overwatch est un gorille scientifique équipé d'une combinaison mécanisée et d'un canon à grappin ?",
+      "correct_answer": "Winston",
+      "incorrect_answers": [
+        "Wrecking Ball",
+        "Doomfist",
+        "Orisa"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle nationalité est attribuée à Mercy, l'héroïne de soutien capable de ressusciter ses coéquipiers ?",
+      "correct_answer": "suisse",
+      "incorrect_answers": [
+        "allemande",
+        "française",
+        "suédoise"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année Overwatch 2 est-il sorti en free-to-play, remplaçant le premier Overwatch ?",
+      "correct_answer": "2022",
+      "incorrect_answers": [
+        "2020",
+        "2021",
+        "2023"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Combien de héros jouables étaient disponibles au lancement d'Overwatch en mai 2016 ?",
+      "correct_answer": "21",
+      "incorrect_answers": [
+        "12",
+        "18",
+        "25"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Créée par Blizzard en 2018, quelle ligue professionnelle d'Overwatch est structurée en franchises représentant des villes du monde entier ?",
+      "correct_answer": "l'Overwatch League",
+      "incorrect_answers": [
+        "l'Overwatch Champions Series",
+        "la Overwatch Pro League",
+        "l'Overwatch World Cup"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Doomfist, héros au bras robotique surpuissant, est originaire de quel pays ?",
+      "correct_answer": "le Nigeria",
+      "incorrect_answers": [
+        "l'Égypte",
+        "l'Afrique du Sud",
+        "le Kenya"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Overwatch a été développé à partir des vestiges d'un projet de MMO annulé par Blizzard. Comment se nommait ce projet ?",
+      "correct_answer": "Titan",
+      "incorrect_answers": [
+        "Nova",
+        "Phoenix",
+        "Genesis"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En quelle année Microsoft a-t-il lancé sa toute première console, la Xbox ?",
+      "correct_answer": "2001",
+      "incorrect_answers": [
+        "1999",
+        "2003",
+        "2005"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Xbox & FPS",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En 2023, Microsoft a finalisé le rachat d'un éditeur propriétaire de Call of Duty pour environ 69 milliards de dollars. Quel est cet éditeur ?",
+      "correct_answer": "Activision Blizzard",
+      "incorrect_answers": [
+        "Electronic Arts",
+        "Ubisoft",
+        "Take-Two Interactive"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio américain développe la série de jeux vidéo The Elder Scrolls ?",
+      "correct_answer": "Bethesda Game Studios",
+      "incorrect_answers": [
+        "BioWare",
+        "CD Projekt Red",
+        "Obsidian Entertainment"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme la région où se déroule l'aventure de The Elder Scrolls V: Skyrim ?",
+      "correct_answer": "Bordeciel",
+      "incorrect_answers": [
+        "Cyrodiil",
+        "Vvardenfell",
+        "Hauts-Rocs"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année The Elder Scrolls V: Skyrim est-il sorti ?",
+      "correct_answer": "2011",
+      "incorrect_answers": [
+        "2008",
+        "2013",
+        "2015"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment nomme-t-on, en langue draconique, le héros de Skyrim capable d'absorber l'âme des dragons vaincus ?",
+      "correct_answer": "Dovahkiin",
+      "incorrect_answers": [
+        "Nerevarine",
+        "Septim",
+        "Thane"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Sur quelle île volcanique se déroule principalement l'intrigue de The Elder Scrolls III: Morrowind ?",
+      "correct_answer": "Vvardenfell",
+      "incorrect_answers": [
+        "Solstheim",
+        "Summerset",
+        "Stros M'Kai"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment s'appelle la capitale de la province de Cyrodiil, théâtre principal de l'intrigue d'Oblivion ?",
+      "correct_answer": "La Ville Impériale",
+      "incorrect_answers": [
+        "Bruma",
+        "Chorrol",
+        "Leyawiin"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom du Prince Daedrique de la Folie, présent notamment dans l'extension Shivering Isles ?",
+      "correct_answer": "Sheogorath",
+      "incorrect_answers": [
+        "Molag Bal",
+        "Mehrunes Dagon",
+        "Malacath"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme le sorceleur héros de la saga The Witcher ?",
+      "correct_answer": "Geralt de Riv",
+      "incorrect_answers": [
+        "Vesemir",
+        "Lambert",
+        "Eskel"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio polonais est à l'origine des jeux vidéo The Witcher ?",
+      "correct_answer": "CD Projekt Red",
+      "incorrect_answers": [
+        "Bethesda Game Studios",
+        "BioWare",
+        "Larian Studios"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Qui est l'écrivain polonais ayant créé l'univers littéraire de The Witcher ?",
+      "correct_answer": "Andrzej Sapkowski",
+      "incorrect_answers": [
+        "Stanisław Lem",
+        "Terry Pratchett",
+        "George R. R. Martin"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Combien de jeux principaux composent la trilogie vidéoludique The Witcher développée par CD Projekt Red ?",
+      "correct_answer": "Trois",
+      "incorrect_answers": [
+        "Deux",
+        "Quatre",
+        "Cinq"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se prénomme la fille adoptive de Geralt, princesse pourchassée par la Chasse Sauvage ?",
+      "correct_answer": "Ciri",
+      "incorrect_answers": [
+        "Yennefer",
+        "Triss Merigold",
+        "Philippa Eilhart"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle magicienne, originaire de Vengerberg, est le grand amour de Geralt dans la saga ?",
+      "correct_answer": "Yennefer",
+      "incorrect_answers": [
+        "Triss Merigold",
+        "Philippa Eilhart",
+        "Fringilla Vigo"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment se nomme l'organisation politique regroupant les magiciennes les plus influentes du Continent ?",
+      "correct_answer": "La Loge des Sorcières",
+      "incorrect_answers": [
+        "Le Chapitre",
+        "Les Sorciers Errants",
+        "L'Ordre de la Flamme Éternelle"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio a développé Fallout 3 et Fallout 4 ?",
+      "correct_answer": "Bethesda Game Studios",
+      "incorrect_answers": [
+        "Obsidian Entertainment",
+        "Interplay Entertainment",
+        "BioWare"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Dans quel type d'univers se déroule la saga Fallout ?",
+      "correct_answer": "Un univers post-apocalyptique rétro-futuriste",
+      "incorrect_answers": [
+        "Un univers médiéval-fantastique",
+        "Un univers cyberpunk contemporain",
+        "Un univers spatial futuriste"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment appelle-t-on les abris souterrains emblématiques construits par Vault-Tec dans l'univers Fallout ?",
+      "correct_answer": "Les Vaults",
+      "incorrect_answers": [
+        "Les Enclaves",
+        "Les Bunkers de la Confrérie de l'Acier",
+        "Les Bastions"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dans quelle ville américaine se déroule principalement Fallout 4 ?",
+      "correct_answer": "Boston",
+      "incorrect_answers": [
+        "Washington D.C.",
+        "Las Vegas",
+        "Chicago"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel studio, fondé notamment par d'anciens membres de Black Isle Studios, a développé Fallout: New Vegas ?",
+      "correct_answer": "Obsidian Entertainment",
+      "incorrect_answers": [
+        "Bethesda Game Studios",
+        "Interplay Entertainment",
+        "Black Isle Studios"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans quelle région désertique du sud-ouest américain se déroule Fallout: New Vegas ?",
+      "correct_answer": "Le désert du Mojave",
+      "incorrect_answers": [
+        "Le désert de Sonora",
+        "La vallée de la Mort",
+        "Le désert du Nevada"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment se nomme la puissante organisation scientifique clandestine qui fabrique des synthétiques dans Fallout 4 ?",
+      "correct_answer": "L'Institut",
+      "incorrect_answers": [
+        "L'Enclave",
+        "La Confrérie de l'Acier",
+        "Les Raiders"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio canadien a développé la trilogie originale Mass Effect ?",
+      "correct_answer": "BioWare",
+      "incorrect_answers": [
+        "Bethesda Game Studios",
+        "Obsidian Entertainment",
+        "CD Projekt Red"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Sous quel nom est connu le protagoniste jouable de la trilogie Mass Effect, soldat de l'Alliance systémique ?",
+      "correct_answer": "Commandant Shepard",
+      "incorrect_answers": [
+        "Capitaine Anderson",
+        "Amiral Hackett",
+        "Major Kirrahe"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment s'appelle le vaisseau amiral commandé par Shepard tout au long de la trilogie ?",
+      "correct_answer": "Le Normandy",
+      "incorrect_answers": [
+        "Le Destiny Ascension",
+        "Le Hammerhead",
+        "Le Kodiak"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle race extraterrestre à la voix rauque incarne le coéquipier récurrent Garrus Vakarian ?",
+      "correct_answer": "Les Turiens",
+      "incorrect_answers": [
+        "Les Krogans",
+        "Les Quariens",
+        "Les Asari"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle organisation constitue la principale menace de la trilogie Mass Effect, cherchant à exterminer toute vie organique avancée ?",
+      "correct_answer": "Les Moissonneurs",
+      "incorrect_answers": [
+        "Cerberus",
+        "Le Conseil",
+        "Les Collecteurs"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom de l'intelligence artificielle geth qui peut rejoindre l'équipage de Shepard dans Mass Effect 2 ?",
+      "correct_answer": "Legion",
+      "incorrect_answers": [
+        "EDI",
+        "Sovereign",
+        "Mordin Solus"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom de la station spatiale, siège du Conseil galactique, visitée dès le premier Mass Effect ?",
+      "correct_answer": "La Citadelle",
+      "incorrect_answers": [
+        "Omega",
+        "Noveria",
+        "Ilos"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio belge a développé Baldur's Gate 3 ?",
+      "correct_answer": "Larian Studios",
+      "incorrect_answers": [
+        "BioWare",
+        "Bethesda Game Studios",
+        "Obsidian Entertainment"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Sur quel jeu de rôle sur table la licence Baldur's Gate est-elle basée ?",
+      "correct_answer": "Donjons & Dragons",
+      "incorrect_answers": [
+        "Pathfinder",
+        "Warhammer Fantasy Battle",
+        "GURPS"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En quelle année Baldur's Gate 3 est-il sorti en version complète (1.0) ?",
+      "correct_answer": "2023",
+      "incorrect_answers": [
+        "2020",
+        "2021",
+        "2022"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel compagnon de Baldur's Gate 3 est un vampire déchu, ancien esclave de son maître Cazador ?",
+      "correct_answer": "Astarion",
+      "incorrect_answers": [
+        "Gale",
+        "Wyll",
+        "Shadowheart"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio a développé les deux premiers jeux Baldur's Gate, sortis en 1998 et 2000 ?",
+      "correct_answer": "BioWare",
+      "incorrect_answers": [
+        "Black Isle Studios",
+        "Obsidian Entertainment",
+        "Larian Studios"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment appelle-t-on le parasite implanté dans le cerveau des héros au tout début de Baldur's Gate 3 ?",
+      "correct_answer": "Un tétard de flagelleur mental",
+      "incorrect_answers": [
+        "Un œuf de beholder",
+        "Un ver charognard",
+        "Une larve de goule"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans quel cadre de campagne de Donjons & Dragons se situe la ville de Baldur's Gate ?",
+      "correct_answer": "Les Royaumes Oubliés",
+      "incorrect_answers": [
+        "Eberron",
+        "Ravenloft",
+        "Dragonlance"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio polonais a développé Cyberpunk 2077 ?",
+      "correct_answer": "CD Projekt Red",
+      "incorrect_answers": [
+        "Bethesda Game Studios",
+        "BioWare",
+        "Larian Studios"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Dans quelle mégalopole fictive se déroule l'action de Cyberpunk 2077 ?",
+      "correct_answer": "Night City",
+      "incorrect_answers": [
+        "Los Angeles",
+        "Neo-Tokyo",
+        "Detroit"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme le protagoniste jouable de Cyberpunk 2077 ?",
+      "correct_answer": "V",
+      "incorrect_answers": [
+        "Johnny Silverhand",
+        "Jackie Welles",
+        "Judy Alvarez"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année Cyberpunk 2077 est-il sorti initialement ?",
+      "correct_answer": "2020",
+      "incorrect_answers": [
+        "2019",
+        "2021",
+        "2022"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel acteur hollywoodien prête ses traits et sa voix au personnage de Johnny Silverhand ?",
+      "correct_answer": "Keanu Reeves",
+      "incorrect_answers": [
+        "Idris Elba",
+        "Ryan Gosling",
+        "Ryan Reynolds"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel créateur américain de jeux de rôle est à l'origine de l'univers papier Cyberpunk 2020, adapté en jeu vidéo par CD Projekt Red ?",
+      "correct_answer": "Mike Pondsmith",
+      "incorrect_answers": [
+        "Gary Gygax",
+        "Andrzej Sapkowski",
+        "Warren Spector"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Occidentaux",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom de l'extension autonome de Cyberpunk 2077 sortie en 2023 ?",
+      "correct_answer": "Phantom Liberty",
+      "incorrect_answers": [
+        "Edgerunners",
+        "Night City Wire",
+        "Afterlife"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio japonais développe et édite la série Final Fantasy depuis ses origines ?",
+      "correct_answer": "Square Enix",
+      "incorrect_answers": [
+        "Capcom",
+        "Konami",
+        "Bandai Namco"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme le héros principal de Final Fantasy VII, un ancien mercenaire du SOLDAT ?",
+      "correct_answer": "Cloud Strife",
+      "incorrect_answers": [
+        "Squall Leonhart",
+        "Zidane Tribal",
+        "Tidus"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Dans Final Fantasy X, sous quel nom est connu le sport aquatique que pratique Tidus ?",
+      "correct_answer": "Le Blitzball",
+      "incorrect_answers": [
+        "Le Chocobo Racing",
+        "Le Triple Triad",
+        "Le Tetra Master"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment s'appelle la méga-corporation qui contrôle l'énergie Mako et incarne l'antagoniste principal de Final Fantasy VII ?",
+      "correct_answer": "La Shinra",
+      "incorrect_answers": [
+        "L'Empire de Galbadia",
+        "L'Empire de Niflheim",
+        "La Garde Impériale d'Archadia"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "À qui doit-on la composition de la majorité des musiques emblématiques de la série Final Fantasy, dont le thème « One-Winged Angel » ?",
+      "correct_answer": "Nobuo Uematsu",
+      "incorrect_answers": [
+        "Yoko Shimomura",
+        "Koichi Sugiyama",
+        "Yasunori Mitsuda"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dans Final Fantasy XV, le personnage jouable Noctis incarne le prince héritier de quel royaume ?",
+      "correct_answer": "Lucis",
+      "incorrect_answers": [
+        "Niflheim",
+        "Tenebrae",
+        "Accordo"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel créateur de jeux vidéo est à l'origine du tout premier Final Fantasy, sorti en 1987 ?",
+      "correct_answer": "Hironobu Sakaguchi",
+      "incorrect_answers": [
+        "Yuji Horii",
+        "Tetsuya Nomura",
+        "Yoshinori Kitase"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans Final Fantasy XVI, Clive Rosfield est le Dominant de quel Eikon au début de l'aventure ?",
+      "correct_answer": "Ifrit",
+      "incorrect_answers": [
+        "Bahamut",
+        "Titan",
+        "Odin"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel producteur, également connu pour son travail sur Final Fantasy XIV, a supervisé la production de Final Fantasy XVI ?",
+      "correct_answer": "Naoki Yoshida",
+      "incorrect_answers": [
+        "Tetsuya Nomura",
+        "Yoshinori Kitase",
+        "Hajime Tabata"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel dessinateur, également créateur de Dragon Ball, a conçu les personnages et monstres de Dragon Quest ?",
+      "correct_answer": "Akira Toriyama",
+      "incorrect_answers": [
+        "Akira Amano",
+        "Eiichiro Oda",
+        "Yoshihiro Togashi"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme la créature gélatineuse bleue devenue la mascotte officielle de Dragon Quest ?",
+      "correct_answer": "Le Slime",
+      "incorrect_answers": [
+        "Le Chocobo",
+        "Le Moogle",
+        "Le Cactus"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "À qui doit-on la création et le scénario de la série Dragon Quest depuis 1986 ?",
+      "correct_answer": "Yuji Horii",
+      "incorrect_answers": [
+        "Hironobu Sakaguchi",
+        "Hideo Kojima",
+        "Shigeru Miyamoto"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Avant sa fusion avec Square en 2003, quel éditeur publiait les jeux Dragon Quest au Japon ?",
+      "correct_answer": "Enix",
+      "incorrect_answers": [
+        "Sega",
+        "Namco",
+        "Konami"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel surnom est donné au monstre rare de couleur argentée, réputé pour offrir énormément de points d'expérience mais fuir au moindre coup ?",
+      "correct_answer": "Le Metal Slime",
+      "incorrect_answers": [
+        "Le Golem",
+        "Le Dracky",
+        "Le Griffon"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Sorti en 2004 sur PlayStation 2, quel épisode fut le premier de la saga principale à proposer un monde intégralement modélisé en 3D ?",
+      "correct_answer": "Dragon Quest VIII",
+      "incorrect_answers": [
+        "Dragon Quest VII",
+        "Dragon Quest IX",
+        "Dragon Quest XI"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel compositeur, également chef d'orchestre de concerts symphoniques dédiés à la saga, a signé les musiques de Dragon Quest jusqu'à sa mort en 2021 ?",
+      "correct_answer": "Koichi Sugiyama",
+      "incorrect_answers": [
+        "Nobuo Uematsu",
+        "Yasunori Mitsuda",
+        "Motoi Sakuraba"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle année le tout premier Dragon Quest est-il sorti au Japon ?",
+      "correct_answer": "1986",
+      "incorrect_answers": [
+        "1983",
+        "1990",
+        "1992"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio japonais, filiale de Sega, développe la série Persona ?",
+      "correct_answer": "Atlus",
+      "incorrect_answers": [
+        "Level-5",
+        "Falcom",
+        "Game Freak"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Dans Persona 5, sous quel nom collectif se fait connaître le groupe de lycéens qui volent le cœur des adultes corrompus ?",
+      "correct_answer": "Les Voleurs Fantômes",
+      "incorrect_answers": [
+        "Les Chevaliers de Minuit",
+        "Les Gardiens de l'Ombre",
+        "L'Escadron Nocturne"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Dans Persona 4, quel ours en peluche facétieux sert de guide au héros dans le monde télévisé ?",
+      "correct_answer": "Teddie",
+      "incorrect_answers": [
+        "Morgana",
+        "Koromaru",
+        "Jack Frost"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel surnom de super-héros est attribué au protagoniste de Persona 5 en tant que leader des Voleurs Fantômes ?",
+      "correct_answer": "Joker",
+      "incorrect_answers": [
+        "Skull",
+        "Fox",
+        "Mona"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel compositeur a signé les bandes originales devenues cultes de Persona 3, 4 et 5 ?",
+      "correct_answer": "Shoji Meguro",
+      "incorrect_answers": [
+        "Nobuo Uematsu",
+        "Yuki Kajiura",
+        "Motoi Sakuraba"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "L'intrigue de Persona 4 se déroule dans quelle bourgade rurale fictive du Japon ?",
+      "correct_answer": "Inaba",
+      "incorrect_answers": [
+        "Iwatodai",
+        "Port Island",
+        "Sumaru City"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Depuis les débuts de la série, quel personnage énigmatique au long nez officie comme maître du Velvet Room ?",
+      "correct_answer": "Igor",
+      "incorrect_answers": [
+        "Philemon",
+        "Nyarlathotep",
+        "Ymir"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans Persona 5, comment se nomme la mécanique permettant de transmettre son tour supplémentaire à un allié après avoir exploité une faiblesse ennemie ?",
+      "correct_answer": "Le Baton Pass",
+      "incorrect_answers": [
+        "Le One More Extra",
+        "Le Link Turn",
+        "Le Weakness Chain"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio de développement japonais a créé Dark Souls, Bloodborne et Elden Ring ?",
+      "correct_answer": "FromSoftware",
+      "incorrect_answers": [
+        "Capcom",
+        "Team Ninja",
+        "PlatinumGames"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Qui est le réalisateur associé à la création de Dark Souls, Bloodborne et Elden Ring ?",
+      "correct_answer": "Hidetaka Miyazaki",
+      "incorrect_answers": [
+        "Hideo Kojima",
+        "Fumito Ueda",
+        "Yoko Taro"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Dans la série Dark Souls, comment se nomme l'objet qui permet de restaurer un nombre limité de fois les points de vie du joueur ?",
+      "correct_answer": "La Fiole d'Estus",
+      "incorrect_answers": [
+        "Le Blood Vial",
+        "La Potion de Vie",
+        "Le Flacon de Grâce"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année Bloodborne est-il sorti, en exclusivité sur PlayStation 4 ?",
+      "correct_answer": "2015",
+      "incorrect_answers": [
+        "2011",
+        "2013",
+        "2017"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel romancier de fantasy, auteur du « Trône de Fer », a collaboré à l'écriture de l'univers d'Elden Ring ?",
+      "correct_answer": "George R. R. Martin",
+      "incorrect_answers": [
+        "J.R.R. Tolkien",
+        "Brandon Sanderson",
+        "Andrzej Sapkowski"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme la cité gothique rongée par une malédiction sanguine, décor principal de Bloodborne ?",
+      "correct_answer": "Yharnam",
+      "incorrect_answers": [
+        "Lordran",
+        "Lothric",
+        "Drangleic"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Sorti en 2009 en exclusivité sur PlayStation 3, quel jeu de FromSoftware est considéré comme le précurseur spirituel de Dark Souls ?",
+      "correct_answer": "Demon's Souls",
+      "incorrect_answers": [
+        "King's Field",
+        "Shadow Tower",
+        "Chromehounds"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans Elden Ring, quel qualificatif désigne le personnage joueur, un exilé rappelé dans les Terres Intermédiaires ?",
+      "correct_answer": "Le Sans-Éclat",
+      "incorrect_answers": [
+        "Le Sans-Nom",
+        "Le Chasseur",
+        "L'Élu de la Cendre"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Dans Sekiro: Shadows Die Twice, autre titre de FromSoftware, quel système de combat repose sur un équilibre à briser plutôt que sur une simple barre de vie ?",
+      "correct_answer": "Le système de Posture",
+      "incorrect_answers": [
+        "Le système de Stamina Break",
+        "Le système de Bloodlust",
+        "Le système de Focus"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme le héros principal de la série Kingdom Hearts, porteur d'une Keyblade ?",
+      "correct_answer": "Sora",
+      "incorrect_answers": [
+        "Riku",
+        "Roxas",
+        "Ventus"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "La série Kingdom Hearts résulte d'une collaboration entre Square Enix et quel studio d'animation américain ?",
+      "correct_answer": "Disney",
+      "incorrect_answers": [
+        "Pixar",
+        "DreamWorks",
+        "Warner Bros."
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle arme en forme de clé géante est maniée par Sora tout au long de la série Kingdom Hearts ?",
+      "correct_answer": "La Keyblade",
+      "incorrect_answers": [
+        "L'Excalibur",
+        "Le Buster Sword",
+        "Le Gunblade"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quels sont les deux compagnons issus de l'univers Disney qui accompagnent Sora dans la majeure partie de ses aventures ?",
+      "correct_answer": "Donald et Dingo",
+      "incorrect_answers": [
+        "Mickey et Minnie",
+        "Pluto et Bambi",
+        "Timon et Pumbaa"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment sont surnommées les créatures nées des ténèbres que Sora affronte tout au long de la série Kingdom Hearts ?",
+      "correct_answer": "Les Sans-Cœur",
+      "incorrect_answers": [
+        "Les Similis",
+        "Les Rêvenants",
+        "Les Ombres"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel réalisateur de la série Kingdom Hearts est également connu pour son travail de character designer sur Final Fantasy VII et VIII ?",
+      "correct_answer": "Tetsuya Nomura",
+      "incorrect_answers": [
+        "Hironobu Sakaguchi",
+        "Yoko Shimomura",
+        "Kazushige Nojima"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Combien de membres compte, selon son nom même, l'organisation antagoniste vêtue de capes noires apparue dans Kingdom Hearts: Chain of Memories ?",
+      "correct_answer": "13",
+      "incorrect_answers": [
+        "10",
+        "12",
+        "15"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : RPG Japonais & Souls-like",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle année le tout premier jeu Kingdom Hearts est-il sorti au Japon sur PlayStation 2 ?",
+      "correct_answer": "2002",
+      "incorrect_answers": [
+        "1999",
+        "2005",
+        "2000"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle couleur est associée au pelage du personnage principal de la série Sonic ?",
+      "correct_answer": "Bleu",
+      "incorrect_answers": [
+        "Rouge",
+        "Vert",
+        "Jaune"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme le renard à deux queues, meilleur ami de Sonic ?",
+      "correct_answer": "Miles «Tails» Prower",
+      "incorrect_answers": [
+        "Knuckles",
+        "Amy Rose",
+        "Shadow"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel éditeur japonais est à l'origine de la création de Sonic the Hedgehog ?",
+      "correct_answer": "SEGA",
+      "incorrect_answers": [
+        "Nintendo",
+        "Capcom",
+        "Konami"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année le tout premier jeu Sonic the Hedgehog est-il sorti sur Mega Drive ?",
+      "correct_answer": "1991",
+      "incorrect_answers": [
+        "1989",
+        "1993",
+        "1994"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel est le nom de l'échidné rival de Sonic, gardien de la Master Emerald ?",
+      "correct_answer": "Knuckles",
+      "incorrect_answers": [
+        "Tails",
+        "Shadow",
+        "Silver"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Qui a conçu le design original du personnage Sonic chez SEGA ?",
+      "correct_answer": "Naoto Ohshima",
+      "incorrect_answers": [
+        "Yuji Naka",
+        "Hirokazu Yasuhara",
+        "Shigeru Miyamoto"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Sonic Adventure, sorti en 1998, a marqué les débuts du hérisson en 3D sur quelle console SEGA ?",
+      "correct_answer": "Dreamcast",
+      "incorrect_answers": [
+        "Saturn",
+        "Mega Drive",
+        "Game Gear"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle particularité physique distingue Rayman des autres personnages de plateforme ?",
+      "correct_answer": "Il n'a ni bras ni jambes reliés à son corps",
+      "incorrect_answers": [
+        "Il n'a qu'un seul œil",
+        "Il est totalement invisible",
+        "Il n'a pas de bouche"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel éditeur français est à l'origine de la série Rayman ?",
+      "correct_answer": "Ubisoft",
+      "incorrect_answers": [
+        "Activision",
+        "Electronic Arts",
+        "SEGA"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel designer français a créé le personnage de Rayman ?",
+      "correct_answer": "Michel Ancel",
+      "incorrect_answers": [
+        "Éric Chahi",
+        "Michel Gondry",
+        "Frédérick Raynal"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année le tout premier jeu Rayman est-il sorti ?",
+      "correct_answer": "1995",
+      "incorrect_answers": [
+        "1991",
+        "1998",
+        "2000"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dans le premier jeu Rayman, quel est le nom du grand antagoniste qui a volé le Grand Protoon ?",
+      "correct_answer": "Mr Dark",
+      "incorrect_answers": [
+        "Andre",
+        "Razorbeard",
+        "Polokus"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel épisode de la série a introduit le style graphique dessiné à la main grâce au moteur UbiArt Framework ?",
+      "correct_answer": "Rayman Origins",
+      "incorrect_answers": [
+        "Rayman 2: The Great Escape",
+        "Rayman 3: Hoodlum Havoc",
+        "Rayman Legends"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Sur quelle console est sorti le tout premier jeu Rayman, avant même sa version PlayStation ?",
+      "correct_answer": "Atari Jaguar",
+      "incorrect_answers": [
+        "Sega Saturn",
+        "Super Nintendo",
+        "Game Boy"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel type d'animal marsupial incarne le personnage principal de Crash Bandicoot ?",
+      "correct_answer": "Un bandicoot",
+      "incorrect_answers": [
+        "Un renard",
+        "Un hérisson",
+        "Un opossum"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio américain a développé la trilogie originale de Crash Bandicoot sur PlayStation ?",
+      "correct_answer": "Naughty Dog",
+      "incorrect_answers": [
+        "Insomniac Games",
+        "Sucker Punch Productions",
+        "Rare"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année le tout premier jeu Crash Bandicoot est-il sorti sur PlayStation ?",
+      "correct_answer": "1996",
+      "incorrect_answers": [
+        "1994",
+        "1998",
+        "1999"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme la petite sœur de Crash, elle aussi jouable dans plusieurs épisodes ?",
+      "correct_answer": "Coco Bandicoot",
+      "incorrect_answers": [
+        "Tawna Bandicoot",
+        "Pura",
+        "Aku Aku"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Combien de Wumpa Fruits faut-il généralement collecter pour obtenir une vie supplémentaire dans les jeux Crash Bandicoot ?",
+      "correct_answer": "100",
+      "incorrect_answers": [
+        "50",
+        "200",
+        "250"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle année est sorti le remake Crash Bandicoot N. Sane Trilogy ?",
+      "correct_answer": "2017",
+      "incorrect_answers": [
+        "2015",
+        "2018",
+        "2019"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment se nomme le savant fou, créateur et rival de Crash Bandicoot ?",
+      "correct_answer": "Docteur Neo Cortex",
+      "incorrect_answers": [
+        "Docteur N. Gin",
+        "Docteur N. Tropy",
+        "Docteur Nitrus Brio"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se prénomme l'héroïne de Celeste qui entreprend d'escalader une montagne ?",
+      "correct_answer": "Madeline",
+      "incorrect_answers": [
+        "Celeste",
+        "Theo",
+        "Badeline"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "À quel genre de jeu vidéo appartient Celeste ?",
+      "correct_answer": "Jeu de plateforme",
+      "incorrect_answers": [
+        "Jeu de course",
+        "Jeu de puzzle",
+        "Jeu de tir"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année le jeu Celeste est-il sorti ?",
+      "correct_answer": "2018",
+      "incorrect_answers": [
+        "2016",
+        "2019",
+        "2020"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme la montagne que Madeline tente de gravir tout au long du jeu ?",
+      "correct_answer": "Le mont Celeste",
+      "incorrect_answers": [
+        "Le mont Everest",
+        "Le mont Silver",
+        "Le mont Corvus"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel studio indépendant a développé Celeste ?",
+      "correct_answer": "Extremely OK Games",
+      "incorrect_answers": [
+        "Team Cherry",
+        "Supergiant Games",
+        "Motion Twin"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment se nomme le double sombre de Madeline, incarnation de son anxiété, qui la poursuit dans le jeu ?",
+      "correct_answer": "Badeline",
+      "incorrect_answers": [
+        "Theo",
+        "Mr. Oshiro",
+        "Granny"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Celeste est né d'un prototype réalisé en quatre jours lors d'une game jam sur quelle console fantaisiste (fantasy console) ?",
+      "correct_answer": "PICO-8",
+      "incorrect_answers": [
+        "Game Boy",
+        "TIC-80",
+        "Commodore 64"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Hollow Knight se déroule dans quel royaume souterrain peuplé d'insectes ?",
+      "correct_answer": "Hallownest",
+      "incorrect_answers": [
+        "Hyrule",
+        "Termina",
+        "Lordran"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio indépendant australien a développé Hollow Knight ?",
+      "correct_answer": "Team Cherry",
+      "incorrect_answers": [
+        "Team Meat",
+        "Klei Entertainment",
+        "Chucklefish"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année Hollow Knight est-il sorti ?",
+      "correct_answer": "2017",
+      "incorrect_answers": [
+        "2015",
+        "2019",
+        "2014"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle arme le Chevalier utilise-t-il principalement pour combattre dans Hollow Knight ?",
+      "correct_answer": "Un clou",
+      "incorrect_answers": [
+        "Une épée",
+        "Une lance",
+        "Un marteau"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme la petite ville en surface où les joueurs croisent de nombreux marchands ?",
+      "correct_answer": "Dirtmouth",
+      "incorrect_answers": [
+        "Cité des Larmes",
+        "Deepnest",
+        "Greenpath"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel terme désigne le genre de jeu de Hollow Knight, mêlant exploration non linéaire, plateforme et combat ?",
+      "correct_answer": "Metroidvania",
+      "incorrect_answers": [
+        "Roguelike",
+        "Battle royale",
+        "Hack'n'slash linéaire"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Combien de personnes ont fondé le studio Team Cherry ?",
+      "correct_answer": "Deux",
+      "incorrect_answers": [
+        "Trois",
+        "Quatre",
+        "Une seule"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio suédois a créé Minecraft ?",
+      "correct_answer": "Mojang",
+      "incorrect_answers": [
+        "Ubisoft",
+        "SEGA",
+        "Team Cherry"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel matériau sert de base à la fabrication des tout premiers outils dans Minecraft ?",
+      "correct_answer": "Le bois",
+      "incorrect_answers": [
+        "Le fer",
+        "L'or",
+        "Le diamant"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle créature emblématique de Minecraft explose silencieusement au contact du joueur ?",
+      "correct_answer": "Le Creeper",
+      "incorrect_answers": [
+        "Le Zombie",
+        "L'Enderman",
+        "Le Squelette"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Qui est le créateur original de Minecraft, surnommé «Notch» ?",
+      "correct_answer": "Markus Persson",
+      "incorrect_answers": [
+        "Jens Bergensten",
+        "Carl Manneh",
+        "Gabe Newell"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle entreprise a racheté le studio Mojang et la licence Minecraft en 2014 ?",
+      "correct_answer": "Microsoft",
+      "incorrect_answers": [
+        "Sony",
+        "Google",
+        "Amazon"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "En quelle année la version officielle 1.0 de Minecraft est-elle sortie ?",
+      "correct_answer": "2011",
+      "incorrect_answers": [
+        "2009",
+        "2013",
+        "2014"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Plateforme, Aventure & Indé",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment se nomme le mode de jeu offrant des ressources illimitées et l'invulnérabilité, dédié à la construction libre ?",
+      "correct_answer": "Mode Créatif",
+      "incorrect_answers": [
+        "Mode Survie",
+        "Mode Hardcore",
+        "Mode Spectateur"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel éditeur de jeux vidéo publie la série FIFA / EA Sports FC ?",
+      "correct_answer": "Electronic Arts",
+      "incorrect_answers": [
+        "Ubisoft",
+        "Activision Blizzard",
+        "Konami"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En quelle année la série a-t-elle été rebaptisée EA Sports FC après la fin du partenariat avec la FIFA ?",
+      "correct_answer": "2023",
+      "incorrect_answers": [
+        "2021",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du mode phare de FIFA / EA Sports FC dans lequel les joueurs constituent une équipe grâce à des cartes de joueurs ?",
+      "correct_answer": "Ultimate Team",
+      "incorrect_answers": [
+        "Pro Clubs",
+        "Volta Football",
+        "Career Mode"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel mode de football de rue, joué en petit comité dans des arènes urbaines, a fait ses débuts dans FIFA 20 ?",
+      "correct_answer": "Volta Football",
+      "incorrect_answers": [
+        "Street Kick-Off",
+        "Panna Mode",
+        "Ultimate Rush"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Qui était le joueur vedette en couverture de FIFA 21 et FIFA 22 ?",
+      "correct_answer": "Kylian Mbappé",
+      "incorrect_answers": [
+        "Antoine Griezmann",
+        "Karim Benzema",
+        "Paul Pogba"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Sous quel nom est aujourd'hui connu le studio EA (anciennement EA Canada) chargé du développement de FIFA / EA Sports FC ?",
+      "correct_answer": "EA Vancouver",
+      "incorrect_answers": [
+        "EA Montréal",
+        "EA Redwood Shores",
+        "EA Black Box"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le titre du tout premier jeu de la licence, sorti en 1993 sur Mega Drive et Super Nintendo ?",
+      "correct_answer": "FIFA International Soccer",
+      "incorrect_answers": [
+        "FIFA Soccer 95",
+        "World Cup USA 94",
+        "FIFA 96"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "À partir de quel épisode la série FIFA a-t-elle basculé sur le moteur graphique Frostbite d'Electronic Arts ?",
+      "correct_answer": "FIFA 17",
+      "incorrect_answers": [
+        "FIFA 15",
+        "FIFA 16",
+        "FIFA 18"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle entreprise développe et édite la série de jeux de course Mario Kart ?",
+      "correct_answer": "Nintendo",
+      "incorrect_answers": [
+        "Sega",
+        "Sony",
+        "Capcom"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel plombier moustachu donne son nom à la série de jeux de course Mario Kart ?",
+      "correct_answer": "Mario",
+      "incorrect_answers": [
+        "Luigi",
+        "Wario",
+        "Yoshi"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel objet, redouté des joueurs en tête de course, fonce automatiquement sur le premier du classement ?",
+      "correct_answer": "La carapace bleue",
+      "incorrect_answers": [
+        "La carapace rouge",
+        "L'étoile d'invincibilité",
+        "Le champignon doré"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Sur quelle console est sorti le tout premier jeu de la série, Super Mario Kart, en 1992 ?",
+      "correct_answer": "La Super Nintendo (SNES)",
+      "incorrect_answers": [
+        "La Nintendo 64",
+        "La Game Boy",
+        "La NES"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel opus, sorti en 2017 sur Nintendo Switch, est une version enrichie de Mario Kart 8 initialement paru sur Wii U ?",
+      "correct_answer": "Mario Kart 8 Deluxe",
+      "incorrect_answers": [
+        "Mario Kart 9",
+        "Mario Kart Switch",
+        "Mario Kart World"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel jeu de la série est sorti en 2019 exclusivement sur smartphones (iOS et Android) ?",
+      "correct_answer": "Mario Kart Tour",
+      "incorrect_answers": [
+        "Mario Kart Live: Home Circuit",
+        "Mario Kart DS",
+        "Mario Kart 7"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel opus a introduit pour la première fois des portions de circuit en apesanteur, permettant de rouler sur les murs et le plafond ?",
+      "correct_answer": "Mario Kart 8",
+      "incorrect_answers": [
+        "Mario Kart 7",
+        "Mario Kart Wii",
+        "Mario Kart 64"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel jeu de la série associe un kart miniature téléguidé réel à un dispositif de réalité augmentée, sorti en 2020 ?",
+      "correct_answer": "Mario Kart Live: Home Circuit",
+      "incorrect_answers": [
+        "Mario Kart Arcade GP",
+        "Mario Kart Tour",
+        "Mario Kart: Double Dash!!"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio japonais, fondé par Kazunori Yamauchi, développe la série Gran Turismo ?",
+      "correct_answer": "Polyphony Digital",
+      "incorrect_answers": [
+        "Naughty Dog",
+        "Sucker Punch Productions",
+        "Evolution Studios"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Sur quelle console est sorti le tout premier jeu Gran Turismo en 1997 ?",
+      "correct_answer": "La PlayStation",
+      "incorrect_answers": [
+        "La PlayStation 2",
+        "La Sega Saturn",
+        "La PlayStation Portable"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel slogan accompagne traditionnellement la série Gran Turismo pour souligner son réalisme ?",
+      "correct_answer": "The Real Driving Simulator",
+      "incorrect_answers": [
+        "The Ultimate Racing Experience",
+        "Pure Speed Simulator",
+        "The Real Race Experience"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio a développé Gran Turismo Sport, sorti en 2017 et entièrement tourné vers la compétition en ligne ?",
+      "correct_answer": "Polyphony Digital",
+      "incorrect_answers": [
+        "Evolution Studios",
+        "Codemasters",
+        "Turn 10 Studios"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En 2022, quel septième opus numéroté de la série est sorti simultanément sur PS4 et PS5 ?",
+      "correct_answer": "Gran Turismo 7",
+      "incorrect_answers": [
+        "Gran Turismo 6",
+        "Gran Turismo Sport",
+        "Gran Turismo 5"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel opus, sorti en 2010, a été le premier volet numéroté complet de la série sur PlayStation 3, après l'épisode « Prologue » ?",
+      "correct_answer": "Gran Turismo 5",
+      "incorrect_answers": [
+        "Gran Turismo 4",
+        "Gran Turismo 6",
+        "Gran Turismo Sport"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel programme, lancé en 2008 en partenariat avec Nissan, a permis à des joueurs de Gran Turismo de devenir pilotes automobiles professionnels ?",
+      "correct_answer": "GT Academy",
+      "incorrect_answers": [
+        "Race Camp",
+        "GT Pro League",
+        "Digital Racers Program"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Le film « Gran Turismo », inspiré de l'histoire du joueur devenu pilote Jann Mardenborough, est sorti au cinéma en quelle année ?",
+      "correct_answer": "2023",
+      "incorrect_answers": [
+        "2021",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio, filiale d'Electronic Arts, est à l'origine de la création de la série The Sims ?",
+      "correct_answer": "Maxis",
+      "incorrect_answers": [
+        "Bullfrog Productions",
+        "BioWare",
+        "DICE"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment s'appelle la langue fictive inventée que parlent les personnages de The Sims ?",
+      "correct_answer": "Le Simlish",
+      "incorrect_answers": [
+        "Le Simien",
+        "Le Maxien",
+        "Le Simsois"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle année a vu la sortie du tout premier jeu The Sims ?",
+      "correct_answer": "2000",
+      "incorrect_answers": [
+        "1998",
+        "1999",
+        "2002"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel concepteur de jeux vidéo, également créateur de la série SimCity, est à l'origine de The Sims ?",
+      "correct_answer": "Will Wright",
+      "incorrect_answers": [
+        "Sid Meier",
+        "Peter Molyneux",
+        "Shigeru Miyamoto"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme le symbole en forme de losange vert flottant au-dessus de la tête d'un Sim sélectionné ?",
+      "correct_answer": "Le Plumbob",
+      "incorrect_answers": [
+        "Le Simstone",
+        "Le Lifebob",
+        "Le Moodgem"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel volet principal de la série, sorti en 2014, est le quatrième opus numéroté ?",
+      "correct_answer": "Les Sims 4",
+      "incorrect_answers": [
+        "Les Sims 3",
+        "Les Sims 2",
+        "The Sims Online"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment se nomme la monnaie virtuelle utilisée par les Sims pour acheter objets et maisons ?",
+      "correct_answer": "Le Simoléon",
+      "incorrect_answers": [
+        "Le SimDollar",
+        "Le MaxiCoin",
+        "Le SimCoin"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel spin-off multijoueur en ligne, lancé en 2002 et fermé en 2008, proposait de vivre en communauté avec d'autres joueurs ?",
+      "correct_answer": "The Sims Online",
+      "incorrect_answers": [
+        "Les Sims Social",
+        "SimCity Social",
+        "The Sims 3 Online"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio américain a développé Rocket League ?",
+      "correct_answer": "Psyonix",
+      "incorrect_answers": [
+        "Valve",
+        "Epic Games",
+        "Codemasters"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quels deux univers sportifs le principe de jeu de Rocket League combine-t-il ?",
+      "correct_answer": "Le football et la course automobile",
+      "incorrect_answers": [
+        "Le basket-ball et la course automobile",
+        "Le hockey sur glace et la course automobile",
+        "Le rugby et le pilotage aérien"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Rocket League a été lancé à l'origine en quelle année, avant de devenir gratuit quelques années plus tard ?",
+      "correct_answer": "2015",
+      "incorrect_answers": [
+        "2013",
+        "2017",
+        "2019"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel jeu de 2008, développé par le même studio, est considéré comme le prédécesseur direct de Rocket League ?",
+      "correct_answer": "Supersonic Acrobatic Rocket-Powered Battle-Cars",
+      "incorrect_answers": [
+        "Battle Cars Arena",
+        "Turbo Soccer Rally",
+        "Rocket Arena"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle entreprise a racheté le studio Psyonix en 2019, avant de rendre Rocket League gratuit ?",
+      "correct_answer": "Epic Games",
+      "incorrect_answers": [
+        "Electronic Arts",
+        "Take-Two Interactive",
+        "Valve"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle année marque le passage de Rocket League au modèle gratuit (free-to-play) ?",
+      "correct_answer": "2020",
+      "incorrect_answers": [
+        "2018",
+        "2019",
+        "2021"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le nom de la monnaie premium utilisée dans la boutique d'objets cosmétiques de Rocket League ?",
+      "correct_answer": "Les Crédits",
+      "incorrect_answers": [
+        "Les Turbos",
+        "Les Boosts",
+        "Les Jetons RL"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel éditeur publie la célèbre série de simulation de basket-ball NBA 2K ?",
+      "correct_answer": "2K",
+      "incorrect_answers": [
+        "Electronic Arts",
+        "Ubisoft",
+        "Activision"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel studio américain, propriété de Microsoft, développe la série de simulation automobile Forza Motorsport ?",
+      "correct_answer": "Turn 10 Studios",
+      "incorrect_answers": [
+        "Playground Games",
+        "Codemasters",
+        "Polyphony Digital"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Sport, Course & Simulation",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel studio britannique développe la série officielle de jeux vidéo de Formule 1 (comme F1 23 ou F1 24) ?",
+      "correct_answer": "Codemasters",
+      "incorrect_answers": [
+        "Slightly Mad Studios",
+        "Kunos Simulazioni",
+        "Turn 10 Studios"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio de développement est à l'origine de World of Warcraft ?",
+      "correct_answer": "Blizzard Entertainment",
+      "incorrect_answers": [
+        "Riot Games",
+        "Epic Games",
+        "Rockstar Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "World of Warcraft voit le jour en quelle année ?",
+      "correct_answer": "2004",
+      "incorrect_answers": [
+        "1999",
+        "2001",
+        "2007"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomment les deux factions rivales de World of Warcraft ?",
+      "correct_answer": "L'Alliance et la Horde",
+      "incorrect_answers": [
+        "Les Empires et les Rebelles",
+        "Les Anciens et les Modernes",
+        "Les Vivants et les Morts"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle extension de World of Warcraft a introduit la classe des Chevaliers de la mort ?",
+      "correct_answer": "Wrath of the Lich King",
+      "incorrect_answers": [
+        "The Burning Crusade",
+        "Cataclysm",
+        "Legion"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel modèle économique a longtemps caractérisé World of Warcraft ?",
+      "correct_answer": "Un abonnement mensuel payant",
+      "incorrect_answers": [
+        "Un achat unique sans frais récurrents",
+        "Un modèle entièrement free-to-play",
+        "Un système de paiement à l'épisode"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le véritable nom du personnage devenu le Roi-Liche dans l'extension Wrath of the Lich King ?",
+      "correct_answer": "Arthas Menethil",
+      "incorrect_answers": [
+        "Illidan Stormrage",
+        "Sylvanas Coursevent",
+        "Ner'zhul"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel dragon noir corrompu incarne l'antagoniste principal de l'extension Cataclysm ?",
+      "correct_answer": "Aile de Mort (Deathwing)",
+      "incorrect_answers": [
+        "Ragnaros",
+        "Kil'jaeden",
+        "Illidan Stormrage"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Sur quel continent se déroule l'intrigue de l'extension Mists of Pandaria ?",
+      "correct_answer": "Pandarie",
+      "incorrect_answers": [
+        "Norfendre",
+        "Kalimdor",
+        "Les Terres de Draenor"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Fortnite a été développé par quel studio américain ?",
+      "correct_answer": "Epic Games",
+      "incorrect_answers": [
+        "Riot Games",
+        "Mojang Studios",
+        "Innersloth"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme la monnaie virtuelle utilisée dans Fortnite pour acheter des objets cosmétiques ?",
+      "correct_answer": "Les V-Bucks",
+      "incorrect_answers": [
+        "Les Robux",
+        "Les Riot Points",
+        "Les Orbes"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Combien de joueurs peuvent s'affronter au maximum dans une partie Battle Royale classique de Fortnite ?",
+      "correct_answer": "100",
+      "incorrect_answers": [
+        "50",
+        "60",
+        "150"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel moteur graphique fait tourner le jeu Fortnite ?",
+      "correct_answer": "Unreal Engine",
+      "incorrect_answers": [
+        "Unity",
+        "CryEngine",
+        "Source Engine"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année le mode Battle Royale de Fortnite a-t-il été lancé ?",
+      "correct_answer": "2017",
+      "incorrect_answers": [
+        "2015",
+        "2013",
+        "2019"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel élément de gameplay emblématique permet aux joueurs de Fortnite d'ériger murs, rampes et plateformes en pleine bataille ?",
+      "correct_answer": "La construction",
+      "incorrect_answers": [
+        "Le piratage de véhicules",
+        "L'invisibilité temporaire",
+        "La téléportation"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel rappeur américain a donné un concert virtuel événement dans Fortnite en avril 2020 ?",
+      "correct_answer": "Travis Scott",
+      "incorrect_answers": [
+        "Marshmello",
+        "Eminem",
+        "Ariana Grande"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Sous quel pseudonyme Kyle Giersdorf a-t-il remporté la finale solo de la Coupe du monde Fortnite 2019 ?",
+      "correct_answer": "Bugha",
+      "incorrect_answers": [
+        "Ninja",
+        "Tfue",
+        "Mongraal"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio développe et édite League of Legends ?",
+      "correct_answer": "Riot Games",
+      "incorrect_answers": [
+        "Blizzard Entertainment",
+        "Valve",
+        "Epic Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "League of Legends a été lancé en quelle année ?",
+      "correct_answer": "2009",
+      "incorrect_answers": [
+        "2004",
+        "2011",
+        "2013"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel est le nom de la carte principale sur laquelle se joue le mode classique 5 contre 5 de League of Legends ?",
+      "correct_answer": "La Faille de l'invocateur",
+      "incorrect_answers": [
+        "L'Abîme hurlant",
+        "La Faille tordue",
+        "Le Nexus Blitz"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "À quel genre vidéoludique appartient League of Legends ?",
+      "correct_answer": "MOBA (arène de bataille en ligne multijoueur)",
+      "incorrect_answers": [
+        "FPS (jeu de tir à la première personne)",
+        "MMORPG",
+        "Jeu de stratégie en temps réel classique"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle structure les joueurs doivent-ils détruire pour remporter une partie de League of Legends ?",
+      "correct_answer": "Le Nexus adverse",
+      "incorrect_answers": [
+        "La Tour centrale",
+        "Le Temple sacré",
+        "La Forteresse ennemie"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle équipe a remporté le tout premier Championnat du monde de League of Legends en 2011 ?",
+      "correct_answer": "Fnatic",
+      "incorrect_answers": [
+        "SK Telecom T1",
+        "G2 Esports",
+        "Cloud9"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Sous quel pseudonyme le joueur professionnel sud-coréen Lee Sang-hyeok est-il mondialement connu ?",
+      "correct_answer": "Faker",
+      "incorrect_answers": [
+        "Uzi",
+        "Caps",
+        "Doublelift"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle série d'animation diffusée sur Netflix s'inspire de l'univers de League of Legends ?",
+      "correct_answer": "Arcane",
+      "incorrect_answers": [
+        "Dota : Le Sang des dragons",
+        "Castlevania",
+        "Cyberpunk : Edgerunners"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Derrière quel studio se cache la création de la série Grand Theft Auto ?",
+      "correct_answer": "Rockstar Games",
+      "incorrect_answers": [
+        "Ubisoft",
+        "Electronic Arts",
+        "Bethesda Softworks"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "GTA Online, mode multijoueur de GTA V, a été lancé durant quelle année ?",
+      "correct_answer": "2013",
+      "incorrect_answers": [
+        "2008",
+        "2011",
+        "2015"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Dans quelle ville fictive se déroule principalement GTA Online ?",
+      "correct_answer": "Los Santos",
+      "incorrect_answers": [
+        "Liberty City",
+        "Vice City",
+        "San Fierro"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme la carte prépayée permettant d'acheter du GTA$ avec de l'argent réel dans GTA Online ?",
+      "correct_answer": "La Shark Card",
+      "incorrect_answers": [
+        "La Rockstar Card",
+        "La V-Bucks Card",
+        "La Robux Card"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel est le nom de l'État fictif américain dans lequel se déroulent GTA V et GTA Online ?",
+      "correct_answer": "San Andreas",
+      "incorrect_answers": [
+        "San Fierro",
+        "Vinewood County",
+        "Liberty State"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle mise à jour majeure de fin 2015 a introduit les braquages coopératifs dans GTA Online ?",
+      "correct_answer": "Heists",
+      "incorrect_answers": [
+        "The Doomsday Heist",
+        "The Diamond Casino Heist",
+        "Los Santos Drug Wars"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Le braquage de Cayo Perico a été ajouté à GTA Online au cours de quelle année ?",
+      "correct_answer": "2020",
+      "incorrect_answers": [
+        "2018",
+        "2019",
+        "2021"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Sur quelles consoles la version autonome (standalone) de GTA Online est-elle sortie en mars 2022 ?",
+      "correct_answer": "PlayStation 5 et Xbox Series X|S",
+      "incorrect_answers": [
+        "Nintendo Switch",
+        "PlayStation 4 uniquement",
+        "Xbox One uniquement"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio indépendant a développé Among Us ?",
+      "correct_answer": "Innersloth",
+      "incorrect_answers": [
+        "Mojang Studios",
+        "Epic Games",
+        "Riot Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quels sont les deux rôles principaux que les joueurs peuvent incarner dans une partie d'Among Us ?",
+      "correct_answer": "Membre d'équipage et Imposteur",
+      "incorrect_answers": [
+        "Détective et Suspect",
+        "Survivant et Zombie",
+        "Chasseur et Proie"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "En quelle année Among Us est-il sorti initialement, avant de devenir un phénomène mondial en 2020 ?",
+      "correct_answer": "2018",
+      "incorrect_answers": [
+        "2016",
+        "2014",
+        "2020"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme la carte originale d'Among Us, représentant un vaisseau spatial ?",
+      "correct_answer": "The Skeld",
+      "incorrect_answers": [
+        "MIRA HQ",
+        "Polus",
+        "The Airship"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment appelle-t-on la réunion que les joueurs peuvent déclencher en signalant un corps ou en appuyant sur un bouton dédié ?",
+      "correct_answer": "Une réunion d'urgence",
+      "incorrect_answers": [
+        "Un vote express",
+        "Un conseil de guerre",
+        "Une alerte rouge"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Among Us s'inspire fortement d'un genre de jeu de société basé sur la déduction sociale et la trahison entre joueurs. Lequel ?",
+      "correct_answer": "Le jeu Mafia / Loup-Garou",
+      "incorrect_answers": [
+        "Le jeu Cluedo",
+        "Le jeu Risk",
+        "Le jeu Codenames"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Le jeu Minecraft a été créé à l'origine par quel studio suédois ?",
+      "correct_answer": "Mojang Studios",
+      "incorrect_answers": [
+        "Innersloth",
+        "Epic Games",
+        "Rockstar Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel jeu de tir tactique 5 contre 5, développé par Riot Games, est sorti en 2020 ?",
+      "correct_answer": "Valorant",
+      "incorrect_answers": [
+        "Overwatch",
+        "Apex Legends",
+        "Counter-Strike"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme le service officiel de Mojang permettant de louer facilement des serveurs privés pour jouer à Minecraft en multijoueur ?",
+      "correct_answer": "Minecraft Realms",
+      "incorrect_answers": [
+        "Minecraft Cloud",
+        "Mojang Host",
+        "Minecraft Network"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : MMORPG & Multijoueur en Ligne",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Le jeu de tir en équipe Overwatch, développé par Blizzard Entertainment, a été lancé durant quelle année ?",
+      "correct_answer": "2016",
+      "incorrect_answers": [
+        "2014",
+        "2018",
+        "2019"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio américain a développé le jeu League of Legends ?",
+      "correct_answer": "Riot Games",
+      "incorrect_answers": [
+        "Blizzard Entertainment",
+        "Valve",
+        "Epic Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme le championnat du monde annuel de League of Legends ?",
+      "correct_answer": "Worlds",
+      "incorrect_answers": [
+        "The International",
+        "EVO",
+        "Les Majors"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En quelle année League of Legends a-t-il été lancé ?",
+      "correct_answer": "2009",
+      "incorrect_answers": [
+        "2005",
+        "2011",
+        "2013"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel est le véritable nom du joueur sud-coréen connu sous le pseudonyme Faker ?",
+      "correct_answer": "Lee Sang-hyeok",
+      "incorrect_answers": [
+        "Kim Jun-hyuk",
+        "Park Sang-woo",
+        "Choi Min-jae"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle équipe a été sacrée toute première championne du monde de League of Legends, en 2011 ?",
+      "correct_answer": "Fnatic",
+      "incorrect_answers": [
+        "SK Telecom T1",
+        "Samsung Galaxy",
+        "Invictus Gaming"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment s'appelle le trophée remis à l'équipe championne du monde de League of Legends ?",
+      "correct_answer": "La Coupe d'Invocateur (Summoner's Cup)",
+      "incorrect_answers": [
+        "L'Égide des Champions",
+        "La Coupe du Monde",
+        "Le Bouclier de Cristal"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Sous quel nom d'équipe sud-coréenne Faker a-t-il disputé l'essentiel de sa carrière professionnelle ?",
+      "correct_answer": "T1 (anciennement SK Telecom T1)",
+      "incorrect_answers": [
+        "KT Rolster",
+        "Gen.G",
+        "DAMWON Gaming"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle équipe chinoise a décroché en 2018 le tout premier titre mondial de League of Legends pour la région LPL ?",
+      "correct_answer": "Invictus Gaming",
+      "incorrect_answers": [
+        "Royal Never Give Up",
+        "EDward Gaming",
+        "FunPlus Phoenix"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle région a remporté le plus grand nombre de championnats du monde de League of Legends au fil de l'histoire de la compétition ?",
+      "correct_answer": "La Corée du Sud (LCK)",
+      "incorrect_answers": [
+        "La Chine (LPL)",
+        "L'Europe (LEC)",
+        "L'Amérique du Nord (LCS)"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle entreprise détient les droits de la licence Counter-Strike ?",
+      "correct_answer": "Valve",
+      "incorrect_answers": [
+        "Riot Games",
+        "Ubisoft",
+        "Electronic Arts"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En quelle année Counter-Strike: Global Offensive est-il sorti ?",
+      "correct_answer": "2012",
+      "incorrect_answers": [
+        "2009",
+        "2010",
+        "2015"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment appelle-t-on les tournois de Counter-Strike directement organisés par Valve ?",
+      "correct_answer": "Les Majors",
+      "incorrect_answers": [
+        "Les Internationals",
+        "Les Worlds",
+        "Les Masters"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle équipe danoise a dominé la scène Counter-Strike: Global Offensive à la fin des années 2010 en remportant quatre Majors ?",
+      "correct_answer": "Astralis",
+      "incorrect_answers": [
+        "Natus Vincere",
+        "Fnatic",
+        "Virtus.pro"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel est le pseudonyme du joueur ukrainien Oleksandr Kostyliev, star de l'équipe Natus Vincere ?",
+      "correct_answer": "s1mple",
+      "incorrect_answers": [
+        "ZywOo",
+        "GeT_RiGhT",
+        "device"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Counter-Strike est né à l'origine comme une modification (mod) d'un autre jeu. Lequel ?",
+      "correct_answer": "Half-Life",
+      "incorrect_answers": [
+        "Quake",
+        "Doom",
+        "Unreal Tournament"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle équipe a remporté le tout premier Major de l'histoire de Counter-Strike: Global Offensive, à DreamHack Winter 2013 ?",
+      "correct_answer": "Fnatic",
+      "incorrect_answers": [
+        "Ninjas in Pyjamas",
+        "Astralis",
+        "Virtus.pro"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle organisation nord-américaine a créé la surprise en devenant, en 2018, la première équipe de sa région à remporter un Major ?",
+      "correct_answer": "Cloud9",
+      "incorrect_answers": [
+        "Team Liquid",
+        "Team SoloMid",
+        "Complexity Gaming"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio développe et édite Dota 2 ?",
+      "correct_answer": "Valve",
+      "incorrect_answers": [
+        "Riot Games",
+        "Blizzard Entertainment",
+        "Epic Games"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme le tournoi de référence de Dota 2, organisé chaque année par Valve ?",
+      "correct_answer": "The International",
+      "incorrect_answers": [
+        "Worlds",
+        "Les Majors",
+        "EVO"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En quelle année Dota 2 est-il officiellement sorti ?",
+      "correct_answer": "2013",
+      "incorrect_answers": [
+        "2010",
+        "2011",
+        "2015"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Dota 2 est l'héritier direct d'une carte personnalisée créée sur quel autre jeu ?",
+      "correct_answer": "Warcraft III",
+      "incorrect_answers": [
+        "StarCraft",
+        "Diablo II",
+        "Age of Empires"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se nomme le trophée remis à l'équipe victorieuse de The International ?",
+      "correct_answer": "L'Égide des Champions (Aegis of Champions)",
+      "incorrect_answers": [
+        "La Coupe d'Invocateur",
+        "Le Bouclier des Anciens",
+        "Le Calice de Cristal"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle équipe a remporté la toute première édition de The International, en 2011 ?",
+      "correct_answer": "Natus Vincere",
+      "incorrect_answers": [
+        "Evil Geniuses",
+        "Newbee",
+        "Invictus Gaming"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle organisation est devenue la première à remporter deux éditions consécutives de The International, en 2018 puis 2019 ?",
+      "correct_answer": "OG",
+      "incorrect_answers": [
+        "Team Secret",
+        "Evil Geniuses",
+        "PSG.LGD"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Comment se nomme le pass numérique payant que les joueurs achètent notamment pour faire grossir la cagnotte de The International ?",
+      "correct_answer": "Le Battle Pass",
+      "incorrect_answers": [
+        "Le Season Pass",
+        "Le Championship Ticket",
+        "Le Prize Pool Fund"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Que désigne le terme « esport » ?",
+      "correct_answer": "La pratique compétitive du jeu vidéo",
+      "incorrect_answers": [
+        "Un sport extrême pratiqué en extérieur",
+        "Une discipline uniquement liée à la réalité virtuelle",
+        "Une catégorie de jeux de société"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel pays est historiquement considéré comme un pionnier de l'esport, notamment grâce à sa scène StarCraft ?",
+      "correct_answer": "La Corée du Sud",
+      "incorrect_answers": [
+        "Le Japon",
+        "Les États-Unis",
+        "La Chine"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle plateforme de streaming est historiquement la plus utilisée pour diffuser les compétitions d'esport en direct ?",
+      "correct_answer": "Twitch",
+      "incorrect_answers": [
+        "Netflix",
+        "Spotify",
+        "TikTok"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Laquelle de ces organisations d'esport a été fondée au Royaume-Uni en 2004 ?",
+      "correct_answer": "Fnatic",
+      "incorrect_answers": [
+        "G2 Esports",
+        "T1",
+        "Cloud9"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Qui a fondé l'organisation G2 Esports en 2014 ?",
+      "correct_answer": "Carlos « ocelote » Rodríguez",
+      "incorrect_answers": [
+        "Rick Fox",
+        "Jack Etienne",
+        "Andy « Reginald » Dinh"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel jeu était au centre du tournoi Red Annihilation en 1997, souvent cité comme l'un des tout premiers grands tournois d'esport ?",
+      "correct_answer": "Quake",
+      "incorrect_answers": [
+        "Doom",
+        "Counter-Strike",
+        "StarCraft"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Pendant de nombreuses années, quel jeu a détenu le record de la plus grosse cagnotte jamais distribuée lors d'un tournoi esport unique, grâce à son système de financement participatif ?",
+      "correct_answer": "Dota 2",
+      "incorrect_answers": [
+        "League of Legends",
+        "Counter-Strike",
+        "Fortnite"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle organisation d'esport a été fondée par l'ancien joueur de NBA Rick Fox, avant de cesser ses activités ?",
+      "correct_answer": "Echo Fox",
+      "incorrect_answers": [
+        "Cloud9",
+        "100 Thieves",
+        "Team Liquid"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel prix inhabituel le joueur Dennis « Thresh » Fong a-t-il remporté en gagnant le tournoi Quake « Red Annihilation » en 1997, don personnel du co-créateur du jeu John Carmack ?",
+      "correct_answer": "Une Ferrari",
+      "incorrect_answers": [
+        "Un an de salaire",
+        "Un ordinateur sur mesure",
+        "Un voyage autour du monde"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment se nomme la plus célèbre compétition de jeux de combat au monde, organisée chaque année aux États-Unis ?",
+      "correct_answer": "EVO (Evolution Championship Series)",
+      "incorrect_answers": [
+        "The International",
+        "Worlds",
+        "ESL One"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel éditeur japonais développe la série de jeux de combat Street Fighter ?",
+      "correct_answer": "Capcom",
+      "incorrect_answers": [
+        "SNK",
+        "Bandai Namco",
+        "Sega"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En quelle année Street Fighter II, jeu fondateur du genre compétitif, est-il sorti en arcade ?",
+      "correct_answer": "1991",
+      "incorrect_answers": [
+        "1987",
+        "1994",
+        "1998"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel surnom est donné au joueur japonais Daigo Umehara, considéré comme une légende des jeux de combat ?",
+      "correct_answer": "The Beast",
+      "incorrect_answers": [
+        "The King",
+        "The Machine",
+        "The Legend"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment est surnommé le moment mythique où Daigo Umehara a paré une série de coups de Chun-Li lors d'EVO 2004 ?",
+      "correct_answer": "EVO Moment 37",
+      "incorrect_answers": [
+        "Le Parry Parfait",
+        "EVO Moment 99",
+        "Le Miracle de Daigo"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Contre quel joueur américain Daigo Umehara a-t-il réalisé cet exploit devenu légendaire lors d'EVO 2004 ?",
+      "correct_answer": "Justin Wong",
+      "incorrect_answers": [
+        "Sanford Kelly",
+        "Alex Valle",
+        "Marn"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel jeu de combat culte, sorti en 2001 exclusivement sur GameCube, doit sa présence prolongée à EVO à une communauté compétitive particulièrement fidèle malgré son âge ?",
+      "correct_answer": "Super Smash Bros. Melee",
+      "incorrect_answers": [
+        "Super Smash Bros. Brawl",
+        "Marvel vs. Capcom 2",
+        "Tekken Tag Tournament"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Esport & Compétition",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle série de jeux de combat développée par Bandai Namco met en scène des personnages comme Kazuya Mishima et Heihachi ?",
+      "correct_answer": "Tekken",
+      "incorrect_answers": [
+        "Street Fighter",
+        "Soulcalibur",
+        "Mortal Kombat"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio japonais a développé le jeu Pac-Man ?",
+      "correct_answer": "Namco",
+      "incorrect_answers": [
+        "Taito",
+        "Sega",
+        "Konami"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En quelle année Pac-Man est-il sorti pour la première fois au Japon ?",
+      "correct_answer": "1980",
+      "incorrect_answers": [
+        "1978",
+        "1983",
+        "1985"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel est le nom du fantôme rouge, le plus agressif des quatre fantômes de Pac-Man ?",
+      "correct_answer": "Blinky",
+      "incorrect_answers": [
+        "Pinky",
+        "Inky",
+        "Clyde"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Sous quel nom Pac-Man a-t-il d'abord été commercialisé au Japon avant d'être renommé pour l'international ?",
+      "correct_answer": "Puck Man",
+      "incorrect_answers": [
+        "Point Man",
+        "Dot Eater",
+        "Maze Man"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel score, considéré comme 'parfait', Billy Mitchell a-t-il atteint le premier à Pac-Man en 1999 ?",
+      "correct_answer": "3 333 360",
+      "incorrect_answers": [
+        "999 999",
+        "1 000 000",
+        "2 500 000"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "À quel niveau apparaît le célèbre 'kill screen' de Pac-Man, causé par un bug de dépassement de mémoire ?",
+      "correct_answer": "Niveau 256",
+      "incorrect_answers": [
+        "Niveau 100",
+        "Niveau 199",
+        "Niveau 300"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel éditeur japonais a sorti Space Invaders en 1978 ?",
+      "correct_answer": "Taito",
+      "incorrect_answers": [
+        "Namco",
+        "Sega",
+        "Nintendo"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Combien de rangées d'envahisseurs composent la formation classique dans Space Invaders ?",
+      "correct_answer": "5",
+      "incorrect_answers": [
+        "3",
+        "7",
+        "10"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Qui est le créateur de Space Invaders ?",
+      "correct_answer": "Tomohiro Nishikado",
+      "incorrect_answers": [
+        "Toru Iwatani",
+        "Shigeru Miyamoto",
+        "Yu Suzuki"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel phénomène économique aurait été partiellement causé par le succès de Space Invaders au Japon, selon une légende urbaine tenace ?",
+      "correct_answer": "Une pénurie de pièces de 100 yens",
+      "incorrect_answers": [
+        "Une pénurie de billets de banque",
+        "Une hausse du prix de l'électricité",
+        "Une pénurie de cartouches de jeux"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle société américaine a obtenu la licence pour distribuer Space Invaders aux États-Unis ?",
+      "correct_answer": "Midway",
+      "incorrect_answers": [
+        "Atari",
+        "Bally",
+        "Williams"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel roman de H. G. Wells est cité comme source d'inspiration pour l'apparence des envahisseurs de Space Invaders ?",
+      "correct_answer": "La Guerre des mondes",
+      "incorrect_answers": [
+        "La Machine à explorer le temps",
+        "L'Île du docteur Moreau",
+        "Les Premiers Hommes dans la Lune"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Qui a créé le jeu Tetris en 1984 ?",
+      "correct_answer": "Alexeï Pajitnov",
+      "incorrect_answers": [
+        "Toru Iwatani",
+        "Shigeru Miyamoto",
+        "Ed Boon"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Dans quel pays Tetris a-t-il été inventé ?",
+      "correct_answer": "Union soviétique",
+      "incorrect_answers": [
+        "États-Unis",
+        "Japon",
+        "Royaume-Uni"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "D'où vient le nom 'Tetris' ?",
+      "correct_answer": "De 'tétromino' et du tennis, sport favori de son créateur",
+      "incorrect_answers": [
+        "De 'tétra' et 'Tris', le prénom de sa fille",
+        "De l'acronyme russe pour 'jeu de blocs'",
+        "Du mot grec signifiant 'chute'"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Sur quel ordinateur Alexeï Pajitnov a-t-il programmé la toute première version de Tetris ?",
+      "correct_answer": "Electronika 60",
+      "incorrect_answers": [
+        "Commodore 64",
+        "IBM PC",
+        "ZX Spectrum"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle entreprise a obtenu les droits d'édition de la version Tetris incluse avec la Game Boy en 1989 ?",
+      "correct_answer": "Nintendo",
+      "incorrect_answers": [
+        "Atari Games",
+        "Spectrum Holobyte",
+        "Sega"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Combien de formes de tétrominos différentes composent le jeu classique Tetris ?",
+      "correct_answer": "7",
+      "incorrect_answers": [
+        "5",
+        "9",
+        "4"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel éditeur japonais est à l'origine de la série Street Fighter ?",
+      "correct_answer": "Capcom",
+      "incorrect_answers": [
+        "Namco",
+        "SNK",
+        "Sega"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "En quelle année Street Fighter II est-il sorti dans les salles d'arcade, relançant l'industrie du jeu de combat ?",
+      "correct_answer": "1991",
+      "incorrect_answers": [
+        "1987",
+        "1994",
+        "1989"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel est le nom de la technique signature de Ryu et Ken consistant à envoyer une boule d'énergie ?",
+      "correct_answer": "Hadoken",
+      "incorrect_answers": [
+        "Shoryuken",
+        "Tatsumaki Senpukyaku",
+        "Sonic Boom"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle combattante de Street Fighter II est considérée comme l'un des premiers personnages féminins jouables majeurs des jeux de combat ?",
+      "correct_answer": "Chun-Li",
+      "incorrect_answers": [
+        "Cammy",
+        "Sakura",
+        "Mai Shiranui"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle particularité équipait les bornes de certaines versions du Street Fighter original de 1987 ?",
+      "correct_answer": "Des boutons sensibles à la pression du coup",
+      "incorrect_answers": [
+        "Un écran tactile",
+        "Un joystick à retour de force",
+        "Un lecteur de cartes magnétiques"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Qui a été le producteur de Street Fighter II chez Capcom ?",
+      "correct_answer": "Yoshiki Okamoto",
+      "incorrect_answers": [
+        "Hideo Kojima",
+        "Shigeru Miyamoto",
+        "Tomonobu Itagaki"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio a créé Mortal Kombat, sorti en 1992 ?",
+      "correct_answer": "Midway",
+      "incorrect_answers": [
+        "Capcom",
+        "Sega",
+        "Namco"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Comment appelle-t-on les mises à mort spectaculaires de fin de combat caractéristiques de Mortal Kombat ?",
+      "correct_answer": "Fatalities",
+      "incorrect_answers": [
+        "Executions",
+        "Finishers",
+        "Brutalités"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle technique Midway a-t-elle utilisée pour créer les personnages de Mortal Kombat, leur donnant un rendu réaliste inédit ?",
+      "correct_answer": "La numérisation d'acteurs filmés en vidéo",
+      "incorrect_answers": [
+        "La capture de mouvement 3D",
+        "Le dessin animé traditionnel",
+        "La modélisation polygonale"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quel est le titre de la suite de Mortal Kombat sortie en 1993 ?",
+      "correct_answer": "Mortal Kombat II",
+      "incorrect_answers": [
+        "Mortal Kombat 3",
+        "Mortal Kombat Trilogy",
+        "Ultimate Mortal Kombat 3"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "La controverse suscitée par la violence de Mortal Kombat a contribué directement à la création de quel organisme aux États-Unis ?",
+      "correct_answer": "L'ESRB (Entertainment Software Rating Board)",
+      "incorrect_answers": [
+        "Le PEGI",
+        "Le CERO",
+        "Le BBFC"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel studio, fondé en 2010 après la faillite de Midway, a repris le développement de la série Mortal Kombat ?",
+      "correct_answer": "NetherRealm Studios",
+      "incorrect_answers": [
+        "WB Games Montréal",
+        "Rocksteady Studios",
+        "Acclaim Entertainment"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel est le nom du personnage jouable dans Donkey Kong (1981), plus tard rebaptisé Mario ?",
+      "correct_answer": "Jumpman",
+      "incorrect_answers": [
+        "Popeye",
+        "Pauline",
+        "Kong Jr."
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel studio japonais a développé et édité Donkey Kong en 1981 ?",
+      "correct_answer": "Nintendo",
+      "incorrect_answers": [
+        "Sega",
+        "Konami",
+        "Namco"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Qui a conçu Donkey Kong, son tout premier jeu en tant que game designer chez Nintendo ?",
+      "correct_answer": "Shigeru Miyamoto",
+      "incorrect_answers": [
+        "Gunpei Yokoi",
+        "Satoru Iwata",
+        "Hiroshi Yamauchi"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment se prénomme la jeune femme kidnappée par le gorille Donkey Kong, que le joueur doit secourir ?",
+      "correct_answer": "Pauline",
+      "incorrect_answers": [
+        "Peach",
+        "Daisy",
+        "Toadette"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Combien de tableaux distincts comporte le Donkey Kong original de 1981 ?",
+      "correct_answer": "4",
+      "incorrect_answers": [
+        "3",
+        "5",
+        "6"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quelle entreprise a poursuivi Nintendo en justice en alléguant que Donkey Kong violait ses droits sur King Kong, un procès finalement perdu par le plaignant ?",
+      "correct_answer": "Universal City Studios",
+      "incorrect_answers": [
+        "Toho",
+        "RKO Pictures",
+        "Paramount Pictures"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quel jeu, sorti en 1972, est considéré comme le premier succès commercial majeur de l'histoire de l'arcade ?",
+      "correct_answer": "Pong",
+      "incorrect_answers": [
+        "Space Invaders",
+        "Asteroids",
+        "Computer Space"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Quelle entreprise américaine, fondée en 1972 par Nolan Bushnell, est devenue emblématique de l'âge d'or de l'arcade ?",
+      "correct_answer": "Atari",
+      "incorrect_answers": [
+        "Midway",
+        "Sega",
+        "Bally"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Quelle console de salon d'Atari, sortie en 1977, a démocratisé les jeux vidéo à cartouches interchangeables dans les foyers ?",
+      "correct_answer": "Atari 2600 (VCS)",
+      "incorrect_answers": [
+        "Atari 5200",
+        "Atari 7800",
+        "Atari Jaguar"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Comment surnomme-t-on la période, de la fin des années 1970 au milieu des années 1980, marquée par l'immense popularité des salles d'arcade ?",
+      "correct_answer": "L'âge d'or de l'arcade",
+      "incorrect_answers": [
+        "L'ère numérique",
+        "La révolution 8 bits",
+        "Le boom vidéoludique"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel jeu de 1971, précurseur de Pong, est généralement considéré comme le tout premier jeu vidéo d'arcade commercialisé ?",
+      "correct_answer": "Computer Space",
+      "incorrect_answers": [
+        "Spacewar!",
+        "Galaxy Game",
+        "Tennis for Two"
+      ]
+    },
+    {
+      "category": "Jeux Vidéo : Rétrogaming & Arcade",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Quel événement de 1983 a provoqué un effondrement massif du marché nord-américain du jeu vidéo ?",
+      "correct_answer": "Le krach du jeu vidéo de 1983",
+      "incorrect_answers": [
+        "Le rachat d'Atari par Warner Communications",
+        "La sortie de la Nintendo Entertainment System (NES)",
+        "Une interdiction totale des jeux vidéo au Japon"
+      ]
+    }
+  ]
+}

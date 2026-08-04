@@ -61,6 +61,31 @@ MANIFEST: dict[str, tuple[str, str, str]] = {
     "Manga & Anime : My Hero Academia": ("Manga & Anime", "Shōnen modernes", "🔥"),
     "Manga & Anime : Demon Slayer": ("Manga & Anime", "Shōnen modernes", "🔥"),
     "Manga & Anime : Fullmetal Alchemist": ("Manga & Anime", "Shōnen modernes", "🔥"),
+    # Jeux vidéo
+    "Jeux Vidéo : Histoire & Culture générale": ("Jeux vidéo", "Jeux vidéo : culture générale", "🎮"),
+    "Jeux Vidéo : Rétrogaming & Arcade": ("Jeux vidéo", "Rétrogaming et arcade", "👾"),
+    "Jeux Vidéo : Nintendo (Mario & Kirby)": ("Jeux vidéo", "Nintendo : Mario, Kirby et Metroid", "🍄"),
+    "Jeux Vidéo : Metroid": ("Jeux vidéo", "Nintendo : Mario, Kirby et Metroid", "🍄"),
+    "Jeux Vidéo : The Legend of Zelda": ("Jeux vidéo", "The Legend of Zelda", "🗡️"),
+    # Complète le quiz Pokémon d'OpenQuizzDB au lieu d'en créer un deuxième (voir MERGE_INTO).
+    "Jeux Vidéo : Pokémon (jeux)": ("Jeux vidéo", "Pokemon", "⚡"),
+    "Jeux Vidéo : PlayStation": ("Jeux vidéo", "PlayStation", "🕹️"),
+    "Jeux Vidéo : Xbox & FPS": ("Jeux vidéo", "Xbox et FPS", "🎯"),
+    "Jeux Vidéo : RPG Occidentaux": ("Jeux vidéo", "RPG occidentaux", "🧙"),
+    "Jeux Vidéo : RPG Japonais & Souls-like": ("Jeux vidéo", "RPG japonais et Souls-like", "🔮"),
+    "Jeux Vidéo : Plateforme, Aventure & Indé": ("Jeux vidéo", "Plateforme, aventure et indé", "🧗"),
+    "Jeux Vidéo : Sport, Course & Simulation": ("Jeux vidéo", "Sport, course et simulation", "🏎️"),
+    "Jeux Vidéo : MMORPG & Multijoueur en Ligne": ("Jeux vidéo", "MMORPG et jeux en ligne", "🌐"),
+    "Jeux Vidéo : Esport & Compétition": ("Jeux vidéo", "Esport et compétition", "🏆"),
+}
+
+# Titres du manifeste qui complètent un quiz déjà importé par un autre corpus plutôt que
+# d'en créer un doublon : titre -> owner du quiz cible. Seules les questions absentes sont
+# ajoutées (comparaison sur l'énoncé), donc l'import reste idempotent. Si le quiz cible
+# n'existe pas encore (import maison lancé avant l'autre corpus), le quiz est créé
+# normalement sous « Midi Quizz » — relancer l'autre import ne le dédoublonnera pas.
+MERGE_INTO: dict[str, str] = {
+    "Pokemon": "OpenQuizzDB",
 }
 
 # Limites alignées sur schemas.QuizIn / QuestionIn — un quiz importé doit rester
@@ -127,11 +152,15 @@ def _extract(results: list, source: str) -> tuple[dict[str, list], list[str]]:
     # Ordre des quiz : celui du MANIFEST. Ordre des questions : facile -> difficile,
     # stable sur l'ordre du fichier à difficulté égale.
     order = list(dict.fromkeys(title for _, title, _ in MANIFEST.values()))
-    ordered = {
-        title: sorted(groups[title], key=lambda q: q[0])[:MAX_QUESTIONS_PER_QUIZ]
-        for title in order
-        if title in groups
-    }
+    ordered = {}
+    for title in order:
+        if title not in groups:
+            continue
+        questions = sorted(groups[title], key=lambda q: q[0])
+        if len(questions) > MAX_QUESTIONS_PER_QUIZ:
+            print(f"  ! {title} : {len(questions) - MAX_QUESTIONS_PER_QUIZ} question(s) coupée(s)"
+                  f" (plafond {MAX_QUESTIONS_PER_QUIZ}, les plus difficiles)")
+        ordered[title] = questions[:MAX_QUESTIONS_PER_QUIZ]
     return ordered, sorted(unknown)
 
 
@@ -153,6 +182,39 @@ def _get_or_create_owner(conn) -> int:
 def _meta(title: str) -> tuple[str, str]:
     """Catégorie et emoji du quiz, depuis la première entrée du MANIFEST qui le porte."""
     return next((cat, emoji) for cat, t, emoji in MANIFEST.values() if t == title)
+
+
+def _merge_target(conn, title: str) -> int | None:
+    """id du quiz d'un autre corpus à compléter, s'il existe déjà."""
+    owner = MERGE_INTO.get(title)
+    if owner is None:
+        return None
+    row = conn.execute(
+        "SELECT q.id FROM quizzes q JOIN users u ON u.id = q.owner_id"
+        " WHERE q.title = ? AND u.username_norm = ?",
+        (title, owner.lower()),
+    ).fetchone()
+    return row["id"] if row else None
+
+
+def _append(conn, quiz_id: int, questions: list) -> tuple[int, int]:
+    """Ajoute à la suite les questions absentes du quiz. Renvoie (ajoutées, refusées)."""
+    rows = conn.execute(
+        "SELECT position, text FROM questions WHERE quiz_id = ?", (quiz_id,)
+    ).fetchall()
+    seen = {r["text"].lower() for r in rows}
+    start = max((r["position"] for r in rows), default=-1) + 1
+    fresh = [q for q in questions if q[1].lower() not in seen]
+    room = max(MAX_QUESTIONS_PER_QUIZ - len(rows), 0)
+    conn.executemany(
+        "INSERT INTO questions (quiz_id, position, text, answers, correct_index)"
+        " VALUES (?, ?, ?, ?, ?)",
+        [
+            (quiz_id, start + i, text, json.dumps(answers, ensure_ascii=False), correct)
+            for i, (_, text, answers, correct) in enumerate(fresh[:room])
+        ],
+    )
+    return min(len(fresh), room), max(len(fresh) - room, 0)
 
 
 def run(directory: str) -> None:
@@ -184,6 +246,13 @@ def run(directory: str) -> None:
 
             for title, questions in groups.items():
                 category, emoji = _meta(title)
+                merge_id = _merge_target(conn, title)
+                if merge_id is not None:
+                    added, dropped = _append(conn, merge_id, questions)
+                    skipped += 1
+                    note = f", {dropped} au-delà du plafond" if dropped else ""
+                    print(f"~ {title} : {added} question(s) ajoutée(s) au quiz existant{note}")
+                    continue
                 existing = conn.execute(
                     "SELECT id FROM quizzes WHERE owner_id = ? AND title = ?", (owner_id, title)
                 ).fetchone()
