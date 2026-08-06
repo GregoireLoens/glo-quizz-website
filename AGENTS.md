@@ -5,6 +5,21 @@ ne fait que l'importer pour Claude Code : toute modification se fait **ici**.
 
 Site de quiz multijoueur temps réel (façon Kahoot). Auth « no-KYC » : pseudo + code unique `XXXX-XXXX` généré serveur, montré une seule fois. V1 complète et vérifiée E2E (voir `changelog.md`, local non versionné).
 
+## Corpus documentaire — le wiki GitHub
+
+**<https://github.com/GregoireLoens/glo-quizz-website/wiki>** documente le projet en détail : architecture, protocole WebSocket, modèle de données, moteur de jeu, Elo, corpus de questions, front, déploiement, tests, et un journal daté des décisions. Ce fichier-ci reste les *consignes de travail* ; le wiki explique le *pourquoi* et le *comment*.
+
+- **Le consulter avant de toucher à une zone qu'on ne connaît pas** — la page correspondante évite de re-déduire depuis le code ce qui est déjà écrit.
+- **Le code fait foi.** Une page qui contredit le code est une page à corriger, pas une autorité.
+- **Le tenir à jour dans la même itération que le code**, dès qu'un contrat bouge : protocole WS, schéma de base, endpoints, règles de jeu ou de classement, procédure de déploiement, design system. Un correctif interne qui ne change aucun de ces contrats ne demande rien. Une décision arbitrée par glo va **toujours** dans la page `Decisions`, avec sa date et sa raison.
+
+Le wiki est un dépôt git distinct (pas de PR, pas de build) — le cloner dans `wiki/`, qui est gitignoré :
+
+```bash
+git clone git@github.com:GregoireLoens/glo-quizz-website.wiki.git wiki   # ou : git -C wiki pull
+git -C wiki add -A && git -C wiki commit -m "…" && git -C wiki push origin master
+```
+
 ## Façon de travailler
 
 - **Effort de réflexion : `high` par défaut**, et **monter en `max`** dès que ça devient coton — bug non reproductible, race condition temps réel (boucle `run()`, reconnexion WS), refonte d'architecture, arbitrage design system, sécurité/durcissement VPS. Ne pas rester en effort bas « pour aller vite » sur ces sujets.
@@ -12,11 +27,11 @@ Site de quiz multijoueur temps réel (façon Kahoot). Auth « no-KYC » : pseudo
 
 ## Contraintes non négociables
 
-1. **Tout en Docker, rien ne s'installe sur la machine hôte.** Pas de `npm`/`pip`/navigateur installé localement : toute commande passe par `docker compose exec` ou un conteneur jetable (`docker run --rm`). Les vérifs navigateur se font avec `zenika/alpine-chrome` (screenshots) ou `zenika/alpine-chrome:with-puppeteer` (E2E), en `--network host`.
+1. **Tout en Docker, rien ne s'installe sur la machine hôte.** Pas de `npm`/`pip`/navigateur installé localement : toute commande passe par `docker compose exec` ou un conteneur jetable (`docker run --rm`). Les vérifs navigateur se font avec `zenika/alpine-chrome` (screenshots) ou `zenika/alpine-chrome:with-puppeteer` (E2E), **sur le réseau compose** (`--network glo-quizz-website_default` + IP du conteneur client) : l'accès hôte → conteneur est cassé sur le PC de dev, `--network host` ne marche pas.
 2. **Un seul worker uvicorn, toujours.** L'état des parties vit en mémoire (`server/app/game/manager.py`) — jamais de `--workers N`, pas de Redis. C'est un choix d'architecture assumé (cible : VPS perso derrière Caddy).
 3. **Anti-triche côté serveur** : `correct_index` ne doit JAMAIS quitter le serveur avant le message `reveal` ; le chronométrage fait foi côté serveur (`time.monotonic()`), le timer client est purement cosmétique ; toutes les validations hôte-only sont revérifiées serveur.
 4. **Le code unique utilisateur n'existe en clair qu'une fois** : réponse du register, puis uniquement le hash bcrypt en base. Côté client il ne transite que par le state de navigation React (`navigate(state)`) — jamais URL, jamais storage, pas de re-fetch possible.
-5. **`front/` est la référence design, ne pas y toucher.** Design system : fond `ink #211F1A`, cartes `card #28261F`, texte `cream #F5F3EC`, accents `citron #C7F45C` / `violet #9C8DF2` / `coral #F0492E`, Fredoka (titres) + Inter (UI), pilules `rounded-full`, cartes 24–28px, halos flous (`GlowBackdrop`), **aucune ombre portée** (`shadow-*` interdit). Tokens déclarés dans `client/src/index.css` (`@theme` Tailwind v4) — les réutiliser, pas de couleurs en dur.
+5. **`front/` est la référence design, ne pas y toucher.** Les tokens font foi dans `client/src/index.css` (`@theme` Tailwind v4) — **les réutiliser, jamais de couleur en dur**, et ne pas se fier à des valeurs recopiées ailleurs (elles ont déjà divergé une fois). Formes : Fredoka (titres) + Inter (UI), pilules `rounded-full` réservées aux contrôles, cartes 22–28px, halos flous (`GlowBackdrop`), **aucune ombre portée** (`shadow-*` interdit). Détail commenté sur la page `Client-front` du wiki.
 6. Codes (partie 6 chars, user 8 chars) sur l'alphabet sans ambigus `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (`server/app/config.py`) ; toute saisie est normalisée (upper, sans tirets/espaces).
 7. **Points ≠ classement.** Le classement d'une partie (`_rank_key`, podium **et** Elo) se joue d'abord au **nombre de bonnes réponses** ; les points (`compute_points`, bonus de vitesse) ne départagent que les ex æquo — la rapidité ne doit jamais faire passer devant quelqu'un qui a réussi plus de questions (décision glo, 28/07). Le classement durable, lui, est l'**Elo** (`server/app/elo.py`). Deux invariants : une partie à moins de 2 joueurs n'est **jamais** classée, et l'ordre d'arrivée dans le salon ne départage jamais l'Elo (vrais ex æquo = nul).
 

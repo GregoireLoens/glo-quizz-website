@@ -7,6 +7,9 @@ server/data/
 .env
 changelog.md
 
+# Clone local du wiki GitHub (corpus documentaire) : dépôt git à part, voir AGENTS.md
+wiki/
+
 # Déploiement — le Dockerfile et le compose sont versionnés : Coolify build
 # depuis GitHub et a besoin d'y accéder. Le reste (secrets, notes VPS) non.
 vps-pass.txt
