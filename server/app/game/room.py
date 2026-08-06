@@ -28,6 +28,9 @@ def compute_points(duration: float, elapsed: float, correct: bool) -> int:
 class PlayerState:
     user_id: int
     username: str
+    # marque du joueur, relue à chaque (re)connexion — voir avatar.py
+    avatar_color: str = "citron"
+    avatar_symbol: str | None = None
     ws: WebSocket | None = None
     connected: bool = False
     ready: bool = False
@@ -81,6 +84,8 @@ class GameRoom:
             {
                 "id": p.user_id,
                 "username": p.username,
+                "avatarColor": p.avatar_color,
+                "avatarSymbol": p.avatar_symbol,
                 "ready": p.ready,
                 "connected": p.connected,
                 "score": p.score,
@@ -125,6 +130,8 @@ class GameRoom:
                 "rank": i + 1,
                 "playerId": p.user_id,
                 "username": p.username,
+                "avatarColor": p.avatar_color,
+                "avatarSymbol": p.avatar_symbol,
                 "score": p.score,
                 "correctCount": p.correct_count,
                 "lives": p.lives,
@@ -191,7 +198,14 @@ class GameRoom:
 
     # ---------- connexion / déconnexion ----------
 
-    async def handle_join(self, user_id: int, username: str, ws: WebSocket) -> bool:
+    async def handle_join(
+        self,
+        user_id: int,
+        username: str,
+        ws: WebSocket,
+        avatar_color: str = "citron",
+        avatar_symbol: str | None = None,
+    ) -> bool:
         async with self.lock:
             self.touch()
             p = self.players.get(user_id)
@@ -204,6 +218,9 @@ class GameRoom:
                     return False
                 p = PlayerState(user_id=user_id, username=username)
                 self.players[user_id] = p
+            # relu à chaque connexion : un changement d'avatar entre deux sockets se voit
+            p.avatar_color = avatar_color
+            p.avatar_symbol = avatar_symbol
             old_ws = p.ws
             p.ws = ws
             p.connected = True

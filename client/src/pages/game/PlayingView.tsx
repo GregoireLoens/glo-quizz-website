@@ -4,9 +4,10 @@ import { AnswerCard, type AnswerState } from '../../components/AnswerCard'
 import { Avatar } from '../../components/Avatar'
 import { Button } from '../../components/Button'
 import { Timer } from '../../components/Timer'
-import { formatPoints } from '../../lib/utils'
+import { formatPoints, initials } from '../../lib/utils'
 import { gameSocket } from '../../lib/ws'
 import { useGameStore } from '../../stores/gameStore'
+import { useMedals } from '../../stores/leadersStore'
 
 const LETTERS = ['A', 'B', 'C', 'D']
 
@@ -27,6 +28,7 @@ export function PlayingView() {
     reveal,
     select,
   } = useGameStore()
+  const medals = useMedals()
 
   // Validation automatique : une réponse sélectionnée mais non validée part quand même
   // à la fin du décompte. Planifié une seule fois par question (l'état est relu à
@@ -78,11 +80,17 @@ export function PlayingView() {
           return (
             <div key={p.id} className="relative">
               <Avatar
+                initials={initials(p.username)}
                 name={p.username}
-                userId={p.id}
+                color={p.avatarColor}
+                symbol={p.avatarSymbol}
+                rank={medals[p.id] ?? null}
                 size={44}
-                ring={p.id === youId ? 'citron' : 'none'}
-                dim={!p.connected || out}
+                style={{
+                  opacity: !p.connected || out ? 0.4 : 1,
+                  outline: p.id === youId ? '2px solid var(--color-citron)' : undefined,
+                  outlineOffset: 3,
+                }}
               />
               {p.answered && !isReveal && !out && (
                 <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-citron text-[10px] font-bold text-ink">

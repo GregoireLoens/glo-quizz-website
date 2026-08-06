@@ -1,8 +1,14 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
+import { api } from '../lib/api'
+import type { AvatarColor, AvatarSymbol } from '../lib/avatar'
+import type { User } from '../lib/types'
 import { initials } from '../lib/utils'
 import { useAuthStore } from '../stores/authStore'
+import { useMedal } from '../stores/leadersStore'
+import { Avatar } from './Avatar'
+import { AvatarPicker } from './AvatarPicker'
 import { Button } from './Button'
 import { Logo } from './Logo'
 
@@ -17,9 +23,26 @@ const LINKS = [
  * Sous md, ces liens cèdent la place à BottomNav (voir App.tsx) — seuls logo et profil
  * restent dans la barre haute. */
 export function NavBar({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
-  const { user, logout } = useAuthStore()
+  const { user, logout, setUser } = useAuthStore()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [draft, setDraft] = useState<{ color: AvatarColor; symbol: AvatarSymbol | null } | null>(null)
+  const [saving, setSaving] = useState(false)
+  const medal = useMedal(user?.id)
+
+  const saveAvatar = async () => {
+    if (!draft || saving) return
+    setSaving(true)
+    try {
+      setUser(await api.post<User>('/api/auth/avatar', draft))
+      setDraft(null)
+      setMenuOpen(false)
+    } catch {
+      // le panneau reste ouvert avec le choix en cours : rien n'est perdu
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
     <nav className="flex h-[76px] items-center gap-3 border-b border-line px-4 sm:gap-7 sm:px-8">
@@ -85,27 +108,75 @@ export function NavBar({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
                 <div className="relative">
                   <button
                     type="button"
-                    onClick={() => setMenuOpen((v) => !v)}
+                    onClick={() => {
+                      setMenuOpen((v) => !v)
+                      setDraft(null)
+                    }}
                     className="flex h-11 cursor-pointer items-center gap-2.5 rounded-full border border-line-strong py-0 pl-1.5 pr-[14px]"
                   >
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-citron font-display text-sm font-semibold text-ink">
-                      {initials(user.username)}
-                    </span>
+                    {/* pastille pleine : le design system la réserve au joueur connecté, ici */}
+                    <Avatar
+                      initials={initials(user.username)}
+                      name={user.username}
+                      color={user.avatarColor}
+                      symbol={user.avatarSymbol}
+                      rank={medal}
+                      solid
+                      size={32}
+                    />
                     <span className="hidden text-sm font-semibold text-cream sm:inline">{user.username}</span>
                   </button>
                   {menuOpen && (
-                    <div className="absolute right-0 top-[52px] z-20 flex w-48 flex-col gap-1 rounded-xl border border-line bg-card p-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMenuOpen(false)
-                          logout()
-                          navigate('/')
-                        }}
-                        className="cursor-pointer rounded-full px-4 py-2.5 text-left text-sm font-medium text-coral hover:bg-coral/10"
-                      >
-                        Déconnexion
-                      </button>
+                    <div
+                      className={`absolute right-0 top-[52px] z-20 flex flex-col gap-1 rounded-xl border border-line bg-card p-2 ${
+                        draft ? 'w-[min(320px,calc(100vw-2rem))] p-4' : 'w-48'
+                      }`}
+                    >
+                      {draft ? (
+                        <>
+                          <AvatarPicker
+                            username={user.username}
+                            color={draft.color}
+                            symbol={draft.symbol}
+                            onChange={setDraft}
+                            previewSize={64}
+                          />
+                          <div className="mt-4 flex gap-2">
+                            <Button size="compact" full disabled={saving} onClick={saveAvatar}>
+                              {saving ? 'Enregistrement…' : 'Enregistrer'}
+                            </Button>
+                            <Button size="compact" variant="ghost" onClick={() => setDraft(null)}>
+                              Annuler
+                            </Button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setDraft({
+                                color: user.avatarColor ?? 'citron',
+                                symbol: user.avatarSymbol ?? null,
+                              })
+                            }
+                            className="cursor-pointer rounded-full px-4 py-2.5 text-left text-sm font-medium text-cream hover:bg-cream/8"
+                          >
+                            Mon avatar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setMenuOpen(false)
+                              logout()
+                              navigate('/')
+                            }}
+                            className="cursor-pointer rounded-full px-4 py-2.5 text-left text-sm font-medium text-coral hover:bg-coral/10"
+                          >
+                            Déconnexion
+                          </button>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>

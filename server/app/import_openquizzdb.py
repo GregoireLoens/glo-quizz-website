@@ -14,7 +14,7 @@ import re
 import sys
 from pathlib import Path
 
-from . import db
+from . import avatar, db
 from .security import generate_user_code, hash_code
 
 DEFAULT_DIR = "/app/openquizzdb"
@@ -353,8 +353,8 @@ def _get_or_create_owner(conn) -> int:
         return row["id"]
     code = generate_user_code()
     cur = conn.execute(
-        "INSERT INTO users (username, username_norm, code_hash) VALUES (?, ?, ?)",
-        (OWNER_USERNAME, OWNER_USERNAME.lower(), hash_code(code)),
+        "INSERT INTO users (username, username_norm, code_hash, avatar_color) VALUES (?, ?, ?, ?)",
+        (OWNER_USERNAME, OWNER_USERNAME.lower(), hash_code(code), avatar.default_color(OWNER_USERNAME)),
     )
     print(f"Compte « {OWNER_USERNAME} » créé — code : {code}")
     return cur.lastrowid

@@ -5,7 +5,7 @@ Usage : python -m app.seed
 import json
 import random
 
-from . import db
+from . import avatar, db
 from .security import generate_user_code, hash_code
 
 QUIZZES = [
@@ -97,15 +97,15 @@ def run() -> None:
         user_ids: dict[str, int] = {}
         for name in NPC_USERS:
             cur = conn.execute(
-                "INSERT INTO users (username, username_norm, code_hash) VALUES (?, ?, ?)",
-                (name, name.lower(), hash_code(generate_user_code())),
+                "INSERT INTO users (username, username_norm, code_hash, avatar_color) VALUES (?, ?, ?, ?)",
+                (name, name.lower(), hash_code(generate_user_code()), avatar.default_color(name)),
             )
             user_ids[name] = cur.lastrowid
 
         demo_code = generate_user_code()
         conn.execute(
-            "INSERT INTO users (username, username_norm, code_hash) VALUES (?, ?, ?)",
-            ("Demo", "demo", hash_code(demo_code)),
+            "INSERT INTO users (username, username_norm, code_hash, avatar_color) VALUES (?, ?, ?, ?)",
+            ("Demo", "demo", hash_code(demo_code), avatar.default_color("Demo")),
         )
 
         quiz_ids: list[int] = []

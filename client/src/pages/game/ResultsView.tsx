@@ -73,6 +73,8 @@ export function ResultsView() {
             rank: e.rank as 1 | 2 | 3,
             name: e.username,
             initials: initials(e.username),
+            color: e.avatarColor,
+            symbol: e.avatarSymbol,
             detail: `${e.correctCount} bonne${e.correctCount > 1 ? 's' : ''}`,
             points: `${formatPoints(e.score)} pts`,
           }))}
@@ -87,6 +89,8 @@ export function ResultsView() {
               rank={entry.rank}
               initials={initials(entry.username)}
               name={entry.username}
+              color={entry.avatarColor}
+              symbol={entry.avatarSymbol}
               meta={`${entry.correctCount}/${questionTotal} bonnes réponses`}
               value={`${formatPoints(entry.score)} pts`}
               delta={entry.eloDelta}

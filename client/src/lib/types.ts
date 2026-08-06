@@ -1,6 +1,14 @@
+import type { AvatarColor, AvatarSymbol } from './avatar'
+
 // ---------- REST ----------
 
-export interface User {
+/** Marque du joueur, servie partout où un avatar s'affiche. `avatarSymbol` à null = initiales. */
+export interface Avatar {
+  avatarColor: AvatarColor
+  avatarSymbol: AvatarSymbol | null
+}
+
+export interface User extends Avatar {
   id: number
   username: string
 }
@@ -21,7 +29,7 @@ export interface QuizSummary {
   author: User
 }
 
-export interface LeaderboardEntry {
+export interface LeaderboardEntry extends Avatar {
   rank: number
   userId: number
   username: string
@@ -57,7 +65,7 @@ export interface GameSettings {
   categories: string[] | null // modes Aléatoire/Survie : thèmes autorisés (null = tous)
 }
 
-export interface GamePlayer {
+export interface GamePlayer extends Avatar {
   id: number
   username: string
   ready: boolean
@@ -87,7 +95,7 @@ export interface RevealResult {
   lives: number
 }
 
-export interface RankingEntry {
+export interface RankingEntry extends Avatar {
   rank: number
   playerId: number
   username: string

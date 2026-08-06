@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 
 import { BottomNav, type BottomNavItem } from './components/BottomNav'
+import { api } from './lib/api'
+import type { User } from './lib/types'
 import { GamePage } from './pages/GamePage'
 import { HomePage } from './pages/HomePage'
 import { JoinPage } from './pages/JoinPage'
@@ -47,6 +49,18 @@ export default function App() {
   // top 3 du classement général : les médailles s'affichent sur les avatars de toute l'app
   useEffect(() => {
     useLeadersStore.getState().load()
+  }, [])
+
+  // Le profil persisté en localStorage peut dater d'avant l'avatar, ou d'avant un changement
+  // fait ailleurs : on le resynchronise au chargement. Un token invalide déclenche déjà le
+  // logout dans `api` — rien à traiter ici.
+  useEffect(() => {
+    const { token, setUser } = useAuthStore.getState()
+    if (!token) return
+    api
+      .get<User>('/api/auth/me')
+      .then(setUser)
+      .catch(() => {})
   }, [])
 
   return (

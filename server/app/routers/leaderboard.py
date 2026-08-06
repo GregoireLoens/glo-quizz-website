@@ -12,7 +12,7 @@ _PERIOD_DAYS = {"week": 7, "month": 30}
 
 # « Depuis toujours » : le rating actuel fait foi.
 _ALL_TIME_SQL = """
-    SELECT u.id AS user_id, u.username, u.elo,
+    SELECT u.id AS user_id, u.username, u.avatar_color, u.avatar_symbol, u.elo,
            u.elo_games AS games_played, NULL AS elo_delta
     FROM users u
     WHERE u.elo_games > 0
@@ -22,7 +22,7 @@ _ALL_TIME_SQL = """
 # Sur une période, un rating instantané ne veut rien dire : on classe à la progression.
 # `elo_delta IS NOT NULL` écarte d'office les parties solo, non classées.
 _PERIOD_SQL = """
-    SELECT u.id AS user_id, u.username, u.elo,
+    SELECT u.id AS user_id, u.username, u.avatar_color, u.avatar_symbol, u.elo,
            COUNT(*) AS games_played, SUM(gp.elo_delta) AS elo_delta
     FROM game_players gp
     JOIN games g ON g.id = gp.game_id AND g.status = 'finished'
@@ -53,6 +53,8 @@ def leaderboard(
             "rank": i + 1,
             "userId": r["user_id"],
             "username": r["username"],
+            "avatarColor": r["avatar_color"],
+            "avatarSymbol": r["avatar_symbol"],
             "elo": r["elo"],
             "eloDelta": r["elo_delta"],
             "gamesPlayed": r["games_played"],

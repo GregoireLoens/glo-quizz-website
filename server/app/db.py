@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
 
-from . import config
+from . import avatar, config
 
 
 def connect() -> sqlite3.Connection:
@@ -45,6 +45,16 @@ def _migrate(conn: sqlite3.Connection) -> None:
     if "elo_delta" not in _columns(conn, "game_players"):
         conn.execute("ALTER TABLE game_players ADD COLUMN elo_before INTEGER")
         conn.execute("ALTER TABLE game_players ADD COLUMN elo_delta INTEGER")
+    if "avatar_color" not in _columns(conn, "users"):
+        conn.execute("ALTER TABLE users ADD COLUMN avatar_color TEXT NOT NULL DEFAULT 'citron'")
+        conn.execute("ALTER TABLE users ADD COLUMN avatar_symbol TEXT")
+        # Les comptes d'avant l'avatar ne restent pas tous citron : la couleur dérivée du
+        # pseudo rend les salons existants lisibles dès la première ouverture.
+        rows = conn.execute("SELECT id, username FROM users").fetchall()
+        conn.executemany(
+            "UPDATE users SET avatar_color = ? WHERE id = ?",
+            [(avatar.default_color(row["username"]), row["id"]) for row in rows],
+        )
 
 
 def get_db():

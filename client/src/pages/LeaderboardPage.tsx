@@ -37,6 +37,8 @@ export function LeaderboardPage() {
       rank={entry.rank}
       initials={initials(entry.username)}
       name={entry.username}
+      color={entry.avatarColor}
+      symbol={entry.avatarSymbol}
       meta={`${entry.gamesPlayed} partie${entry.gamesPlayed > 1 ? 's' : ''}`}
       value={entry.elo}
       delta={showProgress ? entry.eloDelta : null}

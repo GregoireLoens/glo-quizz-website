@@ -16,7 +16,9 @@ router = APIRouter()
 def _fetch_user(user_id: int):
     conn = db.connect()
     try:
-        return conn.execute("SELECT id, username FROM users WHERE id = ?", (user_id,)).fetchone()
+        return conn.execute(
+            "SELECT id, username, avatar_color, avatar_symbol FROM users WHERE id = ?", (user_id,)
+        ).fetchone()
     finally:
         conn.close()
 
@@ -56,7 +58,13 @@ async def game_ws(websocket: WebSocket, code: str):
         await websocket.close(code=4001)
         return
 
-    joined = await room.handle_join(user_id, user["username"], websocket)
+    joined = await room.handle_join(
+        user_id,
+        user["username"],
+        websocket,
+        avatar_color=user["avatar_color"],
+        avatar_symbol=user["avatar_symbol"],
+    )
     if not joined:
         return
 

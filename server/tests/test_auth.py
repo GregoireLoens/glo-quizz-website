@@ -1,4 +1,4 @@
-from app import config
+from app import avatar, config
 from tests.conftest import auth_headers, register
 
 
@@ -45,6 +45,37 @@ def test_me_requires_valid_token(client):
     data = register(client, "FalconRouge92")
     r = client.get("/api/auth/me", headers=auth_headers(data))
     assert r.status_code == 200
-    assert r.json() == {"id": data["user"]["id"], "username": "FalconRouge92"}
+    assert r.json() == {
+        "id": data["user"]["id"],
+        "username": "FalconRouge92",
+        "avatarColor": avatar.default_color("FalconRouge92"),
+        "avatarSymbol": None,
+    }
     assert client.get("/api/auth/me").status_code == 401
     assert client.get("/api/auth/me", headers={"Authorization": "Bearer nimporte"}).status_code == 401
+
+
+def test_default_avatar_color_is_derived_from_username(client):
+    # déterministe et dans la palette : deux pseudos différents ne partent pas tous en citron
+    assert avatar.default_color("FalconRouge92") == avatar.default_color("FalconRouge92")
+    assert all(avatar.default_color(n) in avatar.COLORS for n in ("Nadia_K", "MmeDupuis", "z"))
+    data = register(client, "FalconRouge92")
+    assert data["user"]["avatarColor"] == avatar.default_color("FalconRouge92")
+    assert data["user"]["avatarSymbol"] is None
+
+
+def test_avatar_update_is_persisted_and_validated(client):
+    data = register(client, "FalconRouge92")
+    r = client.post("/api/auth/avatar", json={"color": "jade", "symbol": "trophee"}, headers=auth_headers(data))
+    assert r.status_code == 200
+    assert r.json()["avatarColor"] == "jade" and r.json()["avatarSymbol"] == "trophee"
+    me = client.get("/api/auth/me", headers=auth_headers(data)).json()
+    assert me["avatarColor"] == "jade" and me["avatarSymbol"] == "trophee"
+
+    # retour aux initiales
+    client.post("/api/auth/avatar", json={"color": "rose"}, headers=auth_headers(data))
+    assert client.get("/api/auth/me", headers=auth_headers(data)).json()["avatarSymbol"] is None
+
+    for bad in ({"color": "or"}, {"color": "jade", "symbol": "couronne"}, {"color": "argent"}):
+        assert client.post("/api/auth/avatar", json=bad, headers=auth_headers(data)).status_code == 422
+    assert client.post("/api/auth/avatar", json={"color": "jade"}).status_code == 401

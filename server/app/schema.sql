@@ -6,6 +6,10 @@ CREATE TABLE IF NOT EXISTS users (
   -- rating Elo et nombre de parties classées (voir config.ELO_START pour le défaut)
   elo           INTEGER NOT NULL DEFAULT 1000,
   elo_games     INTEGER NOT NULL DEFAULT 0,
+  -- marque du joueur : couleur parmi avatar.COLORS (dérivée du pseudo à l'inscription),
+  -- symbole parmi avatar.SYMBOLS ou NULL = initiales
+  avatar_color  TEXT NOT NULL DEFAULT 'citron',
+  avatar_symbol TEXT,
   created_at    TEXT NOT NULL DEFAULT (datetime('now'))
 );
 

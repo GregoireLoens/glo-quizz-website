@@ -1,14 +1,9 @@
-export const AVATAR_COLORS = ['#F5F3EC', '#9C8DF2', '#F0492E', '#C7F45C']
-
 export function initials(name: string): string {
   return name.trim().slice(0, 2).toUpperCase()
 }
 
-export function avatarColor(name: string): string {
-  let h = 0
-  for (const ch of name) h = (h * 31 + (ch.codePointAt(0) ?? 0)) >>> 0
-  return AVATAR_COLORS[h % AVATAR_COLORS.length]
-}
+// La couleur d'avatar ne se devine plus depuis le pseudo : le joueur la choisit et le
+// serveur la sert avec chaque joueur (voir lib/avatar.ts et server/app/avatar.py).
 
 export function formatPoints(n: number): string {
   return n.toLocaleString('fr-FR')

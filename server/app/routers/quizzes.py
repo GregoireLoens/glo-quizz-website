@@ -15,6 +15,7 @@ router = APIRouter(prefix="/api", tags=["quizzes"])
 _LIST_SQL = """
 SELECT q.id, q.title, q.emoji, q.category, q.play_count, q.created_at,
        u.id AS owner_id, u.username AS owner_name,
+       u.avatar_color AS owner_color, u.avatar_symbol AS owner_symbol,
        (SELECT COUNT(*) FROM questions WHERE quiz_id = q.id) AS question_count
 FROM quizzes q
 JOIN users u ON u.id = q.owner_id
@@ -29,7 +30,12 @@ def _quiz_summary(row: sqlite3.Row) -> dict:
         "category": row["category"],
         "questionCount": row["question_count"],
         "playCount": row["play_count"],
-        "author": {"id": row["owner_id"], "username": row["owner_name"]},
+        "author": {
+            "id": row["owner_id"],
+            "username": row["owner_name"],
+            "avatarColor": row["owner_color"],
+            "avatarSymbol": row["owner_symbol"],
+        },
     }
 
 

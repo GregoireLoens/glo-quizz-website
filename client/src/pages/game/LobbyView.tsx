@@ -16,6 +16,7 @@ import { initials } from '../../lib/utils'
 import { gameSocket } from '../../lib/ws'
 import { useAuthStore } from '../../stores/authStore'
 import { useGameStore } from '../../stores/gameStore'
+import { useMedals } from '../../stores/leadersStore'
 
 const QUESTION_CHOICES = [5, 10, 15, 20]
 const TIME_CHOICES = [15, 30, 60]
@@ -96,6 +97,7 @@ export function LobbyView() {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const { code, youId, hostId, players, settings, errorMsg, clearError } = useGameStore()
+  const medals = useMedals()
   const [copied, setCopied] = useState<'code' | 'link' | null>(null)
   const [pickerOpen, setPickerOpen] = useState(false)
   const [allCategories, setAllCategories] = useState<string[]>([])
@@ -179,6 +181,9 @@ export function LobbyView() {
                   key={p.id}
                   initials={initials(p.username)}
                   name={p.username}
+                  color={p.avatarColor}
+                  symbol={p.avatarSymbol}
+                  rank={medals[p.id] ?? null}
                   host={p.id === hostId}
                   ready={p.ready}
                   pending={!p.connected}

@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react'
 
+import type { AvatarColor, AvatarSymbol } from '../lib/avatar'
+import { Avatar } from './Avatar'
+
 interface Props {
   emoji: string
   category: string
@@ -7,11 +10,24 @@ interface Props {
   meta: string
   author: string
   initials: string
+  authorColor?: AvatarColor | string | null
+  authorSymbol?: AvatarSymbol | null
   accent?: string
   action?: ReactNode
 }
 
-export function QuizCard({ emoji, category, title, meta, author, initials, accent = 'var(--color-citron)', action }: Props) {
+export function QuizCard({
+  emoji,
+  category,
+  title,
+  meta,
+  author,
+  initials,
+  authorColor,
+  authorSymbol,
+  accent = 'var(--color-citron)',
+  action,
+}: Props) {
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-line bg-card p-5 transition-colors hover:bg-card-2">
       <div className="flex items-center gap-3">
@@ -30,9 +46,7 @@ export function QuizCard({ emoji, category, title, meta, author, initials, accen
         <span className="text-sm text-muted-soft">{meta}</span>
       </div>
       <div className="mt-auto flex items-center gap-2.5 border-t border-line pt-3.5">
-        <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-cream/9 text-xs font-semibold text-cream-soft">
-          {initials}
-        </span>
+        <Avatar initials={initials} name={author} color={authorColor} symbol={authorSymbol} size={28} />
         <span className="flex-1 truncate text-sm text-muted">{author}</span>
         {action}
       </div>

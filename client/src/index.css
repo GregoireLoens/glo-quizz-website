@@ -43,6 +43,22 @@
   --radius-xl: 28px;
 }
 
+/* Marque du joueur : six teintes de luminosité voisine, aucune ne crie plus fort qu'une autre
+   dans une liste de vingt. Ni or, ni argent, ni bronze — ces trois-là ne disent que le rang,
+   sur l'anneau de l'Avatar (voir components/Avatar.tsx).
+   Bloc `static` à part : ces tokens ne sont jamais employés par une classe utilitaire (la
+   couleur d'un joueur se lit à l'exécution, en `var()` dans un style inline), et Tailwind v4
+   n'émet que les variables de `@theme` qu'il voit utilisées — sans `static`, elles
+   disparaissent de la feuille compilée et tous les avatars sortent transparents. */
+@theme static {
+  --color-av-citron: #c9f45e;
+  --color-av-jade: oklch(0.85 0.13 168);
+  --color-av-lagon: oklch(0.83 0.11 222);
+  --color-av-violet: #aa9cff;
+  --color-av-rose: oklch(0.8 0.14 350);
+  --color-av-abricot: oklch(0.84 0.13 62);
+}
+
 html,
 body,
 #root {

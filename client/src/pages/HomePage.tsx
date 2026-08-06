@@ -157,6 +157,8 @@ export function HomePage() {
                 meta={`${quiz.questionCount} question${quiz.questionCount > 1 ? 's' : ''} · ${formatPlays(quiz.playCount)} partie${quiz.playCount > 1 ? 's' : ''}`}
                 author={quiz.author.username}
                 initials={initials(quiz.author.username)}
+                authorColor={quiz.author.avatarColor}
+                authorSymbol={quiz.author.avatarSymbol}
                 accent={ACCENTS[i % ACCENTS.length]}
                 action={
                   <Button

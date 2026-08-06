@@ -12,7 +12,9 @@ def _user_from_header(authorization: str | None, db: sqlite3.Connection) -> sqli
     user_id = parse_token(authorization[len("Bearer "):])
     if user_id is None:
         return None
-    return db.execute("SELECT id, username FROM users WHERE id = ?", (user_id,)).fetchone()
+    return db.execute(
+        "SELECT id, username, avatar_color, avatar_symbol FROM users WHERE id = ?", (user_id,)
+    ).fetchone()
 
 
 def get_current_user(
