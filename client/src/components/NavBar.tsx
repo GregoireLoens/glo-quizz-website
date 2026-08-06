@@ -4,20 +4,17 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { initials } from '../lib/utils'
 import { useAuthStore } from '../stores/authStore'
 import { Button } from './Button'
-import { Icon } from './Icon'
 
 const LINKS = [
   { to: '/', label: 'Explorer' },
   { to: '/join', label: 'Multijoueur' },
   { to: '/leaderboard', label: 'Classement' },
-  { to: '/quizzes/mine', label: 'Mes quiz' },
 ]
 
-/** Remplace NavPill. « Créer » et « Mes quiz » entrent dans la barre desktop — deux
- * fonctionnalités complètes n'avaient aucun point d'entrée visible. Le bouton « Créer » n'a pas
- * encore d'action : il n'existe pas de parcours de création de quiz dans l'app (seule l'édition
- * d'un quiz existant l'est), à traiter séparément. Sous md, les liens et « Créer » cèdent la
- * place à BottomNav (voir App.tsx) — seuls logo et profil restent dans la barre haute. */
+/** Remplace NavPill. Le catalogue étant en lecture seule (alimenté par les scripts d'import),
+ * il n'y a ni « Créer » ni « Mes quiz » : les trois sections du site tiennent dans la barre.
+ * Sous md, ces liens cèdent la place à BottomNav (voir App.tsx) — seuls logo et profil
+ * restent dans la barre haute. */
 export function NavBar({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
@@ -74,11 +71,6 @@ export function NavBar({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
           <div className="ml-auto flex items-center gap-3">
             {user ? (
               <>
-                <div className="hidden md:block">
-                  <Button size="secondaire" variant="contour" icon={<Icon name="editer" size={17} />}>
-                    Créer
-                  </Button>
-                </div>
                 <div className="relative">
                   <button
                     type="button"

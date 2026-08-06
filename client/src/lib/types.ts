@@ -11,12 +11,6 @@ export interface AuthResponse {
   code?: string
 }
 
-export interface QuestionInput {
-  text: string
-  answers: string[]
-  correctIndex: number
-}
-
 export interface QuizSummary {
   id: number
   title: string
@@ -25,10 +19,6 @@ export interface QuizSummary {
   questionCount: number
   playCount: number
   author: User
-}
-
-export interface QuizDetail extends QuizSummary {
-  questions: QuestionInput[]
 }
 
 export interface LeaderboardEntry {

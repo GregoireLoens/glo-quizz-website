@@ -9,8 +9,9 @@ export interface BottomNavItem {
   raised?: boolean
 }
 
-/** Nav basse mobile, 5 entrées, cibles ≥44px — sous 768px, les liens desktop (hidden md:flex)
- * n'avaient aucun remplacement : Multijoueur, Classement, Mes quiz étaient inatteignables.
+/** Nav basse mobile, cibles ≥44px — sous 768px, les liens desktop (hidden md:flex) n'avaient
+ * aucun remplacement : Multijoueur et Classement étaient inatteignables. L'entrée `raised`
+ * marque l'action principale (voir App.tsx).
  * Position fixe : le body réserve l'espace correspondant sous md (voir index.css). */
 export function BottomNav({ items, active }: { items: BottomNavItem[]; active: string }) {
   return (

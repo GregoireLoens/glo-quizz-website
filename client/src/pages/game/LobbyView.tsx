@@ -25,18 +25,11 @@ function QuizPicker({ onClose }: { onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    Promise.all([
-      api.get<QuizSummary[]>('/api/quizzes/mine').catch(() => [] as QuizSummary[]),
-      api.get<QuizSummary[]>('/api/quizzes?limit=20').catch(() => [] as QuizSummary[]),
-    ]).then(([mine, popular]) => {
-      const seen = new Set<number>()
-      const merged = [...mine, ...popular].filter((q) => {
-        if (seen.has(q.id)) return false
-        seen.add(q.id)
-        return true
-      })
-      setQuizzes(merged)
-    })
+    // Le catalogue appartient au site : personne n'a de quiz à soi à faire remonter ici.
+    api
+      .get<QuizSummary[]>('/api/quizzes?limit=20')
+      .then(setQuizzes)
+      .catch(() => setQuizzes([]))
   }, [])
 
   useEffect(() => {

@@ -1,8 +1,7 @@
 from contextlib import contextmanager
 
 from app import config
-from tests.conftest import auth_headers, register
-from tests.test_quizzes import quiz_payload
+from tests.conftest import auth_headers, create_quiz, register
 
 
 def _create_game(client, session, quiz_id=None):
@@ -76,7 +75,7 @@ def test_full_game_flow(client, monkeypatch):
 
     host = register(client, "Hote")
     guest = register(client, "Invite")
-    quiz_id = client.post("/api/quizzes", json=quiz_payload(), headers=auth_headers(host)).json()["id"]
+    quiz_id = create_quiz(host)
     code = _create_game(client, host, quiz_id=quiz_id)
 
     with ws_connect(client, code, host) as ws_host, \
@@ -119,7 +118,7 @@ def test_full_game_flow(client, monkeypatch):
 
 def test_lobby_random_mix_selection(client):
     host = register(client, "Hote")
-    quiz_id = client.post("/api/quizzes", json=quiz_payload(), headers=auth_headers(host)).json()["id"]
+    quiz_id = create_quiz(host)
     code = _create_game(client, host)
 
     with ws_connect(client, code, host) as ws:
@@ -146,7 +145,7 @@ def test_random_mix_full_flow(client, monkeypatch):
     r = client.post("/api/games", json={"random": True}, headers=auth_headers(host))
     assert r.status_code == 409
 
-    client.post("/api/quizzes", json=quiz_payload(), headers=auth_headers(host))
+    create_quiz(host)
     r = client.post("/api/games", json={"random": True}, headers=auth_headers(host))
     assert r.status_code == 201
     code = r.json()["code"]
@@ -176,7 +175,7 @@ def test_random_mix_full_flow(client, monkeypatch):
 
 def test_lobby_survival_selection(client):
     host = register(client, "Hote")
-    quiz_id = client.post("/api/quizzes", json=quiz_payload(), headers=auth_headers(host)).json()["id"]
+    quiz_id = create_quiz(host)
     code = _create_game(client, host)
 
     with ws_connect(client, code, host) as ws:
@@ -209,7 +208,7 @@ def test_survival_full_flow(client, monkeypatch):
         {"text": f"Question {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
         for i in range(8)
     ]
-    client.post("/api/quizzes", json=quiz_payload(questions=questions), headers=auth_headers(host))
+    create_quiz(host, questions=questions)
     code = _create_game(client, host)
 
     with ws_connect(client, code, host) as ws_host, \
@@ -261,7 +260,6 @@ def test_survival_full_flow(client, monkeypatch):
 def test_random_mix_categories_and_theme(client, monkeypatch):
     monkeypatch.setattr(config, "REVEAL_SECONDS", 0.05)
     host = register(client, "Hote")
-    headers = auth_headers(host)
     sciences = [
         {"text": f"Sciences {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
         for i in range(3)
@@ -270,12 +268,8 @@ def test_random_mix_categories_and_theme(client, monkeypatch):
         {"text": f"Musique {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
         for i in range(2)
     ]
-    client.post("/api/quizzes", json=quiz_payload(title="Quiz sciences", questions=sciences), headers=headers)
-    client.post(
-        "/api/quizzes",
-        json=quiz_payload(title="Quiz musique", category="Musique", questions=musique),
-        headers=headers,
-    )
+    create_quiz(host, title="Quiz sciences", questions=sciences)
+    create_quiz(host, title="Quiz musique", category="Musique", questions=musique)
     code = _create_game(client, host)
 
     with ws_connect(client, code, host) as ws:
@@ -313,7 +307,6 @@ def test_survival_categories_across_batches(client, monkeypatch):
     monkeypatch.setattr(config, "SURVIVAL_BATCH", 2)
 
     host = register(client, "Hote")
-    headers = auth_headers(host)
     musique = [
         {"text": f"Musique {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
         for i in range(4)
@@ -322,12 +315,8 @@ def test_survival_categories_across_batches(client, monkeypatch):
         {"text": f"Sciences {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
         for i in range(2)
     ]
-    client.post(
-        "/api/quizzes",
-        json=quiz_payload(title="Quiz musique", category="Musique", questions=musique),
-        headers=headers,
-    )
-    client.post("/api/quizzes", json=quiz_payload(title="Quiz sciences", questions=sciences), headers=headers)
+    create_quiz(host, title="Quiz musique", category="Musique", questions=musique)
+    create_quiz(host, title="Quiz sciences", questions=sciences)
     code = _create_game(client, host)
 
     with ws_connect(client, code, host) as ws:

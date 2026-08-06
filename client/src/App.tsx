@@ -7,8 +7,6 @@ import { HomePage } from './pages/HomePage'
 import { JoinPage } from './pages/JoinPage'
 import { LeaderboardPage } from './pages/LeaderboardPage'
 import { LoginPage } from './pages/LoginPage'
-import { MyQuizzesPage } from './pages/MyQuizzesPage'
-import { QuizEditorPage } from './pages/QuizEditorPage'
 import { RegisterCodePage } from './pages/RegisterCodePage'
 import { RegisterPage } from './pages/RegisterPage'
 import { useAuthStore } from './stores/authStore'
@@ -21,21 +19,19 @@ function RequireAuth() {
   return <Outlet />
 }
 
-// « Créer » n'a pas encore de parcours de création de quiz dédié — pointé sur Mes quiz en
-// attendant (voir NavBar.tsx pour la même réserve côté desktop).
+// Le catalogue est en lecture seule (ni création ni édition de quiz) : la nav tient en
+// trois entrées, « Multijoueur » prenant la place centrale surélevée laissée par « Créer »
+// puisque c'est l'action principale du site.
 const BOTTOM_NAV_ITEMS: BottomNavItem[] = [
   { label: 'Explorer', icon: 'chercher', to: '/' },
-  { label: 'Multijoueur', icon: 'joueurs', to: '/join' },
-  { label: 'Créer', icon: 'editer', to: '/quizzes/mine', raised: true },
+  { label: 'Multijoueur', icon: 'joueurs', to: '/join', raised: true },
   { label: 'Classement', icon: 'trophee', to: '/leaderboard' },
-  { label: 'Mes quiz', icon: 'jouer', to: '/quizzes/mine' },
 ]
 
 function bottomNavSection(pathname: string): string | null {
   if (pathname === '/login' || pathname === '/register' || pathname === '/register/code') return null
   if (pathname === '/') return 'Explorer'
   if (pathname === '/leaderboard') return 'Classement'
-  if (pathname.startsWith('/quizzes/mine') || pathname.startsWith('/quiz/')) return 'Mes quiz'
   if (pathname === '/join' || pathname.startsWith('/game/')) return 'Multijoueur'
   return null
 }
@@ -64,8 +60,6 @@ export default function App() {
         <Route element={<RequireAuth />}>
           <Route path="/join" element={<JoinPage />} />
           <Route path="/game/:code" element={<GamePage />} />
-          <Route path="/quizzes/mine" element={<MyQuizzesPage />} />
-          <Route path="/quiz/:id/edit" element={<QuizEditorPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

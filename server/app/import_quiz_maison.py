@@ -88,8 +88,9 @@ MERGE_INTO: dict[str, str] = {
     "Pokemon": "OpenQuizzDB",
 }
 
-# Limites alignées sur schemas.QuizIn / QuestionIn — un quiz importé doit rester
-# éditable depuis le site sans être rejeté par l'API.
+# Limites de format du catalogue. Elles vivaient dans schemas.QuizIn tant que l'API
+# acceptait des quiz ; depuis le retrait de la création, l'import est le seul chemin
+# d'écriture, donc le seul endroit où elles s'appliquent.
 MAX_TITLE = 80
 MAX_QUESTION = 300
 MAX_ANSWER = 120
