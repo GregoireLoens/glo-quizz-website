@@ -25,13 +25,22 @@ jobs:
           printf '%s\n' "${{ secrets.VPS_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
+      # L'hôte vient d'un secret : ce dépôt est public, et l'adresse de l'origine
+      # ne doit pas y figurer — la publier permet de contourner Cloudflare (WAF,
+      # rate limiting, anti-DDoS) en tapant le serveur en direct.
       - name: Déclenche le déploiement
+        env:
+          VPS_TARGET: ${{ secrets.VPS_TARGET }}
         run: |
+          if [ -z "$VPS_TARGET" ]; then
+            echo "::error::Le secret VPS_TARGET est absent (attendu : <user>@<hôte>)."
+            exit 1
+          fi
           ssh -i ~/.ssh/id_ed25519 \
               -o IdentitiesOnly=yes \
               -o BatchMode=yes \
               -o ConnectTimeout=15 \
-              debian@217.182.65.235
+              "$VPS_TARGET"
 
       # Coolify construit la branche configurée (main), pas le contenu du tag :
       # ce workflow n'est correct que si le tag est posé sur main, ce qui est la
