@@ -4,6 +4,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { initials } from '../lib/utils'
 import { useAuthStore } from '../stores/authStore'
 import { Button } from './Button'
+import { Logo } from './Logo'
 
 const LINKS = [
   { to: '/', label: 'Explorer' },
@@ -22,8 +23,18 @@ export function NavBar({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
 
   return (
     <nav className="flex h-[76px] items-center gap-3 border-b border-line px-4 sm:gap-7 sm:px-8">
-      <Link to="/" className="flex-none font-display text-xl font-semibold tracking-[-0.4px] text-cream">
-        Midi<span className="text-citron">Quizz</span>
+      {/* Sous sm, le lockup pousse « Inscription » hors de l'écran : on tombe sur le
+          monogramme seul, ce que le design system prévoit quand la place manque. */}
+      {/* La bascule se joue sur les conteneurs, pas sur le Logo : `hidden` et
+          `inline-flex` sont deux utilitaires `display`, c'est l'ordre du CSS
+          généré qui tranche et les deux logos s'affichaient. */}
+      <Link to="/" className="flex-none" aria-label="Midi Quizz — accueil">
+        <span className="block sm:hidden">
+          <Logo size={26} variant="mono" />
+        </span>
+        <span className="hidden sm:block">
+          <Logo size={26} />
+        </span>
       </Link>
 
       {variant === 'auth' ? (
