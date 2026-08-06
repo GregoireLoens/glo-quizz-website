@@ -79,7 +79,7 @@ const PATHS: Record<string, ReactElement> = {
       <path d="M4 7h16M9.5 7V5h5v2M6.5 7l1 13h9l1-13" />
     </g>
   ),
-  // fanion du premier au classement (Avatar) — le seul usage, d'où la forme pleine
+  // du jeu d'icônes du design system ; sans emploi depuis que le top 3 porte des lauriers
   couronne: (
     <g fill="currentColor">
       <path d="M4.6 18.4h14.8l1.35-10.6-5.25 4.05L12 5.6 8.5 11.85 3.25 7.8z" />

@@ -9,6 +9,61 @@ const MEDAL: Record<number, string> = {
   3: 'var(--color-bronze)',
 }
 
+// Couronne de laurier du top 3, dessinée sur une grille 100×100 centrée sur le rond :
+// deux tiges en arc de cercle (rayon 37, de 12° à 140°) et 7 feuilles par tige, inclinées
+// pour suivre la tige. Géométrie du design system, reprise telle quelle.
+const WREATH_RADIUS = 37
+const ANGLE_START = 12
+const ANGLE_END = 140
+const LEAVES = 7
+
+/** Point de la tige à l'angle `a` (degrés), `side` = 1 à droite, −1 à gauche. */
+function wreathPoint(a: number, side: number): [number, number] {
+  return [50 + side * WREATH_RADIUS * Math.sin((a * Math.PI) / 180), 50 + WREATH_RADIUS * Math.cos((a * Math.PI) / 180)]
+}
+
+function stemPath(side: number): string {
+  let d = ''
+  for (let i = 0; i <= 24; i++) {
+    const [x, y] = wreathPoint(ANGLE_START + (i / 24) * (ANGLE_END - ANGLE_START), side)
+    d += `${i ? 'L' : 'M'}${x.toFixed(2)} ${y.toFixed(2)}`
+  }
+  return d
+}
+
+function Laurel({ color, size }: { color: string; size: number }) {
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      width={size * 1.5}
+      height={size * 1.5}
+      aria-hidden
+      className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-visible"
+    >
+      {[1, -1].map((side) => (
+        <g key={side}>
+          <path d={stemPath(side)} fill="none" stroke={color} strokeWidth={1.7} strokeLinecap="round" />
+          {Array.from({ length: LEAVES }, (_, i) => {
+            const a = ANGLE_START + 6 + (i / (LEAVES - 1)) * (ANGLE_END - ANGLE_START - 14)
+            const [x, y] = wreathPoint(a, side)
+            return (
+              <ellipse
+                key={i}
+                cx={x}
+                cy={y}
+                rx={3.4}
+                ry={7.3}
+                fill={color}
+                transform={`rotate(${side * (106 - a)} ${x} ${y})`}
+              />
+            )
+          })}
+        </g>
+      ))}
+    </svg>
+  )
+}
+
 interface Props {
   /** Deux lettres. Ignoré si `symbol` est renseigné. */
   initials: string
@@ -24,8 +79,8 @@ interface Props {
   size?: number
   /** Pastille pleine au lieu de la teinte. Réservé au joueur connecté dans la nav. */
   solid?: boolean
-  /** Affiche le fanion de rang. `false` quand un numéro de rang est déjà visible à côté. */
-  chip?: boolean
+  /** Dessine la couronne de laurier. `false` pour ne garder que l'anneau de médaille. */
+  wreath?: boolean
   className?: string
   style?: CSSProperties
 }
@@ -34,10 +89,10 @@ interface Props {
  * podium et les cartes quiz ; avant, chacun de ces endroits dessinait ses propres initiales
  * avec sa propre couleur.
  *
- * Deux axes choisis par le joueur (`color`, `symbol`), un seul gagné (`rank`). Le fanion ne
- * sort qu'à partir de 44 px — en dessous la couronne n'est plus qu'une tache — et s'efface
- * là où une colonne de rang est déjà écrite (`chip={false}`) ; l'anneau, lui, porte seul le
- * classement à toutes les tailles. Le halo autour de l'anneau est un `box-shadow` sans
+ * Deux axes choisis par le joueur (`color`, `symbol`), un seul gagné (`rank`). Les lauriers
+ * n'entourent le rond qu'à partir de 44 px — en dessous les feuilles se referment en bouillie —
+ * et se coupent (`wreath={false}`) là où la place manque ; l'anneau de médaille, lui, porte seul
+ * le classement à toutes les tailles. Le halo autour de l'anneau est un `box-shadow` sans
  * décalage ni flou : un anneau diffus, pas une ombre portée (interdites par le système). */
 export function Avatar({
   initials,
@@ -47,14 +102,13 @@ export function Avatar({
   rank = null,
   size = 38,
   solid = false,
-  chip = true,
+  wreath = true,
   className = '',
   style,
 }: Props) {
   const c = avatarColorVar(color)
   const medal = rank ? MEDAL[rank] : undefined
-  const showChip = chip && medal !== undefined && size >= 44
-  const chipSize = Math.round(size * 0.42)
+  const showWreath = wreath && medal !== undefined && size >= 44
   return (
     <span
       role="img"
@@ -78,20 +132,7 @@ export function Avatar({
       >
         {symbol ? <Icon name={symbol} size={Math.round(size * 0.5)} /> : initials}
       </span>
-      {showChip && (
-        <span
-          className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center rounded-full border-2 border-ink font-display font-semibold tabular-nums"
-          style={{
-            width: chipSize,
-            height: chipSize,
-            background: medal,
-            color: 'var(--color-ink)',
-            fontSize: Math.round(chipSize * 0.62),
-          }}
-        >
-          {rank === 1 ? <Icon name="couronne" size={Math.round(chipSize * 0.66)} /> : rank}
-        </span>
-      )}
+      {showWreath && <Laurel color={medal} size={size} />}
     </span>
   )
 }

@@ -28,15 +28,14 @@ export function Podium({ players }: { players: PodiumPlayer[] }) {
         const c = CFG[p.rank]
         return (
           <div key={p.rank} className="flex w-[110px] flex-col items-center gap-2.5 sm:w-[160px]">
-            {/* la couronne du premier seulement : sur les marches 2 et 3, le chiffre est déjà
-                écrit en grand sur la marche — l'anneau d'argent ou de bronze suffit */}
+            {/* les trois marches portent leurs lauriers : 62 px au plus petit, bien au-dessus
+                du seuil de 44 */}
             <Avatar
               initials={p.initials}
               name={p.name}
               color={p.color}
               symbol={p.symbol}
               rank={p.rank}
-              chip={p.rank === 1}
               size={c.avatar}
             />
             <div className="flex flex-col items-center gap-0.5 text-center">

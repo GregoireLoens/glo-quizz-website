@@ -38,8 +38,9 @@ export function LeaderboardRow({ rank, initials, name, color, symbol, meta, valu
       >
         {rank}
       </span>
-      {/* le rang est déjà écrit dans la pastille de gauche : le fanion s'efface, l'anneau reste */}
-      <Avatar initials={initials} name={name} color={color} symbol={symbol} rank={rank} chip={false} size={38} />
+      {/* 38 px : sous le seuil des lauriers. Le rang est déjà écrit dans la pastille de
+          gauche, l'anneau de médaille suffit à le redire sur l'avatar. */}
+      <Avatar initials={initials} name={name} color={color} symbol={symbol} rank={rank} size={38} />
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className={`flex items-center gap-2 text-base font-semibold ${me ? 'text-citron' : 'text-cream'}`}>
           {name}

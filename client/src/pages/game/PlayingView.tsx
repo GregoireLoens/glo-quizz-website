@@ -86,6 +86,10 @@ export function PlayingView() {
                 symbol={p.avatarSymbol}
                 rank={medals[p.id] ?? null}
                 size={44}
+                // bandeau dense : à 44 px les lauriers déborderaient sur les voisins.
+                // L'anneau de médaille dit le classement, c'est ce que le système prévoit
+                // là où la place manque.
+                wreath={false}
                 style={{
                   opacity: !p.connected || out ? 0.4 : 1,
                   outline: p.id === youId ? '2px solid var(--color-citron)' : undefined,
