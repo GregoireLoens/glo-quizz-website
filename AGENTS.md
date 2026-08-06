@@ -9,6 +9,7 @@ Site de quiz multijoueur temps réel (façon Kahoot). Auth « no-KYC » : pseudo
 
 **<https://github.com/GregoireLoens/glo-quizz-website/wiki>** documente le projet en détail : architecture, protocole WebSocket, modèle de données, moteur de jeu, Elo, corpus de questions, front, déploiement, tests, et un journal daté des décisions. Ce fichier-ci reste les *consignes de travail* ; le wiki explique le *pourquoi* et le *comment*.
 
+- ⚠️ **Le dépôt ET le wiki sont publics.** N'y écrire aucune adresse de serveur, aucun identifiant d'infrastructure, aucun chemin de fichier de secrets, aucun port d'administration, et **aucune faiblesse connue non corrigée**. Tout ça vit dans les notes privées (`deploy/`, hors dépôt).
 - **Le consulter avant de toucher à une zone qu'on ne connaît pas** — la page correspondante évite de re-déduire depuis le code ce qui est déjà écrit.
 - **Le code fait foi.** Une page qui contredit le code est une page à corriger, pas une autorité.
 - **Le tenir à jour dans la même itération que le code**, dès qu'un contrat bouge : protocole WS, schéma de base, endpoints, règles de jeu ou de classement, procédure de déploiement, design system. Un correctif interne qui ne change aucun de ces contrats ne demande rien. Une décision arbitrée par glo va **toujours** dans la page `Decisions`, avec sa date et sa raison.
@@ -82,7 +83,7 @@ Prod : **https://midi-quizz.glocorp.fr** (basculé depuis gloens.fr le 01/08/202
 - `SECRET_KEY` vit dans les variables d'environnement Coolify (**ne jamais la régénérer**). La base SQLite est sur un volume Coolify monté sur `/data`.
 - **Le routage ET les headers de sécurité sont dans les « custom labels » de l'application Coolify**, plus dans le compose. Piège : ces labels **remplacent** ceux que Coolify génère — ils doivent donc inclure aussi `traefik.enable`, les routers, les règles de host et les services. En oublier un met le site en 404 (constaté lors de la migration).
 - TLS : **certificat d'origine Cloudflare** (expire le 30/07/2041) posé dans `/data/coolify/proxy/dynamic/`, sans ACME — Let's Encrypt ne peut pas aboutir derrière le proxy Cloudflare.
-- Le dashboard Coolify n'est **pas exposé** (port 8000 fermé au public) : passer par un tunnel SSH `ssh -L 8000:localhost:8000 -L 6001:localhost:6001 -L 6002:localhost:6002 -i ~/.ssh/vps debian@217.182.65.235`.
+- Le dashboard Coolify n'est **pas exposé** : l'accès passe par un tunnel SSH. **Ce dépôt est public** — hôte, ports d'administration et commande exacte sont dans les notes privées (`deploy/`, hors dépôt), à ne pas réintroduire ici.
 
 **Déployer = pousser un tag `v*`** : `.github/workflows/deploy.yml` déclenche Coolify via SSH. Coolify construit la branche `main`, le tag doit donc être posé dessus.
 
