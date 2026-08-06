@@ -31,6 +31,9 @@ export function ResultsView() {
   const questionTotal = questionsPlayed ?? question?.total ?? settings?.questionCount ?? 10
   const isHost = youId !== null && youId === hostId
   const survival = settings?.survival ?? false
+  // Personne ne « survit » quand tout le monde perd sa dernière vie sur la même
+  // question : le premier du classement l'est alors à la longévité, pas en vie.
+  const survivalTitle = winner.lives > 0 ? 'survit à la partie !' : 'tient le plus longtemps !'
   const you = finalRanking.find((entry) => entry.playerId === youId)
   const podium = finalRanking.filter((e) => e.rank <= 3)
   const rest = finalRanking.filter((e) => e.rank > 3)
@@ -45,7 +48,7 @@ export function ResultsView() {
       <div className="relative mt-[52px] flex flex-col items-center gap-2">
         <span className="text-[44px]">{survival ? '💀' : '🏆'}</span>
         <span className="text-center font-display text-[26px] font-semibold text-cream sm:text-[32px]">
-          {winner.username} {survival ? 'survit à la partie !' : 'remporte la partie !'}
+          {winner.username} {survival ? survivalTitle : 'remporte la partie !'}
         </span>
         <span className="text-[13.5px] text-muted">
           {questionTotal} questions · {players.length} joueur{players.length > 1 ? 's' : ''} ·{' '}

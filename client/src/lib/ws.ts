@@ -55,7 +55,11 @@ class GameSocket {
       if (event.code === 4000) return // remplacé par une connexion plus récente (autre onglet)
       const fatal = FATAL_CODES[event.code]
       if (fatal) {
-        useGameStore.getState().setEnded(fatal)
+        // Salon introuvable alors qu'on y jouait : ce n'est pas un mauvais code, c'est
+        // le salon qui a disparu du serveur — typiquement un redémarrage, l'état des
+        // parties vivant en mémoire. Dire « cette partie n'existe pas » serait faux.
+        const joined = useGameStore.getState().youId !== null
+        useGameStore.getState().setEnded(fatal === 'room_not_found' && joined ? 'game_interrupted' : fatal)
         return
       }
       useGameStore.getState().setConnection('reconnecting')

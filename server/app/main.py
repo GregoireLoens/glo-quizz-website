@@ -2,7 +2,7 @@ import asyncio
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -69,6 +69,11 @@ if _static is not None and _static.is_dir():
     # HEAD accepté : les moniteurs d'uptime sondent souvent sans corps.
     @app.api_route("/{full_path:path}", methods=["GET", "HEAD"], include_in_schema=False)
     async def spa_fallback(full_path: str):
+        # Un chemin d'API inconnu doit répondre comme une API. Sans ça, il ressort
+        # en 200 avec la page HTML : une URL mal orthographiée ou un endpoint retiré
+        # passe alors pour un succès (constaté en vérifiant le retrait du CRUD quiz).
+        if full_path == "api" or full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="not_found")
         candidate = (_static / full_path).resolve()
         if full_path and candidate.is_file() and candidate.is_relative_to(_static.resolve()):
             return FileResponse(candidate)

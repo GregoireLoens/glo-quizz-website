@@ -11,6 +11,9 @@ import { ResultsView } from './game/ResultsView'
 
 const END_MESSAGES: Record<string, string> = {
   room_not_found: "Cette partie n'existe pas ou est déjà terminée.",
+  // Le salon a disparu pendant qu'on y jouait : l'état des parties vit en mémoire,
+  // un redémarrage du serveur les emporte. Voir ws.ts.
+  game_interrupted: 'La partie a été interrompue : le salon n’existe plus côté serveur, ce qui arrive quand le site est mis à jour en cours de partie.',
   already_started: 'La partie a déjà commencé sans toi.',
   room_closed: 'Le salon a été fermé pour cause d’inactivité.',
   invalid_token: 'Ta session a expiré — reconnecte-toi.',
