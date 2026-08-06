@@ -1,2 +1,7 @@
+# Cloudflare préfixe sa propre section « Managed content » à ce fichier (signaux de
+# contenu, blocage de crawlers d'IA) : ce qu'on lit en prod n'est pas ce fichier seul.
 User-agent: *
 Allow: /
+Disallow: /game/
+
+Sitemap: https://midi-quizz.glocorp.fr/sitemap.xml

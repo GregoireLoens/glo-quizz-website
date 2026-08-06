@@ -1,13 +1,14 @@
 import asyncio
 from contextlib import asynccontextmanager
+from functools import lru_cache
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
-from . import config
+from . import config, seo
 from .db import init_db
 from .game import ws as game_ws
 from .game.manager import manager
@@ -66,6 +67,10 @@ if _static is not None and _static.is_dir():
             response.headers["Cache-Control"] = "no-cache"
         return response
 
+    @lru_cache(maxsize=1)
+    def _index_html() -> str:
+        return (_static / "index.html").read_text(encoding="utf-8")
+
     # HEAD accepté : les moniteurs d'uptime sondent souvent sans corps.
     @app.api_route("/{full_path:path}", methods=["GET", "HEAD"], include_in_schema=False)
     async def spa_fallback(full_path: str):
@@ -77,4 +82,8 @@ if _static is not None and _static.is_dir():
         candidate = (_static / full_path).resolve()
         if full_path and candidate.is_file() and candidate.is_relative_to(_static.resolve()):
             return FileResponse(candidate)
-        return FileResponse(_static / "index.html")
+        # La SPA rend le même index.html partout : on y réécrit titre, description et
+        # balises de partage selon la route, seul moyen sans SSR d'être lisible par un
+        # crawler ou un aperçu de lien. Le fichier est immuable dans l'image, donc lu
+        # une fois pour toutes.
+        return HTMLResponse(seo.render(_index_html(), full_path))
