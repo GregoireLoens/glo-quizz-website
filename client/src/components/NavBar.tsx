@@ -112,9 +112,11 @@ export function NavBar({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
                       setMenuOpen((v) => !v)
                       setDraft(null)
                     }}
-                    className="flex h-11 cursor-pointer items-center gap-2.5 rounded-full border border-line-strong py-0 pl-1.5 pr-[14px]"
+                    className="flex h-12 cursor-pointer items-center gap-3 rounded-full border border-line-strong py-0 pl-3 pr-[14px]"
                   >
-                    {/* pastille pleine : le design system la réserve au joueur connecté, ici */}
+                    {/* Pastille pleine : le design system la réserve au joueur connecté, ici.
+                        28 px et non 32 : la couronne du top 3 déborde de 7 px tout autour et
+                        doit tenir dans la pilule sans en croiser la bordure. */}
                     <Avatar
                       initials={initials(user.username)}
                       name={user.username}
@@ -122,7 +124,7 @@ export function NavBar({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
                       symbol={user.avatarSymbol}
                       rank={medal}
                       solid
-                      size={32}
+                      size={28}
                     />
                     <span className="hidden text-sm font-semibold text-cream sm:inline">{user.username}</span>
                   </button>

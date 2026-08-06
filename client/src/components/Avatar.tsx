@@ -79,7 +79,8 @@ interface Props {
   size?: number
   /** Pastille pleine au lieu de la teinte. Réservé au joueur connecté dans la nav. */
   solid?: boolean
-  /** Dessine la couronne de laurier. `false` pour ne garder que l'anneau de médaille. */
+  /** Dessine la couronne de laurier. `false` pour ne garder que l'anneau de médaille,
+   * là où la place manque vraiment. */
   wreath?: boolean
   className?: string
   style?: CSSProperties
@@ -89,11 +90,16 @@ interface Props {
  * podium et les cartes quiz ; avant, chacun de ces endroits dessinait ses propres initiales
  * avec sa propre couleur.
  *
- * Deux axes choisis par le joueur (`color`, `symbol`), un seul gagné (`rank`). Les lauriers
- * n'entourent le rond qu'à partir de 44 px — en dessous les feuilles se referment en bouillie —
- * et se coupent (`wreath={false}`) là où la place manque ; l'anneau de médaille, lui, porte seul
- * le classement à toutes les tailles. Le halo autour de l'anneau est un `box-shadow` sans
- * décalage ni flou : un anneau diffus, pas une ombre portée (interdites par le système). */
+ * Deux axes choisis par le joueur (`color`, `symbol`), un seul gagné (`rank`) : anneau de
+ * médaille sur le disque et couronne de laurier autour.
+ *
+ * **Les lauriers se dessinent à toutes les tailles** — décision de glo du 06/08/2026. Le
+ * design system les coupait sous 44 px (feuilles illisibles) ; glo les veut partout, la marque
+ * du top 3 devant se lire jusque dans la nav et sur une carte quiz. Les conteneurs réservent
+ * la place correspondante : la couronne déborde de 25 % du diamètre de chaque côté.
+ *
+ * Le halo autour de l'anneau est un `box-shadow` sans décalage ni flou : un anneau diffus,
+ * pas une ombre portée (interdites par le système). */
 export function Avatar({
   initials,
   name,
@@ -108,7 +114,7 @@ export function Avatar({
 }: Props) {
   const c = avatarColorVar(color)
   const medal = rank ? MEDAL[rank] : undefined
-  const showWreath = wreath && medal !== undefined && size >= 44
+  const showWreath = wreath && medal !== undefined
   return (
     <span
       role="img"

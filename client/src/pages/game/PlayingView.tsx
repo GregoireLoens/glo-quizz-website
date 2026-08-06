@@ -74,7 +74,9 @@ export function PlayingView() {
   return (
     <div className="relative flex min-h-screen flex-col items-center px-6">
       {/* avatars + progression */}
-      <div className="relative mt-7 flex flex-wrap items-center justify-center gap-2.5">
+      {/* gap-6 : les lauriers d'un avatar de 44 px débordent de 11 px de chaque côté, il
+          faut les 22 px correspondants pour que deux voisins ne se chevauchent pas */}
+      <div className="relative mt-7 flex flex-wrap items-center justify-center gap-6">
         {players.map((p) => {
           const out = survival && p.lives <= 0
           return (
@@ -86,10 +88,6 @@ export function PlayingView() {
                 symbol={p.avatarSymbol}
                 rank={medals[p.id] ?? null}
                 size={44}
-                // bandeau dense : à 44 px les lauriers déborderaient sur les voisins.
-                // L'anneau de médaille dit le classement, c'est ce que le système prévoit
-                // là où la place manque.
-                wreath={false}
                 style={{
                   opacity: !p.connected || out ? 0.4 : 1,
                   outline: p.id === youId ? '2px solid var(--color-citron)' : undefined,

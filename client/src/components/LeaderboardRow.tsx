@@ -27,7 +27,8 @@ const MEDAL: Record<number, string> = { 1: 'bg-gold text-ink', 2: 'bg-silver tex
 export function LeaderboardRow({ rank, initials, name, color, symbol, meta, value, delta, me = false }: Props) {
   return (
     <div
-      className={`flex items-center gap-4 rounded-lg p-3 ${
+      // gap-6 et py-4 : la couronne d'un avatar de 38 px déborde de 9,5 px tout autour
+      className={`flex items-center gap-6 rounded-lg px-3 py-4 ${
         me ? 'border border-citron/30 bg-citron/12' : 'border border-line bg-card'
       }`}
     >
@@ -38,8 +39,8 @@ export function LeaderboardRow({ rank, initials, name, color, symbol, meta, valu
       >
         {rank}
       </span>
-      {/* 38 px : sous le seuil des lauriers. Le rang est déjà écrit dans la pastille de
-          gauche, l'anneau de médaille suffit à le redire sur l'avatar. */}
+      {/* le rang est déjà écrit dans la pastille de gauche ; l'avatar le redit par son
+          anneau et sa couronne — glo les veut partout, taille comprise */}
       <Avatar initials={initials} name={name} color={color} symbol={symbol} rank={rank} size={38} />
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className={`flex items-center gap-2 text-base font-semibold ${me ? 'text-citron' : 'text-cream'}`}>

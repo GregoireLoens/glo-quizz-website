@@ -11,6 +11,7 @@ import { api } from '../lib/api'
 import type { QuizSummary } from '../lib/types'
 import { APP_VERSION } from '../lib/version'
 import { formatPlays, initials } from '../lib/utils'
+import { useMedals } from '../stores/leadersStore'
 import { useAuthStore } from '../stores/authStore'
 
 const ACCENTS = ['var(--color-citron)', 'var(--color-violet)', 'var(--color-coral)']
@@ -25,6 +26,7 @@ export function HomePage() {
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [busyQuizId, setBusyQuizId] = useState<number | null>(null)
   const [busyRandom, setBusyRandom] = useState(false)
+  const medals = useMedals()
 
   useEffect(() => {
     api.get<string[]>('/api/categories').then(setCategories).catch(() => {})
@@ -159,6 +161,7 @@ export function HomePage() {
                 initials={initials(quiz.author.username)}
                 authorColor={quiz.author.avatarColor}
                 authorSymbol={quiz.author.avatarSymbol}
+                authorRank={medals[quiz.author.id] ?? null}
                 accent={ACCENTS[i % ACCENTS.length]}
                 action={
                   <Button
