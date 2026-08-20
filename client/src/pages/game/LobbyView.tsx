@@ -155,10 +155,13 @@ export function LobbyView() {
               monde est prêt
             </p>
           </div>
-          <div className="flex flex-col items-end gap-2">
+          {/* Sous sm le bloc prend toute la largeur et ses actions passent à la ligne : aligné
+              à droite sur une seule ligne, il débordait de 64 px à 390 px et le bouton
+              « Partager » sortait de l'écran sans même être atteignable au scroll. */}
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
             <span className="text-xs font-semibold uppercase tracking-[2px] text-muted">Code du salon</span>
-            <div className="flex items-center gap-3">
-              <span className="font-display text-[36px] font-semibold tracking-[6px] text-cream sm:text-[44px]">
+            <div className="flex flex-wrap items-center gap-3 sm:justify-end">
+              <span className="font-display text-[32px] font-semibold tracking-[6px] text-cream sm:text-[44px]">
                 {code}
               </span>
               <Button variant="contour" size="secondaire" icon={<Icon name="copier" size={17} />} onClick={() => copy(code ?? '', 'code')}>
@@ -231,6 +234,15 @@ export function LobbyView() {
                 Quitter
               </Button>
             </div>
+
+            {/* Dit avant la partie ce que l'écran de fin disait après : une partie à un
+                seul joueur se joue, mais ne touche pas au classement (voir elo.py). */}
+            {players.length < 2 && (
+              <p className="text-[13px] text-muted-deep">
+                Tout seul, la partie se joue mais ne compte pas pour le classement Elo — invite au
+                moins un autre joueur.
+              </p>
+            )}
           </Card>
 
           {/* réglages */}
