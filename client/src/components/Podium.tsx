@@ -1,5 +1,6 @@
 import type { AvatarColor, AvatarSymbol } from '../lib/avatar'
 import { Avatar } from './Avatar'
+import { EloDelta } from './EloDelta'
 
 interface PodiumPlayer {
   rank: 1 | 2 | 3
@@ -9,16 +10,18 @@ interface PodiumPlayer {
   symbol?: AvatarSymbol | null
   detail: string
   points: string
+  /** Rating après la partie et sa variation. Absent sur une partie non classée (solo). */
+  elo?: { rating: string; delta: number } | null
 }
 
-const CFG: Record<1 | 2 | 3, { height: number; bar: string; avatar: number; rank: number }> = {
-  1: { height: 172, bar: 'var(--color-citron)', avatar: 84, rank: 40 },
-  2: { height: 130, bar: 'var(--color-violet)', avatar: 68, rank: 30 },
-  3: { height: 100, bar: 'var(--color-bronze)', avatar: 62, rank: 26 },
+const CFG: Record<1 | 2 | 3, { height: number; eloHeight: number; bar: string; avatar: number; rank: number }> = {
+  1: { height: 172, eloHeight: 206, bar: 'var(--color-citron)', avatar: 84, rank: 40 },
+  2: { height: 130, eloHeight: 156, bar: 'var(--color-violet)', avatar: 68, rank: 30 },
+  3: { height: 100, eloHeight: 120, bar: 'var(--color-bronze)', avatar: 62, rank: 26 },
 }
 
 /** Top 3 uniquement — le reste de la liste passe par LeaderboardRow. Plus de double affichage
- * classement/podium. */
+ * classement/podium. La marche s'allonge quand elle porte l'Elo, pour que le rang garde sa place. */
 export function Podium({ players }: { players: PodiumPlayer[] }) {
   const by = (rank: 1 | 2 | 3) => players.find((p) => p.rank === rank)
   const order = [by(2), by(1), by(3)].filter((p): p is PodiumPlayer => Boolean(p))
@@ -44,12 +47,18 @@ export function Podium({ players }: { players: PodiumPlayer[] }) {
             </div>
             <div
               className="flex w-full flex-col items-center justify-center gap-1.5 rounded-t-xl border-x border-t border-line bg-card"
-              style={{ height: c.height, borderTopColor: c.bar, borderTopWidth: 3 }}
+              style={{ height: p.elo ? c.eloHeight : c.height, borderTopColor: c.bar, borderTopWidth: 3 }}
             >
               <span className="font-display font-semibold" style={{ fontSize: c.rank, color: c.bar }}>
                 {p.rank}
               </span>
               <span className="text-base font-semibold tabular-nums text-cream-soft">{p.points}</span>
+              {p.elo && (
+                <div className="mt-0.5 flex flex-col items-center gap-1">
+                  <span className="text-[12.5px] tabular-nums text-muted-soft">{p.elo.rating} Elo</span>
+                  <EloDelta delta={p.elo.delta} size="sm" unit={false} />
+                </div>
+              )}
             </div>
           </div>
         )

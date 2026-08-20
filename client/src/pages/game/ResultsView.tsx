@@ -7,10 +7,18 @@ import { Icon } from '../../components/Icon'
 import { LeaderboardRow } from '../../components/LeaderboardRow'
 import { Podium } from '../../components/Podium'
 import { api } from '../../lib/api'
+import type { RankingEntry } from '../../lib/types'
 import { formatDuration, formatPoints, initials } from '../../lib/utils'
 import { gameSocket } from '../../lib/ws'
 import { useGameStore } from '../../stores/gameStore'
 import { useLeadersStore } from '../../stores/leadersStore'
+
+/** Rating après la partie et sa variation, ou null si la partie n'est pas classée
+ * (solo) — le serveur ne renseigne `eloBefore` et `eloDelta` qu'ensemble. */
+function eloOf(entry: RankingEntry): { rating: string; delta: number } | null {
+  if (entry.eloBefore == null || entry.eloDelta == null) return null
+  return { rating: formatPoints(entry.eloBefore + entry.eloDelta), delta: entry.eloDelta }
+}
 
 export function ResultsView() {
   const navigate = useNavigate()
@@ -35,6 +43,7 @@ export function ResultsView() {
   // question : le premier du classement l'est alors à la longévité, pas en vie.
   const survivalTitle = winner.lives > 0 ? 'survit à la partie !' : 'tient le plus longtemps !'
   const you = finalRanking.find((entry) => entry.playerId === youId)
+  const yourElo = you ? eloOf(you) : null
   const podium = finalRanking.filter((e) => e.rank <= 3)
   const rest = finalRanking.filter((e) => e.rank > 3)
 
@@ -54,10 +63,10 @@ export function ResultsView() {
           {questionTotal} questions · {players.length} joueur{players.length > 1 ? 's' : ''} ·{' '}
           {formatDuration(durationSec)}
         </span>
-        {you?.eloDelta != null && you.eloBefore != null && (
+        {yourElo && (
           <span className="mt-1 inline-flex items-center gap-2 rounded-full bg-cream/10 px-4 py-1.5 text-[13px] text-cream">
-            Ton Elo : <strong className="font-semibold">{you.eloBefore + you.eloDelta}</strong>
-            <EloDelta delta={you.eloDelta} />
+            Ton Elo : <strong className="font-semibold tabular-nums">{yourElo.rating}</strong>
+            <EloDelta delta={yourElo.delta} />
           </span>
         )}
         {!rated && (
@@ -77,26 +86,34 @@ export function ResultsView() {
             symbol: e.avatarSymbol,
             detail: `${e.correctCount} bonne${e.correctCount > 1 ? 's' : ''}`,
             points: `${formatPoints(e.score)} pts`,
+            // l'Elo de chacun, pas seulement le sien : on veut voir qui monte et qui descend
+            elo: eloOf(e),
           }))}
         />
       </div>
 
       {rest.length > 0 && (
         <div className="relative mt-11 flex w-full max-w-[640px] flex-col gap-2">
-          {rest.map((entry) => (
-            <LeaderboardRow
-              key={entry.playerId}
-              rank={entry.rank}
-              initials={initials(entry.username)}
-              name={entry.username}
-              color={entry.avatarColor}
-              symbol={entry.avatarSymbol}
-              meta={`${entry.correctCount}/${questionTotal} bonnes réponses`}
-              value={`${formatPoints(entry.score)} pts`}
-              delta={entry.eloDelta}
-              me={entry.playerId === youId}
-            />
-          ))}
+          {rest.map((entry) => {
+            const elo = eloOf(entry)
+            return (
+              <LeaderboardRow
+                key={entry.playerId}
+                rank={entry.rank}
+                initials={initials(entry.username)}
+                name={entry.username}
+                color={entry.avatarColor}
+                symbol={entry.avatarSymbol}
+                meta={
+                  `${entry.correctCount}/${questionTotal} bonnes réponses` +
+                  (elo ? ` · ${elo.rating} Elo` : '')
+                }
+                value={`${formatPoints(entry.score)} pts`}
+                delta={entry.eloDelta}
+                me={entry.playerId === youId}
+              />
+            )
+          })}
         </div>
       )}
 
