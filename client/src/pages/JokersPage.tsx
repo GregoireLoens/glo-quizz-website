@@ -9,6 +9,7 @@ const TONE: Record<string, { title: string; badge: string }> = {
   citron: { title: 'text-citron', badge: 'bg-citron/12' },
   violet: { title: 'text-violet', badge: 'bg-violet/12' },
   coral: { title: 'text-coral', badge: 'bg-coral/12' },
+  silver: { title: 'text-silver', badge: 'bg-silver/12' },
 }
 
 /** Règles des jokers. Page publique et indexable : c'est du contenu de jeu, pas du compte.
@@ -29,7 +30,7 @@ export function JokersPage() {
             Les jokers
           </h1>
           <p className="max-w-[560px] text-base leading-[25px] text-muted-soft">
-            Trois jokers par joueur et par partie, un de chaque. Ils se remettent à neuf à chaque
+            Quatre jokers par joueur et par partie, un de chaque. Ils se remettent à neuf à chaque
             manche, tout le monde a exactement les mêmes, et une partie avec jokers reste une partie
             classée.
           </p>
@@ -77,14 +78,23 @@ export function JokersPage() {
               que de te le faire brûler pour rien.
             </li>
             <li>
-              <strong className="font-semibold text-cream">Tout le monde voit tout.</strong> Les
-              jokers qu'il reste à chacun sont publics, et un joker joué est annoncé à toute la
-              table. Savoir que ton voisin garde encore son brouillage fait partie de la partie.
+              <strong className="font-semibold text-cream">Tout le monde voit tout — sauf le
+              bouclier.</strong> Les jokers qu'il reste à chacun sont publics, et un joker joué est
+              annoncé à toute la table : savoir que ton voisin garde encore son braquage fait partie
+              de la partie. Le bouclier est la seule exception — il ne se découvre qu'au décompte,
+              sans quoi il ne serait qu'un panneau « ne m'attaquez pas » et l'assaillant n'y perdrait
+              rien.
             </li>
             <li>
               <strong className="font-semibold text-cream">Le chrono ne bouge jamais.</strong> Aucun
               joker n'ajoute ni ne retire de temps : la question se termine au même instant pour
               tout le monde, sinon les autres joueurs attendraient devant un écran figé.
+            </li>
+            <li>
+              <strong className="font-semibold text-cream">Le braquage se règle au décompte.</strong>{' '}
+              Il ne s'applique pas à l'instant où tu le joues, mais quand les points sont comptés —
+              tu peux donc le lancer à n'importe quel moment de la question, y compris après avoir
+              validé ta propre réponse, et sur quelqu'un qui a déjà répondu.
             </li>
             <li>
               <strong className="font-semibold text-cream">L'hôte peut les couper.</strong> Le

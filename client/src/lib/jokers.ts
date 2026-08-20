@@ -1,13 +1,14 @@
 import type { JokerKind } from './types'
 
-/** Les trois jokers, source unique : barre de jeu, infobulle au survol et page de règles
- * lisent tous ce tableau. Un joker par axe — sûreté, risque, agression — parce que trois
- * exemplaires du même ne poseraient que la question « quand », là où trois différents
- * posent « lequel, quand, et contre qui ». */
+/** Les jokers, source unique : barre de jeu, infobulle au survol et page de règles lisent
+ * tous ce tableau. Un joker par axe — sûreté, risque, agression, parade — parce que
+ * plusieurs exemplaires du même ne poseraient que la question « quand », là où des jokers
+ * différents posent « lequel, quand, et contre qui ». */
 export interface JokerInfo {
   kind: JokerKind
   label: string
-  /** Libellé court, sous `sm` : les trois boutons doivent tenir sur une ligne à 390 px. */
+  /** Libellé court, sous `sm` : les **quatre** boutons doivent tenir sur une seule ligne à
+   * 390 px, sinon le dernier se retrouve sous la nav basse au premier affichage. */
   short: string
   emoji: string
   /** Une ligne, affichée au survol dans la partie. */
@@ -26,7 +27,7 @@ export const JOKERS: JokerInfo[] = [
   {
     kind: 'fifty',
     label: 'Moitié-moitié',
-    short: 'Moitié',
+    short: '50/50',
     emoji: '🎯',
     effect: 'Deux mauvaises réponses disparaissent de ton écran.',
     detail:
@@ -48,16 +49,28 @@ export const JOKERS: JokerInfo[] = [
     needsTarget: false,
   },
   {
-    kind: 'scramble',
-    label: 'Brouillage',
-    short: 'Brouiller',
-    emoji: '💥',
-    effect: "Trois secondes de réponses mélangées pour l'adversaire de ton choix.",
+    kind: 'steal',
+    label: 'Braquage',
+    short: 'Vol',
+    emoji: '💰',
+    effect: 'Si ta cible trouve et pas toi, tu lui prends sa bonne réponse.',
     detail:
-      "Tu désignes un joueur : pendant trois secondes, ses quatre réponses lui apparaissent mélangées et privées de leur lettre. Il peut toujours répondre, mais il doit tout relire — et le chrono, lui, continue. C'est le seul joker qui touche quelqu'un d'autre. Il se refuse sur un joueur qui a déjà validé, ou déjà éliminé en Survie : autant ne pas le gâcher.",
-    risk: null,
+      "Tu désignes un adversaire. Au moment du décompte, s'il a trouvé la bonne réponse et que toi non, elle change de camp : il en perd une, tu en gagnes une. S'il s'est trompé, ou si tu avais trouvé toi aussi, le braquage ne se déclenche pas et le joker est perdu. C'est un pari à l'envers — tu paries que l'autre sait et que toi non.",
+    risk: "Perdu si ta cible se trompe, ou si tu trouves la réponse toi aussi.",
     tone: 'coral',
     needsTarget: true,
+  },
+  {
+    kind: 'shield',
+    label: 'Bouclier',
+    short: 'Parer',
+    emoji: '🛡️',
+    effect: 'Annule les jokers joués contre toi sur cette question.',
+    detail:
+      "Posé sur une question, il annule tout ce qu'on te joue dessus — et l'assaillant perd son joker quand même. C'est le seul joker que la table **ne voit pas partir** : annoncé, il ne serait qu'un panneau « ne m'attaquez pas » et personne n'y perdrait rien. Il n'apparaît qu'au décompte. Revers de la médaille : si personne ne t'attaque ce tour-là, tu l'as brûlé pour rien. C'est un pari sur le moment où l'on va te viser.",
+    risk: "Perdu si personne ne t'attaque sur cette question.",
+    tone: 'silver',
+    needsTarget: false,
   },
 ]
 
@@ -68,4 +81,4 @@ export const JOKER_BY_KIND: Record<JokerKind, JokerInfo> = Object.fromEntries(
 /** Le classement se joue au nombre de bonnes réponses, les points ne départageant que les
  * ex æquo : c'est pourquoi aucun joker ne donne de points — il n'aurait aucun poids. */
 export const JOKERS_RULE =
-  'Trois jokers par joueur et par partie, un de chaque. Ils se remettent à neuf à chaque manche, et une partie avec jokers reste une partie classée.'
+  'Quatre jokers par joueur et par partie, un de chaque. Ils se remettent à neuf à chaque manche, et une partie avec jokers reste une partie classée.'

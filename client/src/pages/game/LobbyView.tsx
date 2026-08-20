@@ -294,7 +294,7 @@ export function LobbyView() {
               )}
             </SettingRow>
 
-            <SettingRow label="Jokers" hint="Trois par joueur : sécuriser, parier, brouiller">
+            <SettingRow label="Jokers" hint="Trois par joueur : sécuriser, parier, braquer">
               {isHost ? (
                 <SegmentedControl
                   options={[
@@ -338,7 +338,7 @@ export function LobbyView() {
 
             {(settings?.jokers ?? true) && (
               <p className="border-t border-line py-4 text-sm text-muted-soft">
-                🎯 Moitié-moitié, 🎲 Double ou rien, 💥 Brouillage — un de chaque par joueur, remis à
+                🎯 Moitié-moitié, 🎲 Double ou rien, 💰 Braquage — un de chaque par joueur, remis à
                 neuf à chaque manche. Une partie avec jokers reste classée.{' '}
                 <a
                   href="/jokers"

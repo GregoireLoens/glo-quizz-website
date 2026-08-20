@@ -45,8 +45,10 @@ interface GameState {
   hiddenAnswers: number[]
   /** « Double ou rien » engagé sur la question en cours. */
   doubleActive: boolean
-  /** Date de fin du brouillage subi (Date.now()), null si aucun. */
-  scrambledUntil: number | null
+  /** Braquage armé sur ce joueur pour la question en cours (null = aucun). */
+  stealTarget: number | null
+  /** Bouclier posé sur la question en cours. */
+  shieldActive: boolean
   lastJoker: JokerEvent | null
 
   setConnection: (c: ConnectionState) => void
@@ -79,7 +81,8 @@ const initial = {
   errorMsg: null,
   hiddenAnswers: [] as number[],
   doubleActive: false,
-  scrambledUntil: null,
+  stealTarget: null,
+  shieldActive: false,
   lastJoker: null as JokerEvent | null,
 }
 
@@ -123,10 +126,8 @@ export const useGameStore = create<GameState>()((set, get) => ({
           // sinon le moitié-moitié payé disparaît avec la socket
           hiddenAnswers: s.jokerState?.hidden ?? [],
           doubleActive: s.jokerState?.double ?? false,
-          scrambledUntil:
-            s.jokerState && s.jokerState.scrambledFor > 0
-              ? Date.now() + s.jokerState.scrambledFor * 1000
-              : null,
+          stealTarget: s.jokerState?.stealTarget ?? null,
+          shieldActive: s.jokerState?.shield ?? false,
         })
         break
       }
@@ -154,7 +155,8 @@ export const useGameStore = create<GameState>()((set, get) => ({
           // les effets de joker ne valent que pour une question
           hiddenAnswers: [],
           doubleActive: false,
-          scrambledUntil: null,
+          stealTarget: null,
+          shieldActive: false,
           lastJoker: null,
         })
         break
@@ -185,16 +187,15 @@ export const useGameStore = create<GameState>()((set, get) => ({
         // seules deux mauvaises réponses sont nommées : la bonne ne sort jamais du serveur
         if (get().question?.index === msg.questionIndex) set({ hiddenAnswers: msg.hidden })
         break
-      case 'joker_scrambled':
-        if (get().question?.index === msg.questionIndex) {
-          set({ scrambledUntil: Date.now() + msg.seconds * 1000 })
-        }
-        break
       case 'joker_used':
         set({
           lastJoker: { playerId: msg.playerId, kind: msg.kind, targetId: msg.targetId, at: Date.now() },
           doubleActive:
             msg.kind === 'double' && msg.playerId === get().youId ? true : get().doubleActive,
+          stealTarget:
+            msg.kind === 'steal' && msg.playerId === get().youId ? msg.targetId : get().stealTarget,
+          shieldActive:
+            msg.kind === 'shield' && msg.playerId === get().youId ? true : get().shieldActive,
         })
         break
       case 'game_over':
@@ -223,7 +224,8 @@ export const useGameStore = create<GameState>()((set, get) => ({
           errorMsg: null,
           hiddenAnswers: [],
           doubleActive: false,
-          scrambledUntil: null,
+          stealTarget: null,
+          shieldActive: false,
           lastJoker: null,
         })
         break

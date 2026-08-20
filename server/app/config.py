@@ -56,11 +56,18 @@ ELO_FLOOR = 100                # plancher : un rating ne descend jamais en desso
 # Jokers — un exemplaire de chacun par joueur et par partie, remis à neuf à chaque
 # manche. Pas de capital durable : le stock reste symétrique, donc compatible avec
 # une partie classée (décision glo du 20/08/2026).
-JOKER_KINDS = ("fifty", "double", "scramble")
-JOKER_SCRAMBLE_SECONDS = 3.0   # durée du brouillage subi par la cible
+JOKER_KINDS = ("fifty", "double", "steal", "shield")
 JOKER_DOUBLE_BONUS = 2         # bonnes réponses gagnées si le pari est tenu
 JOKER_DOUBLE_MALUS = 1         # bonnes réponses perdues sinon — peut faire passer sous zéro
 JOKER_DOUBLE_LIVES_COST = 2    # Survie : un pari perdu coûte deux vies au lieu d'une
+# Braquage : ne se déclenche que si la cible a trouvé et pas le voleur. Il se résout au
+# calcul des points, donc il se joue à n'importe quel moment de la question — c'est ce qui
+# le distingue du brouillage qu'il remplace, injouable dès que la cible avait répondu.
+JOKER_STEAL_AMOUNT = 1         # bonnes réponses transférées de la cible vers le voleur
+# Bouclier : annule les jokers subis sur la question où il est posé, l'assaillant perdant
+# quand même le sien. Contrairement aux trois autres, **il n'est pas annoncé quand il est
+# joué** — un bouclier public ne serait qu'un panneau « ne m'attaquez pas », et personne
+# n'y perdrait rien. Il devient public au reveal, avec le reste.
 
 REVEAL_SECONDS = 4.0
 ANSWER_GRACE_SECONDS = 0.5

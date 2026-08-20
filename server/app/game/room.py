@@ -45,8 +45,12 @@ class PlayerState:
     jokers_left: set[str] = field(default_factory=lambda: set(config.JOKER_KINDS))
     double_on: int | None = None          # index de la question engagée en « double ou rien »
     hidden_answers: dict[int, list[int]] = field(default_factory=dict)  # moitié-moitié
-    scrambled_on: int | None = None       # index de la question où l'on subit un brouillage
-    scrambled_at: float = 0.0             # time.monotonic() au moment du brouillage
+    steal_on: int | None = None           # index de la question sur laquelle un braquage est armé
+    steal_target: int | None = None       # joueur visé par ce braquage
+    shield_on: int | None = None          # index de la question protégée par le bouclier
+    # Ordre d'affichage des réponses, propre à ce joueur et à chaque question : liste des
+    # index canoniques dans l'ordre où il les voit. Mémorisé, donc stable à la reconnexion.
+    answer_order: dict[int, list[int]] = field(default_factory=dict)
 
     def reset_for_game(self) -> None:
         """Remet le joueur à zéro pour une nouvelle manche, jokers compris."""
@@ -59,7 +63,10 @@ class PlayerState:
         self.jokers_left = set(config.JOKER_KINDS)
         self.double_on = None
         self.hidden_answers = {}
-        self.scrambled_on = None
+        self.steal_on = None
+        self.steal_target = None
+        self.shield_on = None
+        self.answer_order = {}
 
 
 class GameRoom:
@@ -161,18 +168,55 @@ class GameRoom:
             for i, p in enumerate(ordered)
         ]
 
-    def _question_payload(self, index: int) -> dict:
+    def _order_for(self, p: PlayerState, index: int) -> list[int]:
+        """Ordre d'affichage des réponses pour ce joueur et cette question.
+
+        Chaque joueur voit les mêmes réponses dans un ordre différent : deux personnes
+        côte à côte ne peuvent plus se souffler « c'est la C ». Le mélange est tiré une
+        fois et mémorisé — il doit rester identique après une reconnexion, sinon la
+        réponse déjà donnée se rattacherait à la mauvaise proposition.
+        """
+        order = p.answer_order.get(index)
+        if order is None:
+            order = list(range(len(self.questions[index]["answers"])))
+            random.shuffle(order)
+            p.answer_order[index] = order
+        return order
+
+    def _question_payload(self, index: int, p: PlayerState) -> dict:
         q = self.questions[index]
+        order = self._order_for(p, index)
         return {
             "index": index,
             # en Survie le nombre total de questions n'est pas connu d'avance
             "total": None if self.settings["survival"] else len(self.questions),
             "text": q["text"],
-            "answers": q["answers"],
+            "answers": [q["answers"][i] for i in order],
             # titre du quiz d'origine — contexte affiché en modes Aléatoire/Survie uniquement
             "theme": q.get("theme"),
             "duration": self.settings["timePerQuestion"],
         }
+
+    def _personalise_reveal(self, reveal: dict, p: PlayerState) -> dict:
+        """Traduit un reveal canonique dans l'ordre d'affichage de ce joueur.
+
+        `correctIndex` et sa propre réponse doivent désigner les cartes **qu'il voit**.
+        Les réponses des autres restent en index canonique : le client ne les affiche pas,
+        et elles n'apprennent rien de plus que le `correct` déjà présent.
+        """
+        order = self._order_for(p, reveal["questionIndex"])
+        results = []
+        for r in reveal["results"]:
+            if r["playerId"] == p.user_id and r["answerIndex"] is not None:
+                r = {**r, "answerIndex": order.index(r["answerIndex"])}
+            results.append(r)
+        return {**reveal, "correctIndex": order.index(reveal["correctIndex"]), "results": results}
+
+    async def broadcast_personal(self, build) -> None:
+        """Diffuse un message construit pour chaque destinataire (ordre des réponses)."""
+        targets = [p for p in self.players.values() if p.connected and p.ws is not None]
+        if targets:
+            await asyncio.gather(*(self._send(p.ws, build(p)) for p in targets))
 
     def to_state(self, for_user_id: int) -> dict:
         state: dict[str, Any] = {
@@ -187,30 +231,30 @@ class GameRoom:
             "jokerState": None,
             "durationSec": self.duration_sec,
         }
-        if self.phase in ("question", "reveal") and 0 <= self.current_index < len(self.questions):
-            q = self._question_payload(self.current_index)
+        me = self.players.get(for_user_id)
+        if (
+            me is not None
+            and self.phase in ("question", "reveal")
+            and 0 <= self.current_index < len(self.questions)
+        ):
+            order = self._order_for(me, self.current_index)
+            q = self._question_payload(self.current_index, me)
             if self.phase == "question":
                 q["elapsed"] = round(time.monotonic() - self.question_started_at, 2)
             state["question"] = q
-            me = self.players.get(for_user_id)
-            if me is not None and self.current_index in me.answers:
-                state["yourAnswer"] = me.answers[self.current_index][0]
+            if self.current_index in me.answers:
+                # stockée en index canonique : on la retraduit dans l'ordre qu'il voit
+                state["yourAnswer"] = order.index(me.answers[self.current_index][0])
             # Une reconnexion en pleine question doit retrouver ses jokers en cours,
             # sinon le moitié-moitié payé disparaît avec la socket.
-            if me is not None:
-                elapsed = time.monotonic() - me.scrambled_at
-                state["jokerState"] = {
-                    "hidden": me.hidden_answers.get(self.current_index, []),
-                    "double": me.double_on == self.current_index,
-                    "scrambledFor": round(
-                        max(0.0, config.JOKER_SCRAMBLE_SECONDS - elapsed)
-                        if me.scrambled_on == self.current_index
-                        else 0.0,
-                        2,
-                    ),
-                }
-        if self.phase == "reveal":
-            state["reveal"] = self.last_reveal
+            state["jokerState"] = {
+                "hidden": me.hidden_answers.get(self.current_index, []),
+                "double": me.double_on == self.current_index,
+                "stealTarget": me.steal_target if me.steal_on == self.current_index else None,
+                "shield": me.shield_on == self.current_index,
+            }
+        if self.phase == "reveal" and self.last_reveal is not None and me is not None:
+            state["reveal"] = self._personalise_reveal(self.last_reveal, me)
         if self.phase == "finished":
             state["ranking"] = self.final_ranking
         state["questionsPlayed"] = self.questions_played if self.phase == "finished" else None
@@ -421,6 +465,13 @@ class GameRoom:
             p = self.players.get(user_id)
             if p is None:
                 return
+            # Chaque joueur voit les réponses dans son propre ordre : l'index reçu est celui
+            # de sa grille, on le retraduit en index canonique avant toute comparaison.
+            order = self._order_for(p, index)
+            if answer_index >= len(order):
+                await self._error(user_id, "invalid_answer", "Réponse invalide.")
+                return
+            answer_index = order[answer_index]
             if self.settings["survival"] and p.lives <= 0:
                 await self._error(user_id, "eliminated", "Tu es éliminé — spectateur jusqu'à la fin.")
                 return
@@ -438,7 +489,7 @@ class GameRoom:
     async def _joker(self, user_id: int, msg: dict) -> None:
         """Dépense un joker sur la question en cours.
 
-        Trois effets, trois axes : `fifty` sécurise, `double` parie, `scramble` agresse.
+        Quatre effets : `fifty` sécurise, `double` parie, `steal` agresse, `shield` pare.
         Tout est arbitré ici — `correct_index` ne sort jamais, même pour le moitié-moitié
         qui ne renvoie que **deux mauvaises** réponses à masquer (contrainte anti-triche).
         """
@@ -463,14 +514,16 @@ class GameRoom:
             if self.settings["survival"] and p.lives <= 0:
                 await self._error(user_id, "eliminated", "Tu es éliminé — spectateur jusqu'à la fin.")
                 return
-            # Après avoir validé, un joker ne changerait plus rien : autant ne pas le brûler.
-            if self.current_index in p.answers:
+            # Le moitié-moitié et le pari doivent précéder la validation, sinon ils ne
+            # changeraient plus rien. Le braquage, lui, se résout au calcul des points :
+            # il reste jouable après avoir répondu, et c'est tout son intérêt.
+            if kind != "steal" and self.current_index in p.answers:
                 await self._error(user_id, "already_answered", "Ta réponse est déjà partie.")
                 return
 
             index = self.current_index
             target: PlayerState | None = None
-            if kind == "scramble":
+            if kind == "steal":
                 target = self.players.get(target_id) if isinstance(target_id, int) else None
                 if target is None or target.user_id == user_id:
                     await self._error(user_id, "invalid_target", "Choisis un autre joueur.")
@@ -478,39 +531,48 @@ class GameRoom:
                 if self.settings["survival"] and target.lives <= 0:
                     await self._error(user_id, "invalid_target", "Ce joueur est déjà éliminé.")
                     return
-                if index in target.answers:
-                    await self._error(user_id, "invalid_target", "Ce joueur a déjà répondu.")
-                    return
 
             p.jokers_left.discard(kind)
             if kind == "fifty":
                 correct = self.questions[index]["correct_index"]
-                wrong = [i for i in range(len(self.questions[index]["answers"])) if i != correct]
+                order = self._order_for(p, index)
+                # positions **de sa grille** occupées par de mauvaises réponses
+                wrong = [pos for pos, canonical in enumerate(order) if canonical != correct]
                 hidden = sorted(random.sample(wrong, min(2, len(wrong))))
                 p.hidden_answers[index] = hidden
                 if p.ws is not None:
                     await self._send(p.ws, {"type": "joker_hidden", "questionIndex": index, "hidden": hidden})
             elif kind == "double":
                 p.double_on = index
+            elif kind == "shield":
+                p.shield_on = index
             else:
                 assert target is not None
-                target.scrambled_on = index
-                target.scrambled_at = time.monotonic()
-                if target.ws is not None:
-                    await self._send(target.ws, {
-                        "type": "joker_scrambled",
-                        "questionIndex": index,
-                        "seconds": config.JOKER_SCRAMBLE_SECONDS,
-                        "fromId": user_id,
-                    })
+                p.steal_on = index
+                p.steal_target = target.user_id
             self.touch()
-            # Tout le monde voit qui dépense quoi : c'est ce qui rend le système lisible.
-            await self.broadcast({
+            used = {
                 "type": "joker_used",
                 "playerId": user_id,
                 "kind": kind,
                 "targetId": target.user_id if target is not None else None,
-            })
+            }
+            if kind == "shield":
+                # Le bouclier est la seule exception à « tout le monde voit qui dépense
+                # quoi » : annoncé, il ne serait qu'un panneau « ne m'attaquez pas » et
+                # l'assaillant n'y perdrait rien. Son propriétaire seul en est informé ;
+                # la table l'apprend au reveal, où les jokers de chacun se resynchronisent.
+                if p.ws is not None:
+                    await self._send(p.ws, used)
+                    # …y compris la liste des jokers, sans quoi le porteur lui-même verrait
+                    # son bouclier encore en main et pourrait le rejouer.
+                    await self._send(p.ws, {
+                        "type": "players",
+                        "players": self.players_payload(),
+                        "hostId": self.host_id,
+                    })
+                return
+            await self.broadcast(used)
             await self.broadcast({"type": "players", "players": self.players_payload(), "hostId": self.host_id})
 
     def _maybe_all_answered(self) -> None:
@@ -581,7 +643,9 @@ class GameRoom:
                     self.all_answered = asyncio.Event()
                     self.question_started_at = time.monotonic()
                     self.touch()
-                await self.broadcast({"type": "question", **self._question_payload(i)})
+                await self.broadcast_personal(
+                    lambda p, i=i: {"type": "question", **self._question_payload(i, p)}
+                )
                 with suppress(asyncio.TimeoutError):
                     await asyncio.wait_for(
                         self.all_answered.wait(),
@@ -591,7 +655,12 @@ class GameRoom:
                     self.phase = "reveal"
                     self.last_reveal = self._score_question(i)
                     self.touch()
-                await self.broadcast(self.last_reveal)
+                await self.broadcast_personal(
+                    lambda p: self._personalise_reveal(self.last_reveal, p)
+                )
+                # Les jokers de chacun se resynchronisent ici : c'est le moment où un
+                # bouclier, tu jusque-là, devient visible de toute la table.
+                await self.broadcast_players()
                 await asyncio.sleep(config.REVEAL_SECONDS)
                 i += 1
                 if survival and len(self._alive()) <= self.survival_threshold:
@@ -623,6 +692,8 @@ class GameRoom:
         duration = self.settings["timePerQuestion"]
         survival = bool(self.settings["survival"])
         results = []
+        correct_by_id: dict[int, bool] = {}
+        result_by_id: dict[int, dict] = {}
         for p in self.players.values():
             if survival and p.lives <= 0:
                 continue  # déjà éliminé : simple spectateur
@@ -667,7 +738,17 @@ class GameRoom:
                 # pari perdu à deux vies s'affichait comme un simple faux : le joueur en
                 # concluait, à raison, que son joker n'avait rien fait.
                 "livesLost": lives_lost,
+                # Braquage : rempli à la seconde passe, ci-dessous.
+                "stoleFrom": None,
+                "stolenBy": None,
+                # Bouclier posé sur cette question — public seulement à partir d'ici.
+                "shielded": p.shield_on == index,
+                "stealBlocked": None,
             })
+            correct_by_id[p.user_id] = correct
+            result_by_id[p.user_id] = results[-1]
+
+        self._resolve_steals(index, correct_by_id, result_by_id)
         return {
             "type": "reveal",
             "questionIndex": index,
@@ -675,6 +756,44 @@ class GameRoom:
             "results": results,
             "ranking": self._ranking_payload(),
         }
+
+    def _resolve_steals(
+        self, index: int, correct_by_id: dict[int, bool], result_by_id: dict[int, dict]
+    ) -> None:
+        """Braquages de la question : seconde passe, une fois qui a trouvé quoi établi.
+
+        Un braquage ne se déclenche que si la cible a trouvé **et** que le voleur non —
+        sinon le joker est perdu. Il se résout ici, et non au moment où il est joué, ce
+        qui le rend jouable à n'importe quel instant de la question : c'est ce qui le
+        distingue du brouillage qu'il remplace, injouable dès que la cible avait répondu.
+
+        Deux voleurs peuvent viser la même victime : chacun lui prend une bonne réponse,
+        sans jamais la faire passer sous zéro. Un bouclier posé sur la question annule le
+        braquage sans rendre son joker au voleur.
+        """
+        for thief in self.players.values():
+            if thief.steal_on != index or thief.steal_target is None:
+                continue
+            victim = self.players.get(thief.steal_target)
+            if victim is None:
+                continue
+            # Un joueur éliminé en Survie n'est pas scoré : il n'a ni résultat ni butin.
+            if thief.user_id not in result_by_id or victim.user_id not in result_by_id:
+                continue
+            # Le bouclier annule le braquage, mais le voleur a déjà perdu le sien : c'est
+            # tout l'intérêt d'avoir parié sur le bon tour.
+            if victim.shield_on == index:
+                result_by_id[thief.user_id]["stealBlocked"] = victim.user_id
+                continue
+            if not correct_by_id.get(victim.user_id) or correct_by_id.get(thief.user_id):
+                continue
+            taken = min(config.JOKER_STEAL_AMOUNT, victim.correct_count)
+            if taken <= 0:
+                continue
+            victim.correct_count -= taken
+            thief.correct_count += taken
+            result_by_id[thief.user_id]["stoleFrom"] = victim.user_id
+            result_by_id[victim.user_id]["stolenBy"] = thief.user_id
 
     def _apply_elo(self, conn) -> dict[int, tuple[int, int]]:
         """Met à jour les ratings à l'issue de la partie → `{user_id: (avant, delta)}`.

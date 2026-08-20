@@ -54,15 +54,16 @@ export interface GameInfo {
 
 export type GamePhase = 'lobby' | 'question' | 'reveal' | 'finished'
 
-/** `fifty` sécurise, `double` parie, `scramble` agresse — voir lib/jokers.ts pour les
- * libellés et l'écran de règles. */
-export type JokerKind = 'fifty' | 'double' | 'scramble'
+/** `fifty` sécurise, `double` parie, `steal` agresse, `shield` pare — voir lib/jokers.ts
+ * pour les libellés et l'écran de règles. */
+export type JokerKind = 'fifty' | 'double' | 'steal' | 'shield'
 
 /** État des jokers du joueur sur la question en cours, rejoué à chaque (re)connexion. */
 export interface JokerState {
   hidden: number[] // réponses masquées par le moitié-moitié
   double: boolean
-  scrambledFor: number // secondes de brouillage restantes (0 = aucun)
+  stealTarget: number | null // braquage armé sur ce joueur (null = aucun)
+  shield: boolean // bouclier posé sur la question en cours
 }
 
 export interface GameSettings {
@@ -113,6 +114,15 @@ export interface RevealResult {
   /** Vies réellement perdues sur cette question (0 hors Survie). Vient du serveur : le
    * client ne rejoue pas la règle du coût d'un pari perdu. */
   livesLost: number
+  /** Braquage abouti : à qui ce joueur a pris sa bonne réponse, et par qui il s'est fait
+   * prendre la sienne. Null de part et d'autre quand rien ne s'est produit. */
+  stoleFrom: number | null
+  stolenBy: number | null
+  /** Ce joueur avait posé son bouclier sur cette question. Public seulement au reveal :
+   * annoncé plus tôt, le bouclier ne serait qu'un panneau « ne m'attaquez pas ». */
+  shielded: boolean
+  /** Braquage annulé par le bouclier de ce joueur — l'assaillant perd le sien quand même. */
+  stealBlocked: number | null
 }
 
 export interface RankingEntry extends Avatar {
@@ -162,8 +172,6 @@ export type ServerMessage =
   | { type: 'lobby_reset'; players: GamePlayer[]; settings: GameSettings; hostId: number }
   // Privé : seules deux **mauvaises** réponses sont nommées, jamais la bonne.
   | { type: 'joker_hidden'; questionIndex: number; hidden: number[] }
-  // Privé, reçu par la cible du brouillage.
-  | { type: 'joker_scrambled'; questionIndex: number; seconds: number; fromId: number }
   // Diffusé : tout le monde voit qui dépense quoi, c'est ce qui rend le système lisible.
   | { type: 'joker_used'; playerId: number; kind: JokerKind; targetId: number | null }
   | { type: 'error'; code: string; message: string }

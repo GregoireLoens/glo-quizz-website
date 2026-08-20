@@ -17,12 +17,19 @@ export interface JokerTarget {
 interface Props {
   /** Jokers encore en main. */
   left: JokerKind[]
-  /** Adversaires visables par le brouillage — déjà filtrés par l'appelant. */
+  /** Adversaires visables par le braquage — déjà filtrés par l'appelant. */
   targets: JokerTarget[]
-  /** Coupé pendant le reveal, après validation, ou pour un joueur éliminé. */
+  /** Coupé pendant le reveal ou pour un joueur éliminé. */
   disabled?: boolean
+  /** Réponse déjà validée. Coupe le moitié-moitié et le pari, qui ne changeraient plus
+   * rien — mais **pas** le braquage, qui se résout au décompte des points. */
+  locked?: boolean
   /** « Double ou rien » déjà engagé sur cette question. */
   doubleActive?: boolean
+  /** Braquage déjà armé sur cette question, et sur qui. */
+  stealTarget?: number | null
+  /** Bouclier déjà posé sur cette question. */
+  shieldActive?: boolean
   onPlay: (kind: JokerKind, targetId?: number) => void
 }
 
@@ -32,11 +39,22 @@ const TONE: Record<string, string> = {
   citron: 'border-citron/45 bg-citron/12 text-citron hover:bg-citron/20',
   violet: 'border-violet/45 bg-violet/12 text-violet hover:bg-violet/20',
   coral: 'border-coral/45 bg-coral/12 text-coral hover:bg-coral/20',
+  silver: 'border-silver/45 bg-silver/12 text-silver hover:bg-silver/20',
 }
 
-/** Les trois jokers pendant une partie. Un joker dépensé reste visible, éteint : savoir ce
- * qu'on a déjà brûlé fait partie de la lecture de la partie. */
-export function JokerBar({ left, targets, disabled = false, doubleActive = false, onPlay }: Props) {
+/** Les jokers pendant une partie. Un joker dépensé reste visible, éteint : savoir ce qu'on
+ * a déjà brûlé fait partie de la lecture de la partie — sauf le bouclier d'un adversaire,
+ * que le serveur ne révèle qu'au décompte. */
+export function JokerBar({
+  left,
+  targets,
+  disabled = false,
+  locked = false,
+  doubleActive = false,
+  stealTarget = null,
+  shieldActive = false,
+  onPlay,
+}: Props) {
   const [picking, setPicking] = useState(false)
   const pickerRef = useRef<HTMLDivElement>(null)
 
@@ -54,20 +72,26 @@ export function JokerBar({ left, targets, disabled = false, doubleActive = false
   }, [disabled])
 
   return (
-    <div className="relative flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+    <div className="relative flex flex-wrap items-center justify-center gap-1.5 sm:gap-3">
       {JOKERS.map((j) => {
         const spent = !left.includes(j.kind)
-        const engaged = j.kind === 'double' && doubleActive
-        const off = spent || disabled || (j.kind === 'scramble' && targets.length === 0)
+        const engaged =
+          (j.kind === 'double' && doubleActive) ||
+          (j.kind === 'steal' && stealTarget !== null) ||
+          (j.kind === 'shield' && shieldActive)
+        const tooLate = locked && j.kind !== 'steal'
+        const off = spent || disabled || tooLate || (j.kind === 'steal' && targets.length === 0)
         return (
           <Tooltip
             key={j.kind}
             label={
               spent
                 ? `${j.label} — déjà utilisé.`
-                : j.kind === 'scramble' && targets.length === 0
-                  ? `${j.label} — aucun adversaire à viser.`
-                  : j.effect
+                : tooLate
+                  ? `${j.label} — ta réponse est déjà partie.`
+                  : j.kind === 'steal' && targets.length === 0
+                    ? `${j.label} — aucun adversaire à viser.`
+                    : j.effect
             }
           >
             <button
@@ -88,9 +112,9 @@ export function JokerBar({ left, targets, disabled = false, doubleActive = false
                 }
                 setPicking((v) => !v)
               }}
-              className={`flex h-11 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-sm font-semibold transition disabled:cursor-default sm:gap-2 sm:px-4 ${
+              className={`flex h-11 cursor-pointer items-center gap-1 rounded-full border px-2 text-sm font-semibold transition disabled:cursor-default sm:gap-2 sm:px-4 ${
                 off ? 'border-line bg-cream/4 text-muted-deep opacity-60' : TONE[j.tone]
-              } ${engaged ? 'ring-2 ring-violet/60' : ''}`}
+              } ${engaged ? 'ring-2 ring-cream/40' : ''}`}
             >
               <span className="text-base">{j.emoji}</span>
               <span className="hidden sm:inline">{j.label}</span>
@@ -106,7 +130,7 @@ export function JokerBar({ left, targets, disabled = false, doubleActive = false
           className="absolute bottom-[calc(100%+12px)] left-1/2 z-30 flex w-[248px] -translate-x-1/2 flex-col gap-1 rounded-xl border border-line bg-ink p-2"
         >
           <span className="px-2 pb-1 pt-1 text-xs font-semibold uppercase tracking-[1.2px] text-muted">
-            Brouiller qui ?
+            Braquer qui ?
           </span>
           {targets.map((t) => (
             <button
@@ -114,7 +138,7 @@ export function JokerBar({ left, targets, disabled = false, doubleActive = false
               type="button"
               onClick={() => {
                 setPicking(false)
-                onPlay('scramble', t.id)
+                onPlay('steal', t.id)
               }}
               className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-left hover:bg-coral/15"
             >

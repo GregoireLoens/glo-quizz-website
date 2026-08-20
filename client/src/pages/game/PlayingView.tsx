@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import { AnswerCard, type AnswerState } from '../../components/AnswerCard'
 import { Avatar } from '../../components/Avatar'
@@ -40,39 +40,14 @@ export function PlayingView() {
     select,
     hiddenAnswers,
     doubleActive,
-    scrambledUntil,
+    stealTarget,
+    shieldActive,
     lastJoker,
     previousRanking,
     errorMsg,
     clearError,
   } = useGameStore()
   const medals = useMedals()
-
-  // Le brouillage expire tout seul : un minuteur réveille le rendu à l'échéance, sinon
-  // les réponses resteraient mélangées jusqu'au prochain changement d'état.
-  const [, tick] = useState(0)
-  useEffect(() => {
-    if (scrambledUntil === null) return
-    const delay = scrambledUntil - Date.now()
-    if (delay <= 0) return
-    const id = setTimeout(() => tick((n) => n + 1), delay)
-    return () => clearTimeout(id)
-  }, [scrambledUntil])
-  const scrambled = scrambledUntil !== null && scrambledUntil > Date.now()
-
-  // Ordre d'affichage des réponses. Mélangé pendant un brouillage — mémorisé, sinon
-  // chaque rendu redistribuerait les cartes et elles deviendraient incliquables. Les
-  // index réels sont conservés : cliquer envoie toujours la bonne réponse.
-  const answerCount = question?.answers.length ?? 0
-  const order = useMemo(() => {
-    const idx = Array.from({ length: answerCount }, (_, i) => i)
-    if (!scrambled) return idx
-    for (let i = idx.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[idx[i], idx[j]] = [idx[j], idx[i]]
-    }
-    return idx
-  }, [answerCount, scrambled, scrambledUntil])
 
   // Une réponse ne part qu'une fois par question. `locked` n'arrive qu'avec l'ack du
   // serveur : cliquer « Valider » puis appuyer sur Entrée déclenchait les deux chemins
@@ -126,11 +101,7 @@ export function PlayingView() {
       const out = (s.settings?.survival ?? false) && me !== undefined && me.lives <= 0
       if (s.phase !== 'question' || s.locked || out || s.question === null) return
 
-      // Pendant un brouillage les lettres sont masquées à l'écran : les raccourcis de
-      // sélection contourneraient l'effet. Entrée reste disponible.
-      const index = s.scrambledUntil !== null && s.scrambledUntil > Date.now()
-        ? undefined
-        : ANSWER_KEYS[e.key.toLowerCase()] ?? ANSWER_CODES[e.code]
+      const index = ANSWER_KEYS[e.key.toLowerCase()] ?? ANSWER_CODES[e.code]
       if (index !== undefined) {
         if (index >= s.question.answers.length) return
         e.preventDefault()
@@ -155,11 +126,16 @@ export function PlayingView() {
   const eliminated = survival && me !== undefined && me.lives <= 0
 
   const jokersOn = settings?.jokers ?? false
+  // Qui s'est cassé les dents sur mon bouclier — l'information vit dans le résultat de
+  // l'assaillant, pas dans le mien.
+  const blockedForMe =
+    reveal?.results.find((r) => r.stealBlocked !== null && r.stealBlocked === youId)?.playerId ?? null
   const nameOf = (id: number) => players.find((p) => p.id === id)?.username
-  // Le brouillage se refuse sur qui a déjà validé ou n'est plus en jeu : le picker ne
-  // propose donc que des cibles que le serveur acceptera.
+  // Le braquage se résout au décompte, pas au moment où il part : une cible qui a déjà
+  // validé reste donc parfaitement visable — c'est ce qui le rend jouable, là où le
+  // brouillage se refermait dès la première réponse.
   const jokerTargets = players.filter(
-    (p) => p.id !== youId && p.connected && !p.answered && !(survival && p.lives <= 0),
+    (p) => p.id !== youId && p.connected && !(survival && p.lives <= 0),
   )
 
   const answerState = (index: number): AnswerState => {
@@ -263,6 +239,34 @@ export function PlayingView() {
                           : ' — éliminé 💀'
                         : '')}
                 </span>
+                {/* Le braquage se résout ici : sans un mot à l'écran, une bonne réponse qui
+                    change de camp au décompte serait parfaitement incompréhensible. */}
+                {myResult.stoleFrom !== null && (
+                  <span className="mt-1 text-[13px] font-semibold text-coral">
+                    💰 Braquage réussi — tu prends la bonne réponse de{' '}
+                    {nameOf(myResult.stoleFrom) ?? 'ta cible'}
+                  </span>
+                )}
+                {myResult.stolenBy !== null && (
+                  <span className="mt-1 text-[13px] font-semibold text-coral">
+                    💰 {nameOf(myResult.stolenBy) ?? 'Un joueur'} t'a braqué — ta bonne réponse
+                    change de camp
+                  </span>
+                )}
+                {myResult.stealBlocked !== null && (
+                  <span className="mt-1 text-[13px] font-semibold text-silver">
+                    🛡️ Braquage bloqué — {nameOf(myResult.stealBlocked) ?? 'ta cible'} avait posé son
+                    bouclier, et tu y laisses ton joker
+                  </span>
+                )}
+                {myResult.shielded && (
+                  <span className="mt-1 text-[13px] font-semibold text-silver">
+                    🛡️{' '}
+                    {blockedForMe !== null
+                      ? `Bouclier tenu — tu encaisses le braquage de ${nameOf(blockedForMe) ?? 'un joueur'}`
+                      : 'Bouclier posé — personne ne t’a visé, il est perdu'}
+                  </span>
+                )}
               </>
             ) : (
               eliminated && (
@@ -296,14 +300,14 @@ export function PlayingView() {
 
       {/* réponses */}
       <div className="relative mt-7 grid w-full max-w-[760px] grid-cols-1 gap-3 sm:mt-10 sm:gap-[18px] md:grid-cols-2">
-        {order.map((i) => {
+        {question.answers.map((_, i) => {
           // Écartée par un moitié-moitié : la carte reste en place, vidée — un trou dans la
           // grille déplacerait les autres réponses en pleine lecture.
           const cut = hiddenAnswers.includes(i) && !isReveal
           return (
             <AnswerCard
               key={i}
-              letter={scrambled ? '?' : LETTERS[i]}
+              letter={LETTERS[i]}
               state={cut ? 'estompee' : answerState(i)}
               showLabel={!cut}
               disabled={cut || locked || isReveal || eliminated}
@@ -347,16 +351,14 @@ export function PlayingView() {
               {errorMsg} — ton joker n'a pas été dépensé
             </button>
           )}
-          {scrambled && (
-            <span className="flex h-9 items-center rounded-full bg-coral/14 px-4 text-[13px] font-semibold text-coral">
-              💥 Brouillage — tes réponses sont mélangées, le chrono continue
-            </span>
-          )}
           <JokerBar
             left={me?.jokers ?? []}
             targets={jokerTargets}
-            disabled={locked || isReveal || eliminated}
+            disabled={isReveal || eliminated}
+            locked={locked}
             doubleActive={doubleActive}
+            stealTarget={stealTarget}
+            shieldActive={shieldActive}
             onPlay={(kind: JokerKind, targetId?: number) =>
               gameSocket.send({ type: 'joker', kind, targetId })
             }
@@ -379,16 +381,10 @@ export function PlayingView() {
         </span>
         {!isReveal && !eliminated && (
           <span className="hidden flex-none items-center gap-1.5 text-[13px] text-muted lg:flex">
-            {/* pendant un brouillage les lettres sont masquées, et leurs raccourcis coupés
-                avec elles : les annoncer promettrait quelque chose qui ne marche pas */}
-            {!scrambled && (
-              <>
-                {LETTERS.slice(0, question.answers.length).map((l) => (
-                  <KeyHint key={l}>{l}</KeyHint>
-                ))}
-                <span className="mx-1">puis</span>
-              </>
-            )}
+            {LETTERS.slice(0, question.answers.length).map((l) => (
+              <KeyHint key={l}>{l}</KeyHint>
+            ))}
+            <span className="mx-1">puis</span>
             <KeyHint tone="citron">Entrée</KeyHint>
           </span>
         )}
