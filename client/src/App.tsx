@@ -9,6 +9,7 @@ import { HomePage } from './pages/HomePage'
 import { JoinPage } from './pages/JoinPage'
 import { LeaderboardPage } from './pages/LeaderboardPage'
 import { LoginPage } from './pages/LoginPage'
+import { ProfilePage } from './pages/ProfilePage'
 import { RegisterCodePage } from './pages/RegisterCodePage'
 import { RegisterPage } from './pages/RegisterPage'
 import { useAuthStore } from './stores/authStore'
@@ -35,6 +36,9 @@ function bottomNavSection(pathname: string): string | null {
   if (pathname === '/') return 'Explorer'
   if (pathname === '/leaderboard') return 'Classement'
   if (pathname === '/join' || pathname.startsWith('/game/')) return 'Multijoueur'
+  // Le profil n'est pas une des trois sections, mais la nav basse reste affichée : la
+  // masquer enfermerait le joueur sur un écran sans autre sortie que le logo.
+  if (pathname === '/me') return 'Profil'
   return null
 }
 
@@ -72,6 +76,7 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route element={<RequireAuth />}>
+          <Route path="/me" element={<ProfilePage />} />
           <Route path="/join" element={<JoinPage />} />
           <Route path="/game/:code" element={<GamePage />} />
         </Route>

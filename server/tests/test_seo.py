@@ -26,7 +26,7 @@ def test_pages_publiques_ont_leur_propre_titre():
 
 def test_ecrans_prives_non_indexables():
     # Un salon est éphémère ; l'écran de code affiche un secret montré une seule fois.
-    for path in ("/game/AB12CD", "/login", "/register", "/register/code", "/inconnu"):
+    for path in ("/game/AB12CD", "/login", "/register", "/register/code", "/me", "/inconnu"):
         assert not seo.meta_for(path)["indexable"], path
 
 

@@ -149,3 +149,36 @@ export type ClientMessage =
   | { type: 'answer'; questionIndex: number; answerIndex: number }
   | { type: 'play_again' }
   | { type: 'leave' }
+
+// ---------- profil (`GET /api/me`) ----------
+
+export interface ProfileGame {
+  gameId: number
+  finishedAt: string | null
+  /** null sur un Mix aléatoire, une partie en Survie, ou un quiz retiré du catalogue. */
+  quizTitle: string | null
+  quizEmoji: string | null
+  rank: number
+  playerCount: number
+  score: number
+  correctCount: number
+  questionCount: number | null
+  eloBefore: number | null
+  eloDelta: number | null
+}
+
+export interface Profile {
+  elo: number
+  eloGames: number
+  /** null tant qu'aucune partie classée n'a été jouée. */
+  rank: number | null
+  rankedPlayers: number
+  stats: {
+    games: number
+    wins: number
+    ratedGames: number
+    correctCount: number
+    questionCount: number
+  }
+  games: ProfileGame[]
+}

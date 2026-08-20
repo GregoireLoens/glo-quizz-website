@@ -12,7 +12,7 @@ from . import config, seo
 from .db import init_db
 from .game import ws as game_ws
 from .game.manager import manager
-from .routers import auth, games, leaderboard, quizzes
+from .routers import auth, games, leaderboard, profile, quizzes
 
 
 @asynccontextmanager
@@ -41,6 +41,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(quizzes.router)
 app.include_router(leaderboard.router)
+app.include_router(profile.router)
 app.include_router(games.router)
 app.include_router(game_ws.router)
 

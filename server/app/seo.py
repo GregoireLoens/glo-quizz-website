@@ -39,12 +39,13 @@ _PAGES: dict[str, tuple[str, str]] = {
     # du navigateur, où « Midi Quizz — quiz multijoueur… » partout n'aide personne.
     "login": ("Connexion — Midi Quizz", DEFAULT_DESCRIPTION),
     "register": ("Inscription — Midi Quizz", DEFAULT_DESCRIPTION),
+    "me": ("Mon profil — Midi Quizz", DEFAULT_DESCRIPTION),
 }
 
 # Écrans sans intérêt pour un moteur, ou qu'on ne veut pas voir indexés : pages de
-# compte (contenu mince, et l'écran de code affiche un secret montré une seule fois)
-# et salons de partie, éphémères et privés.
-_NOINDEX_PREFIXES = ("login", "register", "game")
+# compte (contenu mince, et l'écran de code affiche un secret montré une seule fois),
+# profil du joueur connecté, et salons de partie, éphémères et privés.
+_NOINDEX_PREFIXES = ("login", "register", "game", "me")
 
 
 def _norm(path: str) -> str:

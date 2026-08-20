@@ -156,6 +156,16 @@ export function NavBar({ variant = 'app' }: { variant?: 'app' | 'auth' }) {
                         <>
                           <button
                             type="button"
+                            onClick={() => {
+                              setMenuOpen(false)
+                              navigate('/me')
+                            }}
+                            className="cursor-pointer rounded-full px-4 py-2.5 text-left text-sm font-medium text-cream hover:bg-cream/8"
+                          >
+                            Mon profil
+                          </button>
+                          <button
+                            type="button"
                             onClick={() =>
                               setDraft({
                                 color: user.avatarColor ?? 'citron',

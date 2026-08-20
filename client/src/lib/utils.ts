@@ -15,6 +15,22 @@ export function formatEloDelta(delta: number): string {
   return delta > 0 ? `+${delta}` : `${delta}`
 }
 
+/** Rang en toutes lettres : 1er, puis 2e, 3e… (le féminin « 1re » n'a pas d'emploi ici,
+ * les rangs qualifient toujours une place, jamais une personne). */
+export function formatRank(n: number): string {
+  return n === 1 ? '1er' : `${n}e`
+}
+
+/** Date d'une partie. `games.finished_at` vient de `datetime('now')` côté SQLite : de
+ * l'UTC sans marqueur de fuseau, d'où le « Z » ajouté avant de parser — sinon le
+ * navigateur le lit comme une heure locale et décale la date. */
+export function formatGameDate(value: string | null): string {
+  if (!value) return ''
+  const d = new Date(`${value.replace(' ', 'T')}Z`)
+  if (Number.isNaN(d.getTime())) return ''
+  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+}
+
 export function formatPlays(n: number): string {
   if (n >= 1000) return `${(n / 1000).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} k`
   return `${n}`
