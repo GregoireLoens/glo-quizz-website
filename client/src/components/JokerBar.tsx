@@ -75,8 +75,18 @@ export function JokerBar({ left, targets, disabled = false, doubleActive = false
               disabled={off}
               aria-label={`${j.label} — ${j.effect}`}
               onClick={() => {
-                if (j.needsTarget) setPicking((v) => !v)
-                else onPlay(j.kind)
+                if (!j.needsTarget) {
+                  onPlay(j.kind)
+                  return
+                }
+                // Un seul adversaire visable : le sélecteur n'a rien à demander, et
+                // l'ouvrir coûtait les deux ou trois secondes qui suffisent à ce que la
+                // cible réponde — auquel cas le joker n'est plus jouable du tout.
+                if (targets.length === 1) {
+                  onPlay(j.kind, targets[0].id)
+                  return
+                }
+                setPicking((v) => !v)
               }}
               className={`flex h-11 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-sm font-semibold transition disabled:cursor-default sm:gap-2 sm:px-4 ${
                 off ? 'border-line bg-cream/4 text-muted-deep opacity-60' : TONE[j.tone]
