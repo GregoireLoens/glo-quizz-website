@@ -22,7 +22,8 @@ OWNER_USERNAME = "OpenQuizzDB"
 
 # id OpenQuizzDB -> (catégorie du site, emoji). Seuls ces fichiers sont importés.
 # Couverture : tout le corpus importable du miroir, sauf les thèmes industrie X
-# (106, 110, 162, 235) et le doublon de titre « Comédies françaises » (250).
+# (106, 110, 162, 235), le doublon de titre « Comédies françaises » (250) et les
+# quiz people, catégorie retirée du site le 20/08/2026 (décision glo).
 MANIFEST: dict[int, tuple[str, str]] = {
     # Culture générale
     1: ("Culture générale", "🏷️"),      # Marques, logos et slogans
@@ -235,46 +236,6 @@ MANIFEST: dict[int, tuple[str, str]] = {
     237: ("Nature", "🐝"),               # Abeilles du rucher
     263: ("Nature", "🎍"),               # Jardin japonais
     413: ("Nature", "🕊️"),               # Colombophilie
-    # People
-    42: ("People", "💬"),                # Potins de stars 2014
-    64: ("People", "📰"),                # Actu people : août 2015
-    74: ("People", "🗞️"),                # Actu people : février 2015
-    76: ("People", "✨"),                # Actu people : janvier 2015
-    78: ("People", "⭐"),                # Célébrités
-    83: ("People", "💅"),                # Actu people : septembre 2015
-    131: ("People", "🇺🇸"),               # Donald Trump
-    137: ("People", "📰"),               # Actu people : février 2017
-    141: ("People", "🗞️"),               # Actu people : janvier 2017
-    146: ("People", "✨"),               # Actu people : mars 2017
-    148: ("People", "💅"),               # Actu people : avril 2017
-    149: ("People", "📰"),               # Actu people : mai 2017
-    152: ("People", "🗞️"),               # Actu people : juin 2017
-    170: ("People", "✨"),               # Actu people : août 2017
-    171: ("People", "💅"),               # Actu people : septembre 2017
-    178: ("People", "📰"),               # Actu people : octobre 2017
-    198: ("People", "🗞️"),               # Actu people : janvier 2018
-    210: ("People", "✨"),               # Actu people : février 2018
-    213: ("People", "🌟"),               # Stars mondiales
-    215: ("People", "💅"),               # Actu people : mars 2018
-    217: ("People", "💫"),               # Stars mondiales 2
-    218: ("People", "📰"),               # Actu people : avril 2018
-    220: ("People", "🎇"),               # Stars mondiales 3
-    222: ("People", "🗞️"),               # Actu people : mai 2018
-    225: ("People", "👸"),               # Meghan Markle
-    227: ("People", "🌠"),               # Stars mondiales 4
-    229: ("People", "💍"),               # Wags
-    230: ("People", "✨"),               # Actu people : juin 2018
-    242: ("People", "📰"),               # Actu people : juillet 2018
-    248: ("People", "🏖️"),               # Pamela Anderson
-    252: ("People", "🗞️"),               # Actu people : août 2018
-    253: ("People", "🤣"),               # Florence Foresti
-    258: ("People", "✨"),               # Actu people : septembre 2018
-    270: ("People", "🃏"),               # Jean-Marie Bigard
-    429: ("People", "📰"),               # People : février 2021
-    434: ("People", "🗞️"),               # People : mars 2021
-    441: ("People", "✨"),               # People : avril 2021
-    452: ("People", "📰"),               # People : mai 2021
-    463: ("People", "🗞️"),               # People : juin 2021
     # High-tech
     32: ("High-tech", "💻"),             # Logiciels et applications web
     37: ("High-tech", "🐧"),             # Linux

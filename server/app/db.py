@@ -32,6 +32,11 @@ def _columns(conn: sqlite3.Connection, table: str) -> set[str]:
     return {row["name"] for row in conn.execute(f"PRAGMA table_info({table})")}
 
 
+# Catégories supprimées du site : leurs quiz sont purgés au démarrage, pour que la
+# base d'une instance déjà déployée suive `config.CATEGORIES` sans intervention.
+RETIRED_CATEGORIES = ("People",)   # retirée le 20/08/2026 (décision glo)
+
+
 def _migrate(conn: sqlite3.Connection) -> None:
     """Greffe les colonnes manquantes sur une base créée avant leur introduction.
 
@@ -55,6 +60,17 @@ def _migrate(conn: sqlite3.Connection) -> None:
             "UPDATE users SET avatar_color = ? WHERE id = ?",
             [(avatar.default_color(row["username"]), row["id"]) for row in rows],
         )
+    _purge_retired_categories(conn)
+
+
+def _purge_retired_categories(conn: sqlite3.Connection) -> None:
+    """Supprime les quiz des catégories retirées : les questions suivent en cascade, les
+    parties déjà jouées restent (`games.quiz_id` passe à NULL). Idempotent — une base
+    déjà purgée ne coûte qu'un DELETE à vide."""
+    if not RETIRED_CATEGORIES:
+        return
+    placeholders = ",".join("?" * len(RETIRED_CATEGORIES))
+    conn.execute(f"DELETE FROM quizzes WHERE category IN ({placeholders})", RETIRED_CATEGORIES)
 
 
 def get_db():

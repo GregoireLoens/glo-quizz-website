@@ -22,7 +22,6 @@ CATEGORIES = [
     "Littérature",
     "Gastronomie",
     "Nature",
-    "People",
     "High-tech",
     "Manga & Anime",
 ]

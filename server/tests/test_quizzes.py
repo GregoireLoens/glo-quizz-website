@@ -1,3 +1,4 @@
+from app import db
 from tests.conftest import auth_headers, create_quiz, register
 
 
@@ -43,3 +44,36 @@ def test_search(client):
 
     # les jokers SQL sont neutralisés : « % » n'est pas un joker
     assert client.get("/api/quizzes", params={"search": "%"}).json() == []
+
+
+def test_categorie_retiree_purgee_au_demarrage(client):
+    """Une catégorie retirée de `config.CATEGORIES` disparaît aussi de la base.
+
+    Le catalogue de prod est déjà peuplé : sortir « People » de la liste ne suffit pas,
+    `db._purge_retired_categories` doit effacer les quiz au démarrage suivant. Les parties
+    déjà jouées, elles, survivent avec un `quiz_id` à NULL.
+    """
+    session = register(client, "Auteur")
+    survivant = create_quiz(session, title="Volcans", category="Nature")
+    condamne = create_quiz(session, title="Potins de stars", category="People")
+
+    conn = db.connect()
+    try:
+        conn.execute(
+            "INSERT INTO games (code, quiz_id, host_id, status) VALUES ('PEOPLE', ?, ?, 'finished')",
+            (condamne, session["user"]["id"]),
+        )
+        conn.commit()
+        db._purge_retired_categories(conn)
+        conn.commit()
+
+        assert conn.execute("SELECT COUNT(*) FROM quizzes WHERE id = ?", (condamne,)).fetchone()[0] == 0
+        assert conn.execute("SELECT COUNT(*) FROM quizzes WHERE id = ?", (survivant,)).fetchone()[0] == 1
+        # questions en cascade, partie conservée mais orpheline
+        assert conn.execute("SELECT COUNT(*) FROM questions WHERE quiz_id = ?", (condamne,)).fetchone()[0] == 0
+        assert conn.execute("SELECT quiz_id FROM games WHERE code = 'PEOPLE'").fetchone()[0] is None
+    finally:
+        conn.close()
+
+    assert "People" not in client.get("/api/categories").json()
+    assert [q["title"] for q in client.get("/api/quizzes").json()] == ["Volcans"]
