@@ -53,6 +53,15 @@ ELO_K = 32                     # amplitude d'ajustement par partie une fois le r
 ELO_K_PROVISIONAL = 48         # amplitude renforcée pendant les premières parties
 ELO_PROVISIONAL_GAMES = 10     # parties classées avant de passer au K normal
 ELO_FLOOR = 100                # plancher : un rating ne descend jamais en dessous
+# Jokers — un exemplaire de chacun par joueur et par partie, remis à neuf à chaque
+# manche. Pas de capital durable : le stock reste symétrique, donc compatible avec
+# une partie classée (décision glo du 20/08/2026).
+JOKER_KINDS = ("fifty", "double", "scramble")
+JOKER_SCRAMBLE_SECONDS = 3.0   # durée du brouillage subi par la cible
+JOKER_DOUBLE_BONUS = 2         # bonnes réponses gagnées si le pari est tenu
+JOKER_DOUBLE_MALUS = 1         # bonnes réponses perdues sinon — peut faire passer sous zéro
+JOKER_DOUBLE_LIVES_COST = 2    # Survie : un pari perdu coûte deux vies au lieu d'une
+
 REVEAL_SECONDS = 4.0
 ANSWER_GRACE_SECONDS = 0.5
 

@@ -40,6 +40,26 @@ class PlayerState:
     eliminated_at: int | None = None  # index de la question fatale (Survie)
     answers: dict[int, tuple[int, float]] = field(default_factory=dict)
     joined_at: float = field(default_factory=time.monotonic)
+    # Jokers encore en main. Publics : savoir ce qu'il reste aux autres fait partie
+    # de la stratégie (voir config.JOKER_KINDS).
+    jokers_left: set[str] = field(default_factory=lambda: set(config.JOKER_KINDS))
+    double_on: int | None = None          # index de la question engagée en « double ou rien »
+    hidden_answers: dict[int, list[int]] = field(default_factory=dict)  # moitié-moitié
+    scrambled_on: int | None = None       # index de la question où l'on subit un brouillage
+    scrambled_at: float = 0.0             # time.monotonic() au moment du brouillage
+
+    def reset_for_game(self) -> None:
+        """Remet le joueur à zéro pour une nouvelle manche, jokers compris."""
+        self.score = 0
+        self.correct_count = 0
+        self.lives = 0
+        self.eliminated_at = None
+        self.answers = {}
+        self.ready = False
+        self.jokers_left = set(config.JOKER_KINDS)
+        self.double_on = None
+        self.hidden_answers = {}
+        self.scrambled_on = None
 
 
 class GameRoom:
@@ -56,6 +76,7 @@ class GameRoom:
             "randomMix": False,
             "survival": False,
             "categories": None,  # modes Aléatoire/Survie : thèmes autorisés (None = tous)
+            "jokers": True,      # trois jokers par joueur ; l'hôte peut couper le système
             **settings,
         }
         self.phase: str = "lobby"  # lobby | question | reveal | finished
@@ -92,6 +113,7 @@ class GameRoom:
                 "correctCount": p.correct_count,
                 "lives": p.lives,
                 "answered": self.current_index in p.answers,
+                "jokers": sorted(p.jokers_left),
             }
             for p in sorted(self.players.values(), key=lambda p: p.joined_at)
         ]
@@ -162,6 +184,7 @@ class GameRoom:
             "reveal": None,
             "ranking": None,
             "yourAnswer": None,
+            "jokerState": None,
             "durationSec": self.duration_sec,
         }
         if self.phase in ("question", "reveal") and 0 <= self.current_index < len(self.questions):
@@ -172,6 +195,20 @@ class GameRoom:
             me = self.players.get(for_user_id)
             if me is not None and self.current_index in me.answers:
                 state["yourAnswer"] = me.answers[self.current_index][0]
+            # Une reconnexion en pleine question doit retrouver ses jokers en cours,
+            # sinon le moitié-moitié payé disparaît avec la socket.
+            if me is not None:
+                elapsed = time.monotonic() - me.scrambled_at
+                state["jokerState"] = {
+                    "hidden": me.hidden_answers.get(self.current_index, []),
+                    "double": me.double_on == self.current_index,
+                    "scrambledFor": round(
+                        max(0.0, config.JOKER_SCRAMBLE_SECONDS - elapsed)
+                        if me.scrambled_on == self.current_index
+                        else 0.0,
+                        2,
+                    ),
+                }
         if self.phase == "reveal":
             state["reveal"] = self.last_reveal
         if self.phase == "finished":
@@ -259,6 +296,8 @@ class GameRoom:
             await self._start(user_id)
         elif msg_type == "answer":
             await self._answer(user_id, msg)
+        elif msg_type == "joker":
+            await self._joker(user_id, msg)
         elif msg_type == "play_again":
             await self._play_again(user_id)
         elif msg_type == "leave":
@@ -322,6 +361,8 @@ class GameRoom:
             tpq = incoming.get("timePerQuestion")
             if isinstance(tpq, int) and tpq in config.TIME_CHOICES:
                 self.settings["timePerQuestion"] = tpq
+            if isinstance(incoming.get("jokers"), bool):
+                self.settings["jokers"] = incoming["jokers"]
             if quiz_info is not None:
                 self.settings.update(quiz_info)
             if categories_update is not None and (self.settings["randomMix"] or self.settings["survival"]):
@@ -394,6 +435,84 @@ class GameRoom:
             await self.broadcast({"type": "player_answered", "playerId": user_id})
             self._maybe_all_answered()
 
+    async def _joker(self, user_id: int, msg: dict) -> None:
+        """Dépense un joker sur la question en cours.
+
+        Trois effets, trois axes : `fifty` sécurise, `double` parie, `scramble` agresse.
+        Tout est arbitré ici — `correct_index` ne sort jamais, même pour le moitié-moitié
+        qui ne renvoie que **deux mauvaises** réponses à masquer (contrainte anti-triche).
+        """
+        kind = msg.get("kind")
+        target_id = msg.get("targetId")
+        async with self.lock:
+            if not self.settings["jokers"]:
+                await self._error(user_id, "jokers_disabled", "Les jokers sont coupés sur cette partie.")
+                return
+            if self.phase != "question":
+                await self._error(user_id, "too_late", "Trop tard pour jouer un joker.")
+                return
+            p = self.players.get(user_id)
+            if p is None:
+                return
+            if kind not in config.JOKER_KINDS:
+                await self._error(user_id, "unknown_joker", "Ce joker n'existe pas.")
+                return
+            if kind not in p.jokers_left:
+                await self._error(user_id, "joker_spent", "Tu as déjà utilisé ce joker.")
+                return
+            if self.settings["survival"] and p.lives <= 0:
+                await self._error(user_id, "eliminated", "Tu es éliminé — spectateur jusqu'à la fin.")
+                return
+            # Après avoir validé, un joker ne changerait plus rien : autant ne pas le brûler.
+            if self.current_index in p.answers:
+                await self._error(user_id, "already_answered", "Ta réponse est déjà partie.")
+                return
+
+            index = self.current_index
+            target: PlayerState | None = None
+            if kind == "scramble":
+                target = self.players.get(target_id) if isinstance(target_id, int) else None
+                if target is None or target.user_id == user_id:
+                    await self._error(user_id, "invalid_target", "Choisis un autre joueur.")
+                    return
+                if self.settings["survival"] and target.lives <= 0:
+                    await self._error(user_id, "invalid_target", "Ce joueur est déjà éliminé.")
+                    return
+                if index in target.answers:
+                    await self._error(user_id, "invalid_target", "Ce joueur a déjà répondu.")
+                    return
+
+            p.jokers_left.discard(kind)
+            if kind == "fifty":
+                correct = self.questions[index]["correct_index"]
+                wrong = [i for i in range(len(self.questions[index]["answers"])) if i != correct]
+                hidden = sorted(random.sample(wrong, min(2, len(wrong))))
+                p.hidden_answers[index] = hidden
+                if p.ws is not None:
+                    await self._send(p.ws, {"type": "joker_hidden", "questionIndex": index, "hidden": hidden})
+            elif kind == "double":
+                p.double_on = index
+            else:
+                assert target is not None
+                target.scrambled_on = index
+                target.scrambled_at = time.monotonic()
+                if target.ws is not None:
+                    await self._send(target.ws, {
+                        "type": "joker_scrambled",
+                        "questionIndex": index,
+                        "seconds": config.JOKER_SCRAMBLE_SECONDS,
+                        "fromId": user_id,
+                    })
+            self.touch()
+            # Tout le monde voit qui dépense quoi : c'est ce qui rend le système lisible.
+            await self.broadcast({
+                "type": "joker_used",
+                "playerId": user_id,
+                "kind": kind,
+                "targetId": target.user_id if target is not None else None,
+            })
+            await self.broadcast({"type": "players", "players": self.players_payload(), "hostId": self.host_id})
+
     def _maybe_all_answered(self) -> None:
         if self.phase != "question":
             return
@@ -427,12 +546,7 @@ class GameRoom:
             for uid in [uid for uid, p in self.players.items() if not p.connected]:
                 del self.players[uid]
             for p in self.players.values():
-                p.score = 0
-                p.correct_count = 0
-                p.lives = 0
-                p.eliminated_at = None
-                p.answers = {}
-                p.ready = False
+                p.reset_for_game()
             self.touch()
             await self.broadcast({
                 "type": "lobby_reset",
@@ -520,12 +634,21 @@ class GameRoom:
                 answer_index, elapsed = ans
                 correct = answer_index == q["correct_index"]
                 points = compute_points(duration, elapsed, correct)
+            # « Double ou rien » : engagé avant de valider, il joue sur le nombre de bonnes
+            # réponses — donc sur le classement lui-même (`_rank_key`), là où les points ne
+            # départagent que les ex æquo. Le malus n'est pas plafonné à zéro : sans ça,
+            # parier dès la première question serait gratuit et il n'y aurait plus de pari.
+            double = p.double_on == index
             if correct:
-                p.correct_count += 1
-            elif survival:
-                p.lives -= 1
-                if p.lives <= 0:
-                    p.eliminated_at = index
+                p.correct_count += config.JOKER_DOUBLE_BONUS if double else 1
+            else:
+                if double:
+                    p.correct_count -= config.JOKER_DOUBLE_MALUS
+                if survival:
+                    p.lives -= config.JOKER_DOUBLE_LIVES_COST if double else 1
+                    if p.lives <= 0:
+                        p.lives = 0
+                        p.eliminated_at = index
             p.score += points
             results.append({
                 "playerId": p.user_id,
@@ -534,6 +657,9 @@ class GameRoom:
                 "pointsEarned": points,
                 "score": p.score,
                 "lives": p.lives,
+                # le reveal dit qui avait parié : sans ça, un −1 en bonnes réponses est
+                # incompréhensible pour les autres joueurs
+                "doubled": double,
             })
         return {
             "type": "reveal",
