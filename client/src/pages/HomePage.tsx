@@ -156,7 +156,14 @@ export function HomePage() {
                 emoji={quiz.emoji}
                 category={quiz.category}
                 title={quiz.title}
-                meta={`${quiz.questionCount} question${quiz.questionCount > 1 ? 's' : ''} · ${formatPlays(quiz.playCount)} partie${quiz.playCount > 1 ? 's' : ''}`}
+                // « 0 partie » sur chaque carte d'un catalogue neuf n'informe de rien et
+                // fait vide : le compteur n'apparaît qu'une fois la première partie jouée.
+                meta={
+                  `${quiz.questionCount} question${quiz.questionCount > 1 ? 's' : ''}` +
+                  (quiz.playCount > 0
+                    ? ` · ${formatPlays(quiz.playCount)} partie${quiz.playCount > 1 ? 's' : ''}`
+                    : '')
+                }
                 author={quiz.author.username}
                 initials={initials(quiz.author.username)}
                 authorColor={quiz.author.avatarColor}

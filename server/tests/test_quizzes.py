@@ -77,3 +77,55 @@ def test_categorie_retiree_purgee_au_demarrage(client):
 
     assert "People" not in client.get("/api/categories").json()
     assert [q["title"] for q in client.get("/api/quizzes").json()] == ["Volcans"]
+
+
+def test_vitrine_panachee_par_categorie(client):
+    """La vitrine alterne les catégories tant que personne n'a encore joué.
+
+    Sans panachage, `play_count` valant 0 partout, `created_at` tranchait seul et
+    l'accueil n'affichait que la dernière catégorie importée.
+    """
+    session = register(client, "Auteur")
+    for i in range(3):
+        create_quiz(session, title=f"Nature {i}", category="Nature")
+        create_quiz(session, title=f"Sport {i}", category="Sport")
+        create_quiz(session, title=f"Cinéma {i}", category="Cinéma")
+
+    cats = [q["category"] for q in client.get("/api/quizzes", params={"limit": 6}).json()]
+    # 3 catégories × 3 quiz : les trois premières cartes sont de catégories distinctes
+    assert len(set(cats[:3])) == 3
+    assert len(set(cats[3:6])) == 3
+
+
+def test_vitrine_respecte_la_popularite(client):
+    """Le panachage ne casse pas l'ordre : dans chaque tour, le plus joué passe devant."""
+    session = register(client, "Auteur")
+    create_quiz(session, title="Nature peu jouée", category="Nature")
+    populaire = create_quiz(session, title="Sport très joué", category="Sport")
+    conn = db.connect()
+    try:
+        conn.execute("UPDATE quizzes SET play_count = 42 WHERE id = ?", (populaire,))
+        conn.commit()
+    finally:
+        conn.close()
+
+    titles = [q["title"] for q in client.get("/api/quizzes").json()]
+    assert titles[0] == "Sport très joué"
+
+
+def test_recherche_reste_triee_par_popularite(client):
+    """Une recherche n'est pas une vitrine : elle garde l'ordre « le plus joué d'abord »."""
+    session = register(client, "Auteur")
+    create_quiz(session, title="Volcans du monde", category="Nature")
+    joue = create_quiz(session, title="Volcans en sommeil", category="Géographie")
+    autre = create_quiz(session, title="Volcans et séismes", category="Sciences")
+    conn = db.connect()
+    try:
+        conn.execute("UPDATE quizzes SET play_count = 10 WHERE id = ?", (joue,))
+        conn.execute("UPDATE quizzes SET play_count = 5 WHERE id = ?", (autre,))
+        conn.commit()
+    finally:
+        conn.close()
+
+    titles = [q["title"] for q in client.get("/api/quizzes", params={"search": "volcans"}).json()]
+    assert titles == ["Volcans en sommeil", "Volcans et séismes", "Volcans du monde"]
