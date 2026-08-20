@@ -43,6 +43,8 @@ export function PlayingView() {
     scrambledUntil,
     lastJoker,
     previousRanking,
+    errorMsg,
+    clearError,
   } = useGameStore()
   const medals = useMedals()
 
@@ -245,11 +247,21 @@ export function PlayingView() {
                 >
                   {myResult.correct ? `+${formatPoints(myResult.pointsEarned)}` : '+0'}
                 </span>
+                {/* Le coût en vies vient du serveur (`livesLost`) : il était écrit « −1 vie »
+                    en dur, si bien qu'un pari perdu à deux vies s'affichait comme un simple
+                    faux — le joueur en concluait que son joker n'avait rien fait. */}
                 <span className="text-[13px] text-muted">
                   {myResult.correct
-                    ? 'Bonne réponse !'
+                    ? myResult.doubled
+                      ? 'Bonne réponse — pari tenu, elle compte double ! 🎲'
+                      : 'Bonne réponse !'
                     : (myResult.answerIndex === null ? 'Pas de réponse' : 'Mauvaise réponse') +
-                      (survival ? ` — ${myResult.lives > 0 ? '−1 vie ❤️' : 'éliminé 💀'}` : '')}
+                      (myResult.doubled ? ' — pari perdu 🎲, une bonne réponse en moins' : '') +
+                      (survival
+                        ? myResult.lives > 0
+                          ? ` — ${myResult.livesLost} vie${myResult.livesLost > 1 ? 's' : ''} ❤️`
+                          : ' — éliminé 💀'
+                        : '')}
                 </span>
               </>
             ) : (
@@ -323,6 +335,18 @@ export function PlayingView() {
       {/* jokers */}
       {!isReveal && jokersOn && (
         <div className="relative mt-7 flex w-full max-w-[760px] flex-col items-center gap-3">
+          {/* Un joker refusé (cible qui vient de répondre, joker déjà dépensé…) ne
+              disait rien : `errorMsg` n'était affiché que dans le salon, si bien que le
+              clic restait sans effet visible et le joker paraissait cassé. */}
+          {errorMsg && (
+            <button
+              type="button"
+              onClick={clearError}
+              className="cursor-pointer rounded-full bg-coral/14 px-4 py-2 text-[13px] font-medium text-coral"
+            >
+              {errorMsg} — ton joker n'a pas été dépensé
+            </button>
+          )}
           {scrambled && (
             <span className="flex h-9 items-center rounded-full bg-coral/14 px-4 text-[13px] font-semibold text-coral">
               💥 Brouillage — tes réponses sont mélangées, le chrono continue

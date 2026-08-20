@@ -110,6 +110,9 @@ export interface RevealResult {
   /** Ce joueur avait engagé un « double ou rien » — sans quoi un −1 en bonnes réponses
    * serait incompréhensible pour les autres. */
   doubled: boolean
+  /** Vies réellement perdues sur cette question (0 hors Survie). Vient du serveur : le
+   * client ne rejoue pas la règle du coût d'un pari perdu. */
+  livesLost: number
 }
 
 export interface RankingEntry extends Avatar {

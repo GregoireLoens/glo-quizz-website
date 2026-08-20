@@ -639,14 +639,17 @@ class GameRoom:
             # départagent que les ex æquo. Le malus n'est pas plafonné à zéro : sans ça,
             # parier dès la première question serait gratuit et il n'y aurait plus de pari.
             double = p.double_on == index
+            lives_lost = 0
             if correct:
                 p.correct_count += config.JOKER_DOUBLE_BONUS if double else 1
             else:
                 if double:
                     p.correct_count -= config.JOKER_DOUBLE_MALUS
                 if survival:
-                    p.lives -= config.JOKER_DOUBLE_LIVES_COST if double else 1
+                    lives_lost = config.JOKER_DOUBLE_LIVES_COST if double else 1
+                    p.lives -= lives_lost
                     if p.lives <= 0:
+                        lives_lost += p.lives  # ce qui a réellement été retiré, sans passer sous zéro
                         p.lives = 0
                         p.eliminated_at = index
             p.score += points
@@ -660,6 +663,10 @@ class GameRoom:
                 # le reveal dit qui avait parié : sans ça, un −1 en bonnes réponses est
                 # incompréhensible pour les autres joueurs
                 "doubled": double,
+                # Vies réellement perdues. Le client l'annonçait « −1 vie » en dur, donc un
+                # pari perdu à deux vies s'affichait comme un simple faux : le joueur en
+                # concluait, à raison, que son joker n'avait rien fait.
+                "livesLost": lives_lost,
             })
         return {
             "type": "reveal",

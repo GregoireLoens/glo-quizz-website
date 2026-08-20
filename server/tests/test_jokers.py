@@ -203,3 +203,32 @@ def test_brouillage_refuse_sur_soi_ou_sur_qui_a_repondu():
     _run(sequence)
     assert "scramble" in attaquant.jokers_left
     assert cible.scrambled_on is None
+
+
+def test_vies_reellement_perdues_annoncees_au_reveal():
+    """`livesLost` doit refléter ce qui a été retiré, jamais plus que ce qu'il restait."""
+    room = _room(survival=True)
+    p = _player(room, 1)
+    p.lives = 3
+    p.double_on = 0
+    p.answers[0] = (1, 1.0)
+    r = room._score_question(0)["results"][0]
+    assert r["livesLost"] == config.JOKER_DOUBLE_LIVES_COST and r["lives"] == 1
+
+    # une seule vie restante : un pari perdu en retire une, pas deux
+    room2 = _room(survival=True)
+    q = _player(room2, 1)
+    q.lives = 1
+    q.double_on = 0
+    q.answers[0] = (1, 1.0)
+    r2 = room2._score_question(0)["results"][0]
+    assert r2["lives"] == 0 and r2["livesLost"] == 1
+
+
+def test_mauvaise_reponse_sans_pari_coute_une_vie():
+    room = _room(survival=True)
+    p = _player(room, 1)
+    p.lives = 3
+    p.answers[0] = (2, 1.0)
+    r = room._score_question(0)["results"][0]
+    assert r["livesLost"] == 1 and r["doubled"] is False

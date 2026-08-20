@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 
 from app import config
+from app.game.manager import manager
 from tests.conftest import auth_headers, create_quiz, register
 
 
@@ -335,3 +336,98 @@ def test_survival_categories_across_batches(client, monkeypatch):
             _recv_until(ws, "reveal")
         over = _recv_until(ws, "game_over")
         assert over["questionsPlayed"] == 4
+
+
+def test_joker_double_perd_deux_vies_par_la_socket(client, monkeypatch):
+    """Le pari perdu coûte bien deux vies de bout en bout, pas seulement en unitaire."""
+    monkeypatch.setattr(config, "REVEAL_SECONDS", 0.05)
+    host = register(client, "Hote")
+    other = register(client, "Vif")
+    create_quiz(host, questions=[
+        {"text": f"Question {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
+        for i in range(4)
+    ])
+    code = _create_game(client, host)
+
+    with ws_connect(client, code, host) as ws_host, ws_connect(client, code, other) as ws_other:
+        for ws in (ws_host, ws_other):
+            assert ws.receive_json()["type"] == "joined"
+        ws_host.send_json({"type": "update_settings", "settings": {"survival": True}})
+        _recv_until(ws_host, "settings_updated")
+        ws_host.send_json({"type": "start"})
+
+        q = _recv_until(ws_host, "question")
+        _recv_until(ws_other, "question")
+
+        ws_host.send_json({"type": "joker", "kind": "double"})
+        used = _recv_until(ws_host, "joker_used")
+        assert used["kind"] == "double" and used["playerId"] == host["user"]["id"]
+
+        # réponse volontairement fausse (la bonne est l'index 0)
+        ws_host.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 1})
+        ws_other.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 0})
+
+        reveal = _recv_until(ws_host, "reveal")
+        me = next(r for r in reveal["results"] if r["playerId"] == host["user"]["id"])
+        assert me["doubled"] is True
+        assert me["lives"] == config.SURVIVAL_LIVES - config.JOKER_DOUBLE_LIVES_COST
+        # c'est ce champ que l'écran affiche : il disait « −1 vie » en dur avant
+        assert me["livesLost"] == config.JOKER_DOUBLE_LIVES_COST
+
+
+def test_joker_brouillage_atteint_la_cible(client, monkeypatch):
+    monkeypatch.setattr(config, "REVEAL_SECONDS", 0.05)
+    host = register(client, "Hote")
+    other = register(client, "Cible")
+    create_quiz(host)
+    code = _create_game(client, host, quiz_id=None)
+
+    with ws_connect(client, code, host) as ws_host, ws_connect(client, code, other) as ws_other:
+        for ws in (ws_host, ws_other):
+            assert ws.receive_json()["type"] == "joined"
+        quiz_id = client.get("/api/quizzes").json()[0]["id"]
+        ws_host.send_json({"type": "update_settings", "settings": {"quizId": quiz_id}})
+        _recv_until(ws_host, "settings_updated")
+        ws_host.send_json({"type": "start"})
+        q = _recv_until(ws_host, "question")
+        _recv_until(ws_other, "question")
+
+        ws_host.send_json({"type": "joker", "kind": "scramble", "targetId": other["user"]["id"]})
+        msg = _recv_until(ws_other, "joker_scrambled")
+        assert msg["questionIndex"] == q["index"]
+        assert msg["seconds"] == config.JOKER_SCRAMBLE_SECONDS
+        assert msg["fromId"] == host["user"]["id"]
+
+
+def test_joker_brouillage_refuse_sur_qui_a_deja_repondu(client, monkeypatch):
+    """Cas réel : la cible répond dans la seconde, le brouillage n'a plus de sens.
+
+    Le serveur refuse et **rend le joker** — encore faut-il que le joueur le voie.
+    """
+    monkeypatch.setattr(config, "REVEAL_SECONDS", 0.05)
+    host = register(client, "Hote")
+    other = register(client, "Rapide")
+    create_quiz(host)
+    code = _create_game(client, host)
+
+    with ws_connect(client, code, host) as ws_host, ws_connect(client, code, other) as ws_other:
+        for ws in (ws_host, ws_other):
+            assert ws.receive_json()["type"] == "joined"
+        quiz_id = client.get("/api/quizzes").json()[0]["id"]
+        ws_host.send_json({"type": "update_settings", "settings": {"quizId": quiz_id}})
+        _recv_until(ws_host, "settings_updated")
+        ws_host.send_json({"type": "start"})
+        q = _recv_until(ws_host, "question")
+        _recv_until(ws_other, "question")
+
+        ws_other.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 0})
+        _recv_until(ws_host, "player_answered")
+
+        ws_host.send_json({"type": "joker", "kind": "scramble", "targetId": other["user"]["id"]})
+        err = _recv_until(ws_host, "error")
+        assert err["code"] == "invalid_target"
+
+        # Un refus sort avant les diffusions : pas de message `players` à attendre, on lit
+        # donc l'état de la room. Le joker doit être resté en main.
+        room = manager.get(code)
+        assert "scramble" in room.players[host["user"]["id"]].jokers_left
