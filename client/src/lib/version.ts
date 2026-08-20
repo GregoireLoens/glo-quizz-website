@@ -4,4 +4,4 @@
  * (`git tag -a v0.2 -m …`), pour que ce qui est affiché corresponde à ce qui est
  * publié sur GitHub.
  */
-export const APP_VERSION = '0.9'
+export const APP_VERSION = '0.10'
