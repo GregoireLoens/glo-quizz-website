@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import { AnswerCard, type AnswerState } from '../../components/AnswerCard'
 import { Avatar } from '../../components/Avatar'
 import { Button } from '../../components/Button'
+import { KeyHint } from '../../components/KeyHint'
 import { Timer } from '../../components/Timer'
 import { formatPoints, initials } from '../../lib/utils'
 import { gameSocket } from '../../lib/ws'
@@ -10,6 +11,12 @@ import { useGameStore } from '../../stores/gameStore'
 import { useMedals } from '../../stores/leadersStore'
 
 const LETTERS = ['A', 'B', 'C', 'D']
+
+// Raccourcis de sélection. Les lettres passent par `key` (elles tombent au même endroit
+// en AZERTY comme en QWERTY) ; les chiffres passent par `code`, sinon il faudrait Shift
+// sur un clavier français pour obtenir un « 1 ».
+const ANSWER_KEYS: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 }
+const ANSWER_CODES: Record<string, number> = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3 }
 
 // Marge avant la fin du décompte pour que l'envoi automatique atteigne le serveur
 // avant qu'il ne clôture la question (config.ANSWER_GRACE_SECONDS = 0,5 s côté serveur).
@@ -30,6 +37,28 @@ export function PlayingView() {
   } = useGameStore()
   const medals = useMedals()
 
+  // Une réponse ne part qu'une fois par question. `locked` n'arrive qu'avec l'ack du
+  // serveur : cliquer « Valider » puis appuyer sur Entrée déclenchait les deux chemins
+  // avant le retour (le navigateur active aussi le bouton qui a le focus), et le second
+  // envoi se faisait refuser en `already_answered`. Le repère est `questionStartedAt`,
+  // horodatage propre à chaque question — un `play_again` repart à l'index 0 sans
+  // rejouer un index déjà marqué.
+  const sentAt = useRef<number | null>(null)
+  const submit = useCallback(() => {
+    const s = useGameStore.getState()
+    const me = s.players.find((p) => p.id === s.youId)
+    const out = (s.settings?.survival ?? false) && me !== undefined && me.lives <= 0
+    if (s.phase !== 'question' || s.locked || out) return
+    if (s.question === null || s.selectedAnswer === null || s.questionStartedAt === null) return
+    if (sentAt.current === s.questionStartedAt) return
+    sentAt.current = s.questionStartedAt
+    gameSocket.send({
+      type: 'answer',
+      questionIndex: s.question.index,
+      answerIndex: s.selectedAnswer,
+    })
+  }, [])
+
   // Validation automatique : une réponse sélectionnée mais non validée part quand même
   // à la fin du décompte. Planifié une seule fois par question (l'état est relu à
   // l'échéance via getState(), donc changer de sélection ne replanifie rien).
@@ -40,19 +69,41 @@ export function PlayingView() {
     const delay = questionStartedAt + questionDuration * 1000 - AUTO_SUBMIT_LEAD_MS - Date.now()
     if (delay <= 0) return // question déjà terminée (reconnexion tardive) : le serveur refuserait
     const id = setTimeout(() => {
+      if (useGameStore.getState().question?.index !== questionIndex) return
+      submit()
+    }, delay)
+    return () => clearTimeout(id)
+  }, [questionIndex, questionDuration, questionStartedAt, submit])
+
+  // Clavier : A–D (ou 1–4) choisit, Entrée valide. Comme pour la validation automatique,
+  // l'état est relu à la volée via getState() — l'écouteur n'est branché qu'une fois et
+  // ne se rebranche pas à chaque sélection.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+      const target = e.target as HTMLElement | null
+      if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return
+
       const s = useGameStore.getState()
       const me = s.players.find((p) => p.id === s.youId)
       const out = (s.settings?.survival ?? false) && me !== undefined && me.lives <= 0
-      if (s.phase !== 'question' || s.locked || s.selectedAnswer === null || out) return
-      if (s.question?.index !== questionIndex) return
-      gameSocket.send({
-        type: 'answer',
-        questionIndex,
-        answerIndex: s.selectedAnswer,
-      })
-    }, delay)
-    return () => clearTimeout(id)
-  }, [questionIndex, questionDuration, questionStartedAt])
+      if (s.phase !== 'question' || s.locked || out || s.question === null) return
+
+      const index = ANSWER_KEYS[e.key.toLowerCase()] ?? ANSWER_CODES[e.code]
+      if (index !== undefined) {
+        if (index >= s.question.answers.length) return
+        e.preventDefault()
+        s.select(index)
+        return
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        submit()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [submit])
 
   if (!question) return null
 
@@ -199,18 +250,19 @@ export function PlayingView() {
                   : 'Réponse enregistrée dès validation.'}
         </span>
         {!isReveal && !eliminated && (
+          <span className="hidden flex-none items-center gap-1.5 text-[13px] text-muted lg:flex">
+            {LETTERS.slice(0, question.answers.length).map((l) => (
+              <KeyHint key={l}>{l}</KeyHint>
+            ))}
+            <span className="mx-1">puis</span>
+            <KeyHint tone="citron">Entrée</KeyHint>
+          </span>
+        )}
+        {!isReveal && !eliminated && (
           <Button
             variant="contour"
             disabled={selectedAnswer === null || locked}
-            onClick={() => {
-              if (selectedAnswer !== null) {
-                gameSocket.send({
-                  type: 'answer',
-                  questionIndex: question.index,
-                  answerIndex: selectedAnswer,
-                })
-              }
-            }}
+            onClick={submit}
           >
             Valider →
           </Button>

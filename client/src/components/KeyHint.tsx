@@ -12,8 +12,8 @@ const TONES: Record<NonNullable<Props['tone']>, string> = {
   citron: 'border border-transparent bg-citron/13 text-citron',
 }
 
-/** Badge de raccourci clavier (A/B/C/D, Entrée) — prêt pour le chantier « ajouts fonctionnels »,
- * pas encore câblé dans les écrans. */
+/** Badge de raccourci clavier (A/B/C/D, Entrée). Câblé dans `PlayingView` depuis le
+ * 20/08/2026 : A–D choisit une réponse, Entrée la valide. */
 export function KeyHint({ children, tone = 'neutre', className = '' }: Props) {
   return (
     <kbd
