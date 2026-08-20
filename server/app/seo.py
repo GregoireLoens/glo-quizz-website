@@ -35,6 +35,11 @@ _PAGES: dict[str, tuple[str, str]] = {
         "Rejoindre une partie — Midi Quizz",
         "Entre le code à six caractères partagé par l'hôte et rejoins la partie en cours.",
     ),
+    "jokers": (
+        "Les jokers — Midi Quizz",
+        "Moitié-moitié, double ou rien, brouillage : les trois jokers de Midi Quizz, "
+        "un de chaque par joueur et par partie.",
+    ),
     # Ces deux-là restent `noindex` (voir plus bas) : le titre ne sert qu'à l'onglet
     # du navigateur, où « Midi Quizz — quiz multijoueur… » partout n'aide personne.
     "login": ("Connexion — Midi Quizz", DEFAULT_DESCRIPTION),

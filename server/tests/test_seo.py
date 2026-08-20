@@ -62,3 +62,11 @@ def test_render_echappe_les_valeurs():
     out = seo.render(INDEX, "/")
     assert "<script" in out  # le JSON-LD, seul script attendu
     assert out.count("<script") == 1
+
+
+def test_page_des_jokers_indexable():
+    """Règles du jeu, donc contenu public : titre propre et pas de noindex."""
+    meta = seo.meta_for("/jokers")
+    assert meta["indexable"] is True
+    assert meta["title"] == "Les jokers — Midi Quizz"
+    assert '<meta name="robots" content="noindex" />' not in seo.head_tags(meta)

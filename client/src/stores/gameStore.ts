@@ -5,10 +5,19 @@ import type {
   GamePlayer,
   GameQuestion,
   GameSettings,
+  JokerKind,
   RankingEntry,
   RevealMessage,
   ServerMessage,
 } from '../lib/types'
+
+/** Dernier joker joué, affiché en bandeau quelques secondes. `targetId` non nul = agression. */
+export interface JokerEvent {
+  playerId: number
+  kind: JokerKind
+  targetId: number | null
+  at: number
+}
 
 export type ConnectionState = 'idle' | 'connecting' | 'open' | 'reconnecting' | 'ended'
 
@@ -26,10 +35,19 @@ interface GameState {
   selectedAnswer: number | null
   locked: boolean
   reveal: RevealMessage | null
+  /** Classement du reveal précédent — sert à afficher les places gagnées ou perdues. */
+  previousRanking: RankingEntry[] | null
   finalRanking: RankingEntry[] | null
   durationSec: number
   questionsPlayed: number | null
   errorMsg: string | null
+  /** Réponses masquées par un moitié-moitié sur la question en cours. */
+  hiddenAnswers: number[]
+  /** « Double ou rien » engagé sur la question en cours. */
+  doubleActive: boolean
+  /** Date de fin du brouillage subi (Date.now()), null si aucun. */
+  scrambledUntil: number | null
+  lastJoker: JokerEvent | null
 
   setConnection: (c: ConnectionState) => void
   setEnded: (reason: string) => void
@@ -54,10 +72,15 @@ const initial = {
   selectedAnswer: null,
   locked: false,
   reveal: null,
+  previousRanking: null,
   finalRanking: null,
   durationSec: 0,
   questionsPlayed: null,
   errorMsg: null,
+  hiddenAnswers: [] as number[],
+  doubleActive: false,
+  scrambledUntil: null,
+  lastJoker: null as JokerEvent | null,
 }
 
 export const useGameStore = create<GameState>()((set, get) => ({
@@ -90,9 +113,20 @@ export const useGameStore = create<GameState>()((set, get) => ({
           selectedAnswer: s.yourAnswer,
           locked: s.yourAnswer !== null,
           reveal: s.reveal,
+          // une reconnexion ne connaît pas le classement d'avant : pas de flèches au
+          // premier reveal qui suit, plutôt qu'un mouvement inventé
+          previousRanking: null,
           finalRanking: s.ranking,
           durationSec: s.durationSec,
           questionsPlayed: s.questionsPlayed,
+          // une reconnexion en pleine question doit retrouver ses jokers en cours,
+          // sinon le moitié-moitié payé disparaît avec la socket
+          hiddenAnswers: s.jokerState?.hidden ?? [],
+          doubleActive: s.jokerState?.double ?? false,
+          scrambledUntil:
+            s.jokerState && s.jokerState.scrambledFor > 0
+              ? Date.now() + s.jokerState.scrambledFor * 1000
+              : null,
         })
         break
       }
@@ -111,8 +145,17 @@ export const useGameStore = create<GameState>()((set, get) => ({
           questionStartedAt: Date.now(),
           selectedAnswer: null,
           locked: false,
+          // Le classement qu'on quitte est mis de côté ici, et non à l'arrivée du reveal
+          // suivant : `reveal` vient d'être vidé, il n'y aurait plus rien à sauvegarder.
+          // C'est lui qui donnera les places gagnées ou perdues au prochain reveal.
+          previousRanking: get().reveal?.ranking ?? get().previousRanking,
           reveal: null,
           errorMsg: null,
+          // les effets de joker ne valent que pour une question
+          hiddenAnswers: [],
+          doubleActive: false,
+          scrambledUntil: null,
+          lastJoker: null,
         })
         break
       }
@@ -138,6 +181,22 @@ export const useGameStore = create<GameState>()((set, get) => ({
         })
         break
       }
+      case 'joker_hidden':
+        // seules deux mauvaises réponses sont nommées : la bonne ne sort jamais du serveur
+        if (get().question?.index === msg.questionIndex) set({ hiddenAnswers: msg.hidden })
+        break
+      case 'joker_scrambled':
+        if (get().question?.index === msg.questionIndex) {
+          set({ scrambledUntil: Date.now() + msg.seconds * 1000 })
+        }
+        break
+      case 'joker_used':
+        set({
+          lastJoker: { playerId: msg.playerId, kind: msg.kind, targetId: msg.targetId, at: Date.now() },
+          doubleActive:
+            msg.kind === 'double' && msg.playerId === get().youId ? true : get().doubleActive,
+        })
+        break
       case 'game_over':
         set({
           phase: 'finished',
@@ -157,10 +216,15 @@ export const useGameStore = create<GameState>()((set, get) => ({
           selectedAnswer: null,
           locked: false,
           reveal: null,
+          previousRanking: null,
           finalRanking: null,
           durationSec: 0,
           questionsPlayed: null,
           errorMsg: null,
+          hiddenAnswers: [],
+          doubleActive: false,
+          scrambledUntil: null,
+          lastJoker: null,
         })
         break
       case 'error':

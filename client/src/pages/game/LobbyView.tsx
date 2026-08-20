@@ -294,6 +294,25 @@ export function LobbyView() {
               )}
             </SettingRow>
 
+            <SettingRow label="Jokers" hint="Trois par joueur : sécuriser, parier, brouiller">
+              {isHost ? (
+                <SegmentedControl
+                  options={[
+                    { label: 'Avec', value: 'on' },
+                    { label: 'Sans', value: 'off' },
+                  ]}
+                  value={settings?.jokers ?? true ? 'on' : 'off'}
+                  onChange={(v) =>
+                    gameSocket.send({ type: 'update_settings', settings: { jokers: v === 'on' } })
+                  }
+                />
+              ) : (
+                <div className="flex h-9 items-center rounded-full bg-cream/8 px-3.5 text-sm font-semibold text-cream">
+                  {settings?.jokers ?? true ? 'Avec' : 'Sans'}
+                </div>
+              )}
+            </SettingRow>
+
             {themedMode && (
               <div className="flex flex-col gap-3 border-t border-line py-4">
                 <div className="flex items-baseline justify-between gap-3">
@@ -315,6 +334,21 @@ export function LobbyView() {
                   ))}
                 </div>
               </div>
+            )}
+
+            {(settings?.jokers ?? true) && (
+              <p className="border-t border-line py-4 text-sm text-muted-soft">
+                🎯 Moitié-moitié, 🎲 Double ou rien, 💥 Brouillage — un de chaque par joueur, remis à
+                neuf à chaque manche. Une partie avec jokers reste classée.{' '}
+                <a
+                  href="/jokers"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-cream underline underline-offset-2 hover:text-citron"
+                >
+                  Comment ça marche ?
+                </a>
+              </p>
             )}
 
             {settings?.survival && (

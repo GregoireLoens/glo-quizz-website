@@ -7,6 +7,7 @@ import type { User } from './lib/types'
 import { GamePage } from './pages/GamePage'
 import { HomePage } from './pages/HomePage'
 import { JoinPage } from './pages/JoinPage'
+import { JokersPage } from './pages/JokersPage'
 import { LeaderboardPage } from './pages/LeaderboardPage'
 import { LoginPage } from './pages/LoginPage'
 import { ProfilePage } from './pages/ProfilePage'
@@ -75,6 +76,7 @@ export default function App() {
         <Route path="/register/code" element={<RegisterCodePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
+        <Route path="/jokers" element={<JokersPage />} />
         <Route element={<RequireAuth />}>
           <Route path="/me" element={<ProfilePage />} />
           <Route path="/join" element={<JoinPage />} />

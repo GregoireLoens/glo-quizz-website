@@ -1,10 +1,14 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { AnswerCard, type AnswerState } from '../../components/AnswerCard'
 import { Avatar } from '../../components/Avatar'
 import { Button } from '../../components/Button'
+import { JokerBar } from '../../components/JokerBar'
 import { KeyHint } from '../../components/KeyHint'
+import { RoundStandings } from '../../components/RoundStandings'
 import { Timer } from '../../components/Timer'
+import { JOKER_BY_KIND } from '../../lib/jokers'
+import type { JokerKind } from '../../lib/types'
 import { formatPoints, initials } from '../../lib/utils'
 import { gameSocket } from '../../lib/ws'
 import { useGameStore } from '../../stores/gameStore'
@@ -34,8 +38,39 @@ export function PlayingView() {
     locked,
     reveal,
     select,
+    hiddenAnswers,
+    doubleActive,
+    scrambledUntil,
+    lastJoker,
+    previousRanking,
   } = useGameStore()
   const medals = useMedals()
+
+  // Le brouillage expire tout seul : un minuteur réveille le rendu à l'échéance, sinon
+  // les réponses resteraient mélangées jusqu'au prochain changement d'état.
+  const [, tick] = useState(0)
+  useEffect(() => {
+    if (scrambledUntil === null) return
+    const delay = scrambledUntil - Date.now()
+    if (delay <= 0) return
+    const id = setTimeout(() => tick((n) => n + 1), delay)
+    return () => clearTimeout(id)
+  }, [scrambledUntil])
+  const scrambled = scrambledUntil !== null && scrambledUntil > Date.now()
+
+  // Ordre d'affichage des réponses. Mélangé pendant un brouillage — mémorisé, sinon
+  // chaque rendu redistribuerait les cartes et elles deviendraient incliquables. Les
+  // index réels sont conservés : cliquer envoie toujours la bonne réponse.
+  const answerCount = question?.answers.length ?? 0
+  const order = useMemo(() => {
+    const idx = Array.from({ length: answerCount }, (_, i) => i)
+    if (!scrambled) return idx
+    for (let i = idx.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[idx[i], idx[j]] = [idx[j], idx[i]]
+    }
+    return idx
+  }, [answerCount, scrambled, scrambledUntil])
 
   // Une réponse ne part qu'une fois par question. `locked` n'arrive qu'avec l'ack du
   // serveur : cliquer « Valider » puis appuyer sur Entrée déclenchait les deux chemins
@@ -89,7 +124,11 @@ export function PlayingView() {
       const out = (s.settings?.survival ?? false) && me !== undefined && me.lives <= 0
       if (s.phase !== 'question' || s.locked || out || s.question === null) return
 
-      const index = ANSWER_KEYS[e.key.toLowerCase()] ?? ANSWER_CODES[e.code]
+      // Pendant un brouillage les lettres sont masquées à l'écran : les raccourcis de
+      // sélection contourneraient l'effet. Entrée reste disponible.
+      const index = s.scrambledUntil !== null && s.scrambledUntil > Date.now()
+        ? undefined
+        : ANSWER_KEYS[e.key.toLowerCase()] ?? ANSWER_CODES[e.code]
       if (index !== undefined) {
         if (index >= s.question.answers.length) return
         e.preventDefault()
@@ -112,6 +151,14 @@ export function PlayingView() {
   const survival = settings?.survival ?? false
   const me = players.find((p) => p.id === youId)
   const eliminated = survival && me !== undefined && me.lives <= 0
+
+  const jokersOn = settings?.jokers ?? false
+  const nameOf = (id: number) => players.find((p) => p.id === id)?.username
+  // Le brouillage se refuse sur qui a déjà validé ou n'est plus en jeu : le picker ne
+  // propose donc que des cibles que le serveur acceptera.
+  const jokerTargets = players.filter(
+    (p) => p.id !== youId && p.connected && !p.answered && !(survival && p.lives <= 0),
+  )
 
   const answerState = (index: number): AnswerState => {
     if (isReveal && reveal) {
@@ -173,6 +220,20 @@ export function PlayingView() {
         )}
       </div>
 
+      {/* qui vient de jouer quoi — sans ça, un écran qui se mélange passe pour un bug */}
+      {lastJoker && jokersOn && (
+        <div className="relative mt-4 flex h-9 max-w-[calc(100vw-3rem)] items-center rounded-full bg-cream/8 px-4">
+          <span className="truncate text-[13px] font-medium text-cream-soft">
+            {JOKER_BY_KIND[lastJoker.kind].emoji}{' '}
+            {lastJoker.playerId === youId ? 'Tu' : (nameOf(lastJoker.playerId) ?? 'Un joueur')}
+            {lastJoker.playerId === youId ? ' joues ' : ' joue '}
+            <strong className="font-semibold text-cream">{JOKER_BY_KIND[lastJoker.kind].label}</strong>
+            {lastJoker.targetId !== null &&
+              ` sur ${lastJoker.targetId === youId ? 'toi' : (nameOf(lastJoker.targetId) ?? 'un joueur')}`}
+          </span>
+        </div>
+      )}
+
       {/* minuteur */}
       <div className="relative mt-9">
         {isReveal ? (
@@ -223,18 +284,61 @@ export function PlayingView() {
 
       {/* réponses */}
       <div className="relative mt-7 grid w-full max-w-[760px] grid-cols-1 gap-3 sm:mt-10 sm:gap-[18px] md:grid-cols-2">
-        {question.answers.map((answer, i) => (
-          <AnswerCard
-            key={i}
-            letter={LETTERS[i]}
-            state={answerState(i)}
-            disabled={locked || isReveal || eliminated}
-            onClick={() => select(i)}
-          >
-            {answer}
-          </AnswerCard>
-        ))}
+        {order.map((i) => {
+          // Écartée par un moitié-moitié : la carte reste en place, vidée — un trou dans la
+          // grille déplacerait les autres réponses en pleine lecture.
+          const cut = hiddenAnswers.includes(i) && !isReveal
+          return (
+            <AnswerCard
+              key={i}
+              letter={scrambled ? '?' : LETTERS[i]}
+              state={cut ? 'estompee' : answerState(i)}
+              showLabel={!cut}
+              disabled={cut || locked || isReveal || eliminated}
+              onClick={() => select(i)}
+            >
+              {cut ? <span className="text-muted-deep">— écartée —</span> : question.answers[i]}
+            </AnswerCard>
+          )
+        })}
       </div>
+
+      {/* Entre deux questions, le classement prend la place de la barre de jokers : elle
+          n'a plus d'usage pendant le reveal, et c'est là qu'on lit où on en est — donc
+          qu'on décide s'il faudra dépenser un joker à la question suivante. */}
+      {isReveal && reveal && (
+        <div className="relative mt-7 flex w-full max-w-[560px] flex-col gap-2.5">
+          <span className="text-center text-xs font-semibold uppercase tracking-[1.5px] text-muted">
+            Classement après la question {question.index + 1}
+          </span>
+          <RoundStandings
+            ranking={reveal.ranking}
+            previous={previousRanking}
+            youId={youId}
+            survival={survival}
+          />
+        </div>
+      )}
+
+      {/* jokers */}
+      {!isReveal && jokersOn && (
+        <div className="relative mt-7 flex w-full max-w-[760px] flex-col items-center gap-3">
+          {scrambled && (
+            <span className="flex h-9 items-center rounded-full bg-coral/14 px-4 text-[13px] font-semibold text-coral">
+              💥 Brouillage — tes réponses sont mélangées, le chrono continue
+            </span>
+          )}
+          <JokerBar
+            left={me?.jokers ?? []}
+            targets={jokerTargets}
+            disabled={locked || isReveal || eliminated}
+            doubleActive={doubleActive}
+            onPlay={(kind: JokerKind, targetId?: number) =>
+              gameSocket.send({ type: 'joker', kind, targetId })
+            }
+          />
+        </div>
+      )}
 
       {/* validation */}
       <div className="relative mb-16 mt-9 flex w-full max-w-[760px] items-center gap-4">
@@ -251,10 +355,16 @@ export function PlayingView() {
         </span>
         {!isReveal && !eliminated && (
           <span className="hidden flex-none items-center gap-1.5 text-[13px] text-muted lg:flex">
-            {LETTERS.slice(0, question.answers.length).map((l) => (
-              <KeyHint key={l}>{l}</KeyHint>
-            ))}
-            <span className="mx-1">puis</span>
+            {/* pendant un brouillage les lettres sont masquées, et leurs raccourcis coupés
+                avec elles : les annoncer promettrait quelque chose qui ne marche pas */}
+            {!scrambled && (
+              <>
+                {LETTERS.slice(0, question.answers.length).map((l) => (
+                  <KeyHint key={l}>{l}</KeyHint>
+                ))}
+                <span className="mx-1">puis</span>
+              </>
+            )}
             <KeyHint tone="citron">Entrée</KeyHint>
           </span>
         )}

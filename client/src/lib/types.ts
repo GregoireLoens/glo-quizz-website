@@ -54,6 +54,17 @@ export interface GameInfo {
 
 export type GamePhase = 'lobby' | 'question' | 'reveal' | 'finished'
 
+/** `fifty` sécurise, `double` parie, `scramble` agresse — voir lib/jokers.ts pour les
+ * libellés et l'écran de règles. */
+export type JokerKind = 'fifty' | 'double' | 'scramble'
+
+/** État des jokers du joueur sur la question en cours, rejoué à chaque (re)connexion. */
+export interface JokerState {
+  hidden: number[] // réponses masquées par le moitié-moitié
+  double: boolean
+  scrambledFor: number // secondes de brouillage restantes (0 = aucun)
+}
+
 export interface GameSettings {
   questionCount: number
   timePerQuestion: number
@@ -63,6 +74,7 @@ export interface GameSettings {
   randomMix: boolean
   survival: boolean
   categories: string[] | null // modes Aléatoire/Survie : thèmes autorisés (null = tous)
+  jokers: boolean // trois jokers par joueur ; l'hôte peut couper le système
 }
 
 export interface GamePlayer extends Avatar {
@@ -74,6 +86,8 @@ export interface GamePlayer extends Avatar {
   correctCount: number
   lives: number
   answered: boolean
+  /** Jokers encore en main — publics : savoir ce qu'il reste aux autres fait partie du jeu. */
+  jokers: JokerKind[]
 }
 
 export interface GameQuestion {
@@ -93,6 +107,9 @@ export interface RevealResult {
   pointsEarned: number
   score: number
   lives: number
+  /** Ce joueur avait engagé un « double ou rien » — sans quoi un −1 en bonnes réponses
+   * serait incompréhensible pour les autres. */
+  doubled: boolean
 }
 
 export interface RankingEntry extends Avatar {
@@ -117,6 +134,7 @@ export interface GameStateSnapshot {
   reveal: RevealMessage | null
   ranking: RankingEntry[] | null
   yourAnswer: number | null
+  jokerState: JokerState | null
   durationSec: number
   questionsPlayed: number | null
 }
@@ -139,6 +157,12 @@ export type ServerMessage =
   | RevealMessage
   | { type: 'game_over'; durationSec: number; questionsPlayed: number; ranking: RankingEntry[] }
   | { type: 'lobby_reset'; players: GamePlayer[]; settings: GameSettings; hostId: number }
+  // Privé : seules deux **mauvaises** réponses sont nommées, jamais la bonne.
+  | { type: 'joker_hidden'; questionIndex: number; hidden: number[] }
+  // Privé, reçu par la cible du brouillage.
+  | { type: 'joker_scrambled'; questionIndex: number; seconds: number; fromId: number }
+  // Diffusé : tout le monde voit qui dépense quoi, c'est ce qui rend le système lisible.
+  | { type: 'joker_used'; playerId: number; kind: JokerKind; targetId: number | null }
   | { type: 'error'; code: string; message: string }
 
 export type ClientMessage =
@@ -147,6 +171,7 @@ export type ClientMessage =
   | { type: 'update_settings'; settings: Partial<GameSettings> }
   | { type: 'start' }
   | { type: 'answer'; questionIndex: number; answerIndex: number }
+  | { type: 'joker'; kind: JokerKind; targetId?: number }
   | { type: 'play_again' }
   | { type: 'leave' }
 

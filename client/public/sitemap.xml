@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Les trois écrans publics du site. Pas de page par quiz : décision du 06/08/2026,
+<!-- Les écrans publics du site. Pas de page par quiz : décision du 06/08/2026,
      le catalogue reste une grille qui lance une partie (issue #1). -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://midi-quizz.glocorp.fr/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://midi-quizz.glocorp.fr/leaderboard</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://midi-quizz.glocorp.fr/join</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://midi-quizz.glocorp.fr/jokers</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
 </urlset>
