@@ -123,6 +123,9 @@ export interface RevealResult {
   shielded: boolean
   /** Braquage annulé par le bouclier de ce joueur — l'assaillant perd le sien quand même. */
   stealBlocked: number | null
+  /** Braquage qui ne s'est pas déclenché : la cible n'avait rien en main, ou on avait
+   * trouvé soi-même. Toujours annoncé — un braquage silencieux passait pour cassé. */
+  stealMissed: 'target_wrong' | 'self_correct' | null
 }
 
 export interface RankingEntry extends Avatar {

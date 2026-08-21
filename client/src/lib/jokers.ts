@@ -55,7 +55,7 @@ export const JOKERS: JokerInfo[] = [
     emoji: '💰',
     effect: 'Si ta cible trouve et pas toi, tu lui prends sa bonne réponse.',
     detail:
-      "Tu désignes un adversaire. Au moment du décompte, s'il a trouvé la bonne réponse et que toi non, elle change de camp : il en perd une, tu en gagnes une. S'il s'est trompé, ou si tu avais trouvé toi aussi, le braquage ne se déclenche pas et le joker est perdu. C'est un pari à l'envers — tu paries que l'autre sait et que toi non.",
+      "Tu désignes un adversaire. Au moment du décompte, s'il tient une bonne réponse et que toi non, elle change de camp : il en perd une, tu en gagnes une. « Tenir une bonne réponse », c'est avoir répondu juste — ou avoir soi-même réussi son braquage : le butin d'un braqueur se braque, et la bonne réponse file au dernier voleur. S'il n'a rien à prendre, ou si tu avais trouvé toi aussi, le joker est perdu — et l'écran te le dit. En Survie, un braquage qui aboutit te rend la vie que coûtait ta mauvaise réponse : tu finis la question une bonne réponse en main.",
     risk: "Perdu si ta cible se trompe, ou si tu trouves la réponse toi aussi.",
     tone: 'coral',
     needsTarget: true,

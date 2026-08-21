@@ -234,9 +234,11 @@ export function PlayingView() {
                     : (myResult.answerIndex === null ? 'Pas de réponse' : 'Mauvaise réponse') +
                       (myResult.doubled ? ' — pari perdu 🎲, une bonne réponse en moins' : '') +
                       (survival
-                        ? myResult.lives > 0
-                          ? ` — ${myResult.livesLost} vie${myResult.livesLost > 1 ? 's' : ''} ❤️`
-                          : ' — éliminé 💀'
+                        ? myResult.lives <= 0
+                          ? ' — éliminé 💀'
+                          : myResult.livesLost > 0
+                            ? ` — ${myResult.livesLost} vie${myResult.livesLost > 1 ? 's' : ''} ❤️`
+                            : ''
                         : '')}
                 </span>
                 {/* Le braquage se résout ici : sans un mot à l'écran, une bonne réponse qui
@@ -245,6 +247,20 @@ export function PlayingView() {
                   <span className="mt-1 text-[13px] font-semibold text-coral">
                     💰 Braquage réussi — tu prends la bonne réponse de{' '}
                     {nameOf(myResult.stoleFrom) ?? 'ta cible'}
+                    {survival && myResult.livesLost === 0 && !myResult.correct && ', et ta vie est sauve ❤️'}
+                  </span>
+                )}
+                {/* Un braquage qui ne se déclenche pas le dit : le silence passait pour
+                    un joker cassé (retour de terrain du 21/08). */}
+                {myResult.stealMissed === 'target_wrong' && (
+                  <span className="mt-1 text-[13px] font-semibold text-muted">
+                    💰 Braquage raté — {stealTarget !== null ? (nameOf(stealTarget) ?? 'ta cible') : 'ta cible'}{' '}
+                    n'avait pas de bonne réponse à prendre
+                  </span>
+                )}
+                {myResult.stealMissed === 'self_correct' && (
+                  <span className="mt-1 text-[13px] font-semibold text-muted">
+                    💰 Braquage sans objet — tu avais trouvé toi-même, le joker est perdu
                   </span>
                 )}
                 {myResult.stolenBy !== null && (

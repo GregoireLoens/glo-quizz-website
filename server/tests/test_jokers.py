@@ -146,7 +146,11 @@ def test_moitie_moitie_masque_deux_mauvaises_reponses():
 
     hidden = p.hidden_answers[0]
     assert len(hidden) == 2
-    assert 0 not in hidden  # 0 est la bonne réponse : jamais masquée
+    # Les positions masquées sont celles de SA grille (ordre par joueur, v0.13) : la case
+    # qui porte la bonne réponse n'y figure jamais. L'ancienne assertion (« l'index
+    # canonique 0 n'est pas masqué ») était devenue fausse une fois sur deux.
+    position_de_la_bonne = p.answer_order[0].index(0)
+    assert position_de_la_bonne not in hidden
     assert "fifty" not in p.jokers_left
 
 
@@ -346,3 +350,147 @@ def test_le_bouclier_ne_s_annonce_pas_a_la_table():
     joueurs = next(m for m in envois if m.get("type") == "players")
     moi = next(x for x in joueurs["players"] if x["id"] == 1)
     assert "shield" not in moi["jokers"]
+
+
+# ---------- arbitrages du 21/08/2026 (retours de terrain) ----------
+
+
+def test_braquage_reussi_sauve_la_vie_en_survie():
+    """Le braquage exige d'avoir faux, et avoir faux coûte un cœur : sans refund, le
+    joker se punissait lui-même — « il enlève des cœurs quoi qu'il arrive » (glo)."""
+    room = _room(survival=True)
+    voleur = _player(room, 1)
+    cible = _player(room, 2)
+    voleur.lives = 3
+    cible.lives = 3
+    voleur.answers[0] = (1, 1.0)
+    cible.answers[0] = (0, 1.0)
+    voleur.steal_on, voleur.steal_target = 0, 2
+
+    reveal = room._score_question(0)
+    r = {x["playerId"]: x for x in reveal["results"]}
+    assert r[1]["stoleFrom"] == 2
+    assert voleur.lives == 3 and r[1]["livesLost"] == 0  # la vie est sauve
+    assert cible.lives == 3  # la victime n'a jamais perdu de cœur, elle avait juste
+
+
+def test_braquage_rate_coute_sa_vie_normalement():
+    room = _room(survival=True)
+    voleur = _player(room, 1)
+    cible = _player(room, 2)
+    voleur.lives = 3
+    cible.lives = 3
+    voleur.answers[0] = (1, 1.0)
+    cible.answers[0] = (2, 1.0)  # la cible a faux aussi : rien à prendre
+    voleur.steal_on, voleur.steal_target = 0, 2
+
+    reveal = room._score_question(0)
+    r = {x["playerId"]: x for x in reveal["results"]}
+    assert r[1]["stealMissed"] == "target_wrong"
+    assert voleur.lives == 2  # pas de refund sans butin
+
+
+def test_braquage_reussi_ne_rembourse_pas_un_pari_perdu():
+    """Le surcoût du Double reste dû : le pari portait sur SA réponse."""
+    room = _room(survival=True)
+    voleur = _player(room, 1)
+    cible = _player(room, 2)
+    voleur.lives = 3
+    cible.lives = 3
+    voleur.answers[0] = (1, 1.0)
+    cible.answers[0] = (0, 1.0)
+    voleur.double_on = 0
+    voleur.steal_on, voleur.steal_target = 0, 2
+
+    room._score_question(0)
+    # perdu 2 (pari), remboursé 1 (braquage) : net −1
+    assert voleur.lives == 2
+    # −1 du pari, +1 du butin : net 0
+    assert voleur.correct_count == 0
+
+
+def test_braquage_reussi_ressuscite_d_une_elimination_du_meme_tour():
+    room = _room(survival=True)
+    voleur = _player(room, 1)
+    cible = _player(room, 2)
+    voleur.lives = 1
+    cible.lives = 3
+    voleur.answers[0] = (1, 1.0)
+    cible.answers[0] = (0, 1.0)
+    voleur.steal_on, voleur.steal_target = 0, 2
+
+    room._score_question(0)
+    assert voleur.lives == 1 and voleur.eliminated_at is None  # sauvé par son braquage
+
+
+def test_le_butin_se_braque_en_chaine():
+    """A braque B qui braque C : la bonne réponse de C finit chez A (arbitrage glo).
+    L'ordre d'itération ne doit rien changer — A est inscrit avant B dans la room."""
+    room = _room()
+    a = _player(room, 1)
+    b = _player(room, 2)
+    c = _player(room, 3)
+    a.answers[0] = (1, 1.0)
+    b.answers[0] = (2, 1.0)
+    c.answers[0] = (0, 1.0)
+    a.steal_on, a.steal_target = 0, 2
+    b.steal_on, b.steal_target = 0, 3
+
+    reveal = room._score_question(0)
+    r = {x["playerId"]: x for x in reveal["results"]}
+    assert a.correct_count == 1 and b.correct_count == 0 and c.correct_count == 0
+    assert r[2]["stoleFrom"] == 3 and r[2]["stolenBy"] == 1  # B a volé C, puis s'est fait revoler
+    assert r[1]["stoleFrom"] == 2
+
+
+def test_le_butin_vole_garde_sa_vie_meme_revole():
+    """En Survie, B a réussi son braquage : sa vie est sauve, même si A lui revole le butin."""
+    room = _room(survival=True)
+    a = _player(room, 1)
+    b = _player(room, 2)
+    c = _player(room, 3)
+    for p in (a, b, c):
+        p.lives = 3
+    a.answers[0] = (1, 1.0)
+    b.answers[0] = (2, 1.0)
+    c.answers[0] = (0, 1.0)
+    a.steal_on, a.steal_target = 0, 2
+    b.steal_on, b.steal_target = 0, 3
+
+    room._score_question(0)
+    assert a.lives == 3 and b.lives == 3  # les deux vols ont abouti, les deux vies sont sauves
+    assert c.lives == 3
+
+
+def test_un_butin_ne_se_prend_qu_une_fois():
+    """Deux braqueurs sur le même braqueur : le premier prend le butin, l'autre rate."""
+    room = _room()
+    a = _player(room, 1)
+    b = _player(room, 2)
+    voleur_initial = _player(room, 3)
+    cible = _player(room, 4)
+    for p, ans in ((a, 1), (b, 2), (voleur_initial, 3), (cible, 0)):
+        p.answers[0] = (ans, 1.0)
+    voleur_initial.steal_on, voleur_initial.steal_target = 0, 4
+    a.steal_on, a.steal_target = 0, 3
+    b.steal_on, b.steal_target = 0, 3
+
+    reveal = room._score_question(0)
+    r = {x["playerId"]: x for x in reveal["results"]}
+    pris = [uid for uid in (1, 2) if r[uid]["stoleFrom"] == 3]
+    rates = [uid for uid in (1, 2) if r[uid]["stealMissed"] == "target_wrong"]
+    assert len(pris) == 1 and len(rates) == 1
+    assert a.correct_count + b.correct_count == 1 and voleur_initial.correct_count == 0
+
+
+def test_braquage_sans_objet_est_annonce():
+    """Un braquage qui ne se déclenche pas le dit — le silence passait pour un bug."""
+    room = _room()
+    voleur = _player(room, 1)
+    cible = _player(room, 2)
+    voleur.answers[0] = (0, 1.0)  # il avait trouvé lui-même
+    cible.answers[0] = (0, 1.0)
+    voleur.steal_on, voleur.steal_target = 0, 2
+
+    reveal = room._score_question(0)
+    assert reveal["results"][0]["stealMissed"] == "self_correct"

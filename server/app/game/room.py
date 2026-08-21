@@ -744,6 +744,7 @@ class GameRoom:
                 # Bouclier posé sur cette question — public seulement à partir d'ici.
                 "shielded": p.shield_on == index,
                 "stealBlocked": None,
+                "stealMissed": None,
             })
             correct_by_id[p.user_id] = correct
             result_by_id[p.user_id] = results[-1]
@@ -762,38 +763,80 @@ class GameRoom:
     ) -> None:
         """Braquages de la question : seconde passe, une fois qui a trouvé quoi établi.
 
-        Un braquage ne se déclenche que si la cible a trouvé **et** que le voleur non —
-        sinon le joker est perdu. Il se résout ici, et non au moment où il est joué, ce
-        qui le rend jouable à n'importe quel instant de la question : c'est ce qui le
-        distingue du brouillage qu'il remplace, injouable dès que la cible avait répondu.
+        Un braquage ne se déclenche que si la cible tient une bonne réponse et pas le
+        voleur — sinon le joker est perdu, et le résultat le dit (`stealMissed`) : un
+        braquage silencieux passait pour cassé (retour de terrain du 21/08).
 
-        Deux voleurs peuvent viser la même victime : chacun lui prend une bonne réponse,
-        sans jamais la faire passer sous zéro. Un bouclier posé sur la question annule le
-        braquage sans rendre son joker au voleur.
+        Deux arbitrages de glo (21/08/2026) :
+        - **Le butin se braque.** « Tenir une bonne réponse », c'est avoir répondu juste
+          **ou** avoir soi-même réussi son braquage : la bonne réponse file au dernier
+          voleur, en chaîne. Pas de boucle possible — on ne vole qu'en ayant faux, et un
+          joueur qui a faux ne tient un butin qu'après un vol réussi, jamais avant.
+        - **En Survie, un braquage qui aboutit sauve la vie de la mauvaise réponse** :
+          on finit la question une bonne réponse en main. Sans ça le joker se punissait
+          lui-même — il exige d'avoir faux, et avoir faux coûte un cœur. Le surcoût d'un
+          pari Double perdu reste dû (le pari portait sur SA réponse), et un joueur
+          éliminé sur cette question ressuscite si le refund le remet à une vie.
+
+        Un bouclier annule le braquage sans rendre son joker au voleur. Deux voleurs sur
+        la même victime « juste » prennent chacun une bonne réponse (plancher zéro) ; un
+        butin volé, lui, ne se prend qu'une fois.
         """
-        for thief in self.players.values():
-            if thief.steal_on != index or thief.steal_target is None:
-                continue
-            victim = self.players.get(thief.steal_target)
-            if victim is None:
-                continue
-            # Un joueur éliminé en Survie n'est pas scoré : il n'a ni résultat ni butin.
-            if thief.user_id not in result_by_id or victim.user_id not in result_by_id:
-                continue
-            # Le bouclier annule le braquage, mais le voleur a déjà perdu le sien : c'est
-            # tout l'intérêt d'avoir parié sur le bon tour.
-            if victim.shield_on == index:
-                result_by_id[thief.user_id]["stealBlocked"] = victim.user_id
-                continue
-            if not correct_by_id.get(victim.user_id) or correct_by_id.get(thief.user_id):
-                continue
-            taken = min(config.JOKER_STEAL_AMOUNT, victim.correct_count)
-            if taken <= 0:
-                continue
-            victim.correct_count -= taken
-            thief.correct_count += taken
-            result_by_id[thief.user_id]["stoleFrom"] = victim.user_id
-            result_by_id[victim.user_id]["stolenBy"] = thief.user_id
+        survival = bool(self.settings["survival"])
+        pending = [
+            p for p in self.players.values()
+            if p.steal_on == index and p.steal_target is not None and p.user_id in result_by_id
+        ]
+        loot: dict[int, int] = {}  # butin volé encore en main, braquable à son tour
+        progressed = True
+        while progressed and pending:
+            progressed = False
+            for thief in list(pending):
+                victim = self.players.get(thief.steal_target)
+                if victim is None or victim.user_id not in result_by_id:
+                    result_by_id[thief.user_id]["stealMissed"] = "target_wrong"
+                    pending.remove(thief)
+                    progressed = True
+                    continue
+                if victim.shield_on == index:
+                    result_by_id[thief.user_id]["stealBlocked"] = victim.user_id
+                    pending.remove(thief)
+                    progressed = True
+                    continue
+                if correct_by_id.get(thief.user_id):
+                    result_by_id[thief.user_id]["stealMissed"] = "self_correct"
+                    pending.remove(thief)
+                    progressed = True
+                    continue
+                from_loot = not correct_by_id.get(victim.user_id)
+                if from_loot and loot.get(victim.user_id, 0) <= 0:
+                    # La cible a faux et n'a (encore) rien volé : son propre braquage peut
+                    # aboutir à un tour de boucle suivant, on repassera.
+                    continue
+                taken = min(config.JOKER_STEAL_AMOUNT, victim.correct_count)
+                if taken <= 0:
+                    result_by_id[thief.user_id]["stealMissed"] = "target_wrong"
+                    pending.remove(thief)
+                    progressed = True
+                    continue
+                victim.correct_count -= taken
+                thief.correct_count += taken
+                if from_loot:
+                    loot[victim.user_id] -= taken
+                loot[thief.user_id] = loot.get(thief.user_id, 0) + taken
+                result_by_id[thief.user_id]["stoleFrom"] = victim.user_id
+                result_by_id[victim.user_id]["stolenBy"] = thief.user_id
+                if survival and result_by_id[thief.user_id]["livesLost"] > 0:
+                    thief.lives += 1
+                    result_by_id[thief.user_id]["livesLost"] -= 1
+                    result_by_id[thief.user_id]["lives"] = thief.lives
+                    if thief.eliminated_at == index and thief.lives > 0:
+                        thief.eliminated_at = None  # sauvé par son braquage
+                pending.remove(thief)
+                progressed = True
+        # Plus rien ne bouge : les braquages restants n'avaient rien à prendre.
+        for thief in pending:
+            result_by_id[thief.user_id]["stealMissed"] = "target_wrong"
 
     def _apply_elo(self, conn) -> dict[int, tuple[int, int]]:
         """Met à jour les ratings à l'issue de la partie → `{user_id: (avant, delta)}`.
