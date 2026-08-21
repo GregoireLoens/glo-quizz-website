@@ -198,17 +198,35 @@ export function PlayingView() {
         )}
       </div>
 
-      {/* qui vient de jouer quoi — sans ça, un écran qui se mélange passe pour un bug */}
-      {lastJoker && jokersOn && (
-        <div className="relative mt-4 flex h-9 max-w-[calc(100vw-3rem)] items-center rounded-full bg-cream/8 px-4">
-          <span className="truncate text-[13px] font-medium text-cream-soft">
-            {JOKER_BY_KIND[lastJoker.kind].emoji}{' '}
-            {lastJoker.playerId === youId ? 'Tu' : (nameOf(lastJoker.playerId) ?? 'Un joueur')}
-            {lastJoker.playerId === youId ? ' joues ' : ' joue '}
-            <strong className="font-semibold text-cream">{JOKER_BY_KIND[lastJoker.kind].label}</strong>
-            {lastJoker.targetId !== null &&
-              ` sur ${lastJoker.targetId === youId ? 'toi' : (nameOf(lastJoker.targetId) ?? 'un joueur')}`}
-          </span>
+      {/* Annonces des jokers : l'emplacement est réservé dès le début de la question et
+          se remplit sans rien déplacer — inséré dans le flux, le bandeau faisait sauter
+          tout l'écran de 50 px pile quand quelqu'un jouait (retour de terrain du 21/08).
+          Une seule fente pour tout : refus de joker (prioritaire, cliquable) ou dernier
+          joker joué. */}
+      {jokersOn && (
+        <div className="relative mt-4 flex h-9 max-w-[calc(100vw-3rem)] items-center justify-center">
+          {errorMsg ? (
+            <button
+              type="button"
+              onClick={clearError}
+              className="flex h-9 max-w-full cursor-pointer items-center rounded-full bg-coral/14 px-4"
+            >
+              <span className="truncate text-[13px] font-medium text-coral">
+                {errorMsg} — ton joker n'a pas été dépensé
+              </span>
+            </button>
+          ) : lastJoker ? (
+            <div className="flex h-9 max-w-full items-center rounded-full bg-cream/8 px-4">
+              <span className="truncate text-[13px] font-medium text-cream-soft">
+                {JOKER_BY_KIND[lastJoker.kind].emoji}{' '}
+                {lastJoker.playerId === youId ? 'Tu' : (nameOf(lastJoker.playerId) ?? 'Un joueur')}
+                {lastJoker.playerId === youId ? ' joues ' : ' joue '}
+                <strong className="font-semibold text-cream">{JOKER_BY_KIND[lastJoker.kind].label}</strong>
+                {lastJoker.targetId !== null &&
+                  ` sur ${lastJoker.targetId === youId ? 'toi' : (nameOf(lastJoker.targetId) ?? 'un joueur')}`}
+              </span>
+            </div>
+          ) : null}
         </div>
       )}
 
@@ -329,7 +347,16 @@ export function PlayingView() {
               disabled={cut || locked || isReveal || eliminated}
               onClick={() => select(i)}
             >
-              {cut ? <span className="text-muted-deep">— écartée —</span> : question.answers[i]}
+              {cut ? (
+                // le texte d'origine reste en place, invisible : une réponse sur deux
+                // lignes qui se vide ferait rétrécir la carte et bouger la grille
+                <span className="relative block">
+                  <span className="invisible">{question.answers[i]}</span>
+                  <span className="absolute inset-0 flex items-center text-muted-deep">— écartée —</span>
+                </span>
+              ) : (
+                question.answers[i]
+              )}
             </AnswerCard>
           )
         })}
@@ -355,18 +382,6 @@ export function PlayingView() {
       {/* jokers */}
       {!isReveal && jokersOn && (
         <div className="relative mt-7 flex w-full max-w-[760px] flex-col items-center gap-3">
-          {/* Un joker refusé (cible qui vient de répondre, joker déjà dépensé…) ne
-              disait rien : `errorMsg` n'était affiché que dans le salon, si bien que le
-              clic restait sans effet visible et le joker paraissait cassé. */}
-          {errorMsg && (
-            <button
-              type="button"
-              onClick={clearError}
-              className="cursor-pointer rounded-full bg-coral/14 px-4 py-2 text-[13px] font-medium text-coral"
-            >
-              {errorMsg} — ton joker n'a pas été dépensé
-            </button>
-          )}
           <JokerBar
             left={me?.jokers ?? []}
             targets={jokerTargets}
