@@ -76,7 +76,7 @@ docker compose restart client                      # après modification de pack
 
 ## Déploiement (fait le 21/07/2026)
 
-Prod : **https://midi-quizz.glocorp.fr** (basculé depuis gloens.fr le 01/08/2026, coupure nette — decision glo) — VPS OVH, domaine proxifié Cloudflare. Un seul conteneur (image multi-stage : build client → uvicorn 1 worker qui sert API + WS + SPA via `STATIC_DIR`). En prod : `DOCS_ENABLED=0` (pas de `/docs`). Backup SQLite (`VACUUM INTO`) : pas encore de cron.
+Prod : **https://midi-quizz.glocorp.fr** (basculé depuis gloens.fr le 01/08/2026, coupure nette — decision glo) — VPS OVH, domaine proxifié Cloudflare. Un seul conteneur (image multi-stage : build client → uvicorn 1 worker qui sert API + WS + SPA via `STATIC_DIR`). En prod : `DOCS_ENABLED=0` (pas de `/docs`). Sauvegarde quotidienne **automatisée** : timer systemd sur le VPS (`VACUUM INTO` puis envoi compressé vers un stockage objet via un conteneur rclone jetable) — vérifiée en marche le 22/08/2026.
 
 **Depuis le 03/08/2026 le déploiement est géré par Coolify** — le Traefik monté à la main dans la stack n8n a disparu avec elle, ainsi que le réseau `n8n_default` :
 - `deploy/Dockerfile` et `deploy/docker-compose.prod.yml` sont désormais **versionnés** : Coolify construit depuis GitHub et doit y accéder. Restent gitignorés `deploy/.env` et les notes VPS.
