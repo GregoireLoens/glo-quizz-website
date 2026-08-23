@@ -103,7 +103,7 @@ async function playToPodium(pages, budgetMs = 240000) {
     await pHost.screenshot({ path: '/work/e2e-elo-podium.png' });
 
     if (!/ton elo\s*:\s*\d+/i.test(results)) throw new Error('pastille « Ton Elo » absente des résultats');
-    const deltas = results.match(/[+-]\d+|±0/g) || [];
+    const deltas = results.split('\n').map((line) => line.trim()).filter((line) => /^(?:[+-]\d+|±0)$/.test(line));
     if (deltas.length < 2) throw new Error('variations d\'Elo absentes du classement : ' + JSON.stringify(deltas));
     if (/partie solo/i.test(results)) throw new Error('partie à 2 annoncée comme non classée');
     console.log(`podium à 2 en ${seconds}s — « Ton Elo » ✓, variations ${deltas.join(' ')} ✓`);
@@ -140,7 +140,11 @@ async function playToPodium(pages, budgetMs = 240000) {
         throw new Error(name + ' absent du classement Elo');
       }
     }
-    if (!/\b(9\d\d|1\d{3})\s*Elo/i.test(board)) throw new Error('aucun rating affiché sur le podium du classement');
+    const hasDisplayedRating = await pBoard.evaluate(() => {
+      const lines = document.body.innerText.split('\n').map((line) => line.trim()).filter(Boolean);
+      return lines.some((line) => /^\d{3,4}$/.test(line));
+    });
+    if (!hasDisplayedRating) throw new Error('aucun rating affiché dans les lignes du classement');
     console.log('classement général : les 2 joueurs classés avec leur Elo ✓');
   } finally {
     await browser.close();

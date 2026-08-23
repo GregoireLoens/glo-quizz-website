@@ -69,13 +69,13 @@ export function JokersPage() {
               <strong className="font-semibold text-cream">Aucun joker ne donne de points.</strong>{' '}
               Le classement d'une partie se joue au nombre de bonnes réponses ; les points, eux, ne
               départagent que les ex æquo. Un joker « points doublés » ne pourrait donc faire passer
-              devant personne — les trois jokers agissent sur les bonnes réponses ou sur la capacité
-              d'un adversaire à en trouver une.
+              devant personne — les jokers agissent sur les bonnes réponses ou sur la capacité d'un
+              adversaire à en trouver une.
             </li>
             <li>
-              <strong className="font-semibold text-cream">Un joker se joue avant de valider.</strong>{' '}
-              Une fois ta réponse partie, il ne changerait plus rien : le serveur le refuse plutôt
-              que de te le faire brûler pour rien.
+              <strong className="font-semibold text-cream">Trois jokers se jouent avant de valider.</strong>{' '}
+              Moitié-moitié, double ou rien et bouclier doivent précéder ta réponse. Le braquage reste
+              jouable après, puisqu'il ne se résout qu'au décompte.
             </li>
             <li>
               <strong className="font-semibold text-cream">Tout le monde voit tout — sauf le

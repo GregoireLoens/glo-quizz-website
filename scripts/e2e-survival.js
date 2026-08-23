@@ -59,18 +59,28 @@ async function waitForText(page, needle, timeout = 30000) {
   });
   try {
     const pHost = await openAs(browser, host, `${BASE}/game/${code}`, 'hôte');
-    await waitForText(pHost, 'choisir un quiz');
+    await waitForText(pHost, 'mode de jeu');
     const pGuest = await openAs(browser, guest, `${BASE}/game/${code}`, 'invité', true);
     await waitForText(pGuest, 'salon');
 
     // l'hôte sélectionne « Mode Survie » dans le picker de quiz
-    await pHost.evaluate(() => {
-      [...document.querySelectorAll('button')].find((b) => /choisir un quiz/i.test(b.innerText))?.click();
+    const pickerOpened = await pHost.evaluate(() => {
+      const button = [...document.querySelectorAll('button')].find(
+        (b) => b.innerText.trim().toLowerCase().startsWith('choisir'),
+      );
+      button?.click();
+      return Boolean(button);
     });
-    await sleep(400);
-    await pHost.evaluate(() => {
-      [...document.querySelectorAll('button')].find((b) => /mode survie/i.test(b.innerText))?.click();
+    if (!pickerOpened) throw new Error('bouton « Choisir » introuvable');
+    await waitForText(pHost, '3 vies, dernier debout');
+    const survivalSelected = await pHost.evaluate(() => {
+      const button = [...document.querySelectorAll('button')].find(
+        (b) => b.innerText.trim().toLowerCase().includes('mode survie'),
+      );
+      button?.click();
+      return Boolean(button);
     });
+    if (!survivalSelected) throw new Error('option « Mode Survie » introuvable');
     await waitForText(pHost, 'dernier debout gagne');
     await waitForText(pGuest, 'dernier debout gagne');
     console.log('lobby : Mode Survie sélectionné, explication visible chez les 2 joueurs ✓');

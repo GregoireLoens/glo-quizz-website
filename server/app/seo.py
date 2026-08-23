@@ -37,7 +37,7 @@ _PAGES: dict[str, tuple[str, str]] = {
     ),
     "jokers": (
         "Les jokers — Midi Quizz",
-        "Moitié-moitié, double ou rien, braquage : les trois jokers de Midi Quizz, "
+        "Moitié-moitié, double ou rien, braquage et bouclier : les quatre jokers de Midi Quizz, "
         "un de chaque par joueur et par partie.",
     ),
     # Ces deux-là restent `noindex` (voir plus bas) : le titre ne sert qu'à l'onglet

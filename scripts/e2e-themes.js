@@ -69,7 +69,9 @@ async function clickButton(page, label) {
     const layout = await pHome.evaluate(() => {
       const search = document.querySelector('input[type="search"]');
       const tous = [...document.querySelectorAll('button')].find((b) => b.innerText.trim() === 'Tous');
-      const play = [...document.querySelectorAll('button')].find((b) => b.innerText.trim() === '▶');
+      const play = [...document.querySelectorAll('button')].find(
+        (b) => b.innerText.trim().toLowerCase() === 'jouer',
+      );
       const card = play ? play.closest('div.bg-card') : null;
       return {
         hasSearch: Boolean(search),

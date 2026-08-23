@@ -69,4 +69,5 @@ def test_page_des_jokers_indexable():
     meta = seo.meta_for("/jokers")
     assert meta["indexable"] is True
     assert meta["title"] == "Les jokers — Midi Quizz"
+    assert "les quatre jokers" in meta["description"]
     assert '<meta name="robots" content="noindex" />' not in seo.head_tags(meta)

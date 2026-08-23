@@ -75,7 +75,7 @@ export interface GameSettings {
   randomMix: boolean
   survival: boolean
   categories: string[] | null // modes Aléatoire/Survie : thèmes autorisés (null = tous)
-  jokers: boolean // trois jokers par joueur ; l'hôte peut couper le système
+  jokers: boolean // quatre jokers par joueur ; l'hôte peut couper le système
 }
 
 export interface GamePlayer extends Avatar {

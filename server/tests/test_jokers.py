@@ -1,6 +1,6 @@
-"""Jokers : moitié-moitié, double ou rien, braquage.
+"""Jokers : moitié-moitié, double ou rien, braquage et bouclier.
 
-Trois jokers, un exemplaire de chacun par joueur et par partie. Ils touchent le nombre
+Quatre jokers, un exemplaire de chacun par joueur et par partie. Ils touchent le nombre
 de bonnes réponses, donc le classement lui-même (`_rank_key`) — c'est ce qui les rend
 stratégiques, les points ne départageant que les ex æquo.
 """

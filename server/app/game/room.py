@@ -83,7 +83,7 @@ class GameRoom:
             "randomMix": False,
             "survival": False,
             "categories": None,  # modes Aléatoire/Survie : thèmes autorisés (None = tous)
-            "jokers": True,      # trois jokers par joueur ; l'hôte peut couper le système
+            "jokers": True,      # quatre jokers par joueur ; l'hôte peut couper le système
             **settings,
         }
         self.phase: str = "lobby"  # lobby | question | reveal | finished
@@ -514,9 +514,9 @@ class GameRoom:
             if self.settings["survival"] and p.lives <= 0:
                 await self._error(user_id, "eliminated", "Tu es éliminé — spectateur jusqu'à la fin.")
                 return
-            # Le moitié-moitié et le pari doivent précéder la validation, sinon ils ne
-            # changeraient plus rien. Le braquage, lui, se résout au calcul des points :
-            # il reste jouable après avoir répondu, et c'est tout son intérêt.
+            # Le moitié-moitié, le pari et le bouclier doivent précéder la validation.
+            # Le braquage, lui, se résout au calcul des points : il reste jouable après
+            # avoir répondu, et c'est tout son intérêt.
             if kind != "steal" and self.current_index in p.answers:
                 await self._error(user_id, "already_answered", "Ta réponse est déjà partie.")
                 return

@@ -294,7 +294,7 @@ export function LobbyView() {
               )}
             </SettingRow>
 
-            <SettingRow label="Jokers" hint="Trois par joueur : sécuriser, parier, braquer">
+            <SettingRow label="Jokers" hint="Quatre par joueur : sécuriser, parier, braquer, parer">
               {isHost ? (
                 <SegmentedControl
                   options={[
