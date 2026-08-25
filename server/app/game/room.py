@@ -21,7 +21,9 @@ def compute_points(duration: float, elapsed: float, correct: bool) -> int:
     if not correct:
         return 0
     elapsed = min(max(elapsed, 0.0), duration)
-    return max(config.POINTS_FLOOR, round(config.POINTS_BASE * (duration - elapsed) / duration))
+    return max(
+        config.POINTS_FLOOR, round(config.POINTS_BASE * (duration - elapsed) / duration)
+    )
 
 
 @dataclass
@@ -43,11 +45,13 @@ class PlayerState:
     # Jokers encore en main. Publics : savoir ce qu'il reste aux autres fait partie
     # de la stratégie (voir config.JOKER_KINDS).
     jokers_left: set[str] = field(default_factory=lambda: set(config.JOKER_KINDS))
-    double_on: int | None = None          # index de la question engagée en « double ou rien »
+    double_on: int | None = None  # index de la question engagée en « double ou rien »
     hidden_answers: dict[int, list[int]] = field(default_factory=dict)  # moitié-moitié
-    steal_on: int | None = None           # index de la question sur laquelle un braquage est armé
-    steal_target: int | None = None       # joueur visé par ce braquage
-    shield_on: int | None = None          # index de la question protégée par le bouclier
+    steal_on: int | None = (
+        None  # index de la question sur laquelle un braquage est armé
+    )
+    steal_target: int | None = None  # joueur visé par ce braquage
+    shield_on: int | None = None  # index de la question protégée par le bouclier
     # Ordre d'affichage des réponses, propre à ce joueur et à chaque question : liste des
     # index canoniques dans l'ordre où il les voit. Mémorisé, donc stable à la reconnexion.
     answer_order: dict[int, list[int]] = field(default_factory=dict)
@@ -83,14 +87,16 @@ class GameRoom:
             "randomMix": False,
             "survival": False,
             "categories": None,  # modes Aléatoire/Survie : thèmes autorisés (None = tous)
-            "jokers": True,      # quatre jokers par joueur ; l'hôte peut couper le système
+            "jokers": True,  # quatre jokers par joueur ; l'hôte peut couper le système
             **settings,
         }
         self.phase: str = "lobby"  # lobby | question | reveal | finished
         self.players: dict[int, PlayerState] = {}
         self.questions: list[dict] = []
         self.questions_played: int = 0
-        self.survival_threshold: int = 1  # fin quand vivants <= seuil (0 si partie solo)
+        self.survival_threshold: int = (
+            1  # fin quand vivants <= seuil (0 si partie solo)
+        )
         self.current_index: int = -1
         self.question_started_at: float = 0.0
         self.started_at: float = 0.0
@@ -146,11 +152,15 @@ class GameRoom:
         return (-p.correct_count, -p.score)
 
     def _ordered_players(self) -> list[PlayerState]:
-        return sorted(self.players.values(), key=lambda p: (self._rank_key(p), p.joined_at))
+        return sorted(
+            self.players.values(), key=lambda p: (self._rank_key(p), p.joined_at)
+        )
 
     def _elo_groups(self) -> list[list[int]]:
         """Places de la partie, de la 1re à la dernière, ex æquo regroupés."""
-        return elo.group_by_ties([(p.user_id, self._rank_key(p)) for p in self._ordered_players()])
+        return elo.group_by_ties(
+            [(p.user_id, self._rank_key(p)) for p in self._ordered_players()]
+        )
 
     def _ranking_payload(self) -> list[dict]:
         ordered = self._ordered_players()
@@ -210,13 +220,19 @@ class GameRoom:
             if r["playerId"] == p.user_id and r["answerIndex"] is not None:
                 r = {**r, "answerIndex": order.index(r["answerIndex"])}
             results.append(r)
-        return {**reveal, "correctIndex": order.index(reveal["correctIndex"]), "results": results}
+        return {
+            **reveal,
+            "correctIndex": order.index(reveal["correctIndex"]),
+            "results": results,
+        }
 
     async def broadcast_personal(self, build) -> None:
         """Diffuse un message construit pour chaque destinataire (ordre des réponses)."""
         targets = [p for p in self.players.values() if p.connected and p.ws is not None]
         if targets:
-            await asyncio.gather(*(self._send(p.ws, build(p)) for p in targets))
+            sent = await asyncio.gather(*(self._send(p.ws, build(p)) for p in targets))
+            if not all(sent):
+                await self._broadcast_players()
 
     def to_state(self, for_user_id: int) -> dict:
         state: dict[str, Any] = {
@@ -250,27 +266,87 @@ class GameRoom:
             state["jokerState"] = {
                 "hidden": me.hidden_answers.get(self.current_index, []),
                 "double": me.double_on == self.current_index,
-                "stealTarget": me.steal_target if me.steal_on == self.current_index else None,
+                "stealTarget": me.steal_target
+                if me.steal_on == self.current_index
+                else None,
                 "shield": me.shield_on == self.current_index,
             }
         if self.phase == "reveal" and self.last_reveal is not None and me is not None:
             state["reveal"] = self._personalise_reveal(self.last_reveal, me)
         if self.phase == "finished":
             state["ranking"] = self.final_ranking
-        state["questionsPlayed"] = self.questions_played if self.phase == "finished" else None
+        state["questionsPlayed"] = (
+            self.questions_played if self.phase == "finished" else None
+        )
         return state
 
-    async def _send(self, ws: WebSocket, msg: dict) -> None:
-        with suppress(Exception):
+    async def _send(self, ws: WebSocket, msg: dict) -> bool:
+        try:
             await ws.send_text(json.dumps(msg, ensure_ascii=False))
+            return True
+        except Exception as exc:
+            player = next((p for p in self.players.values() if p.ws is ws), None)
+            if player is not None:
+                player.ws = None
+                player.connected = False
+                self._maybe_all_answered()
+                self.touch()
+                logger.warning(
+                    "Envoi WebSocket échoué pour le joueur %s dans %s : %s",
+                    player.user_id,
+                    self.code,
+                    exc,
+                )
+            else:
+                logger.warning("Envoi WebSocket échoué dans %s : %s", self.code, exc)
+            with suppress(Exception):
+                await ws.close(code=1011)
+            return False
+
+    async def _broadcast_players(self) -> None:
+        sockets = [
+            p.ws for p in self.players.values() if p.connected and p.ws is not None
+        ]
+        if not sockets:
+            return
+        payload = {
+            "type": "players",
+            "players": self.players_payload(),
+            "hostId": self.host_id,
+        }
+        sent = await asyncio.gather(*(self._send(ws, payload) for ws in sockets))
+        if not all(sent):
+            # Le premier envoi peut avoir échoué après la construction du payload :
+            # renvoyer aux sockets encore vivantes pour publier connected=False.
+            sockets = [
+                p.ws for p in self.players.values() if p.connected and p.ws is not None
+            ]
+            if sockets:
+                await asyncio.gather(
+                    *(
+                        self._send(
+                            ws,
+                            {
+                                "type": "players",
+                                "players": self.players_payload(),
+                                "hostId": self.host_id,
+                            },
+                        )
+                        for ws in sockets
+                    )
+                )
 
     async def broadcast(self, msg: dict) -> None:
-        sockets = [p.ws for p in self.players.values() if p.connected and p.ws is not None]
+        sockets = [
+            p.ws for p in self.players.values() if p.connected and p.ws is not None
+        ]
         if sockets:
-            await asyncio.gather(*(self._send(ws, msg) for ws in sockets))
+            sent = await asyncio.gather(*(self._send(ws, msg) for ws in sockets))
+            if not all(sent):
+                await self._broadcast_players()
 
     async def broadcast_players(self) -> None:
-        await self.broadcast({"type": "players", "players": self.players_payload(), "hostId": self.host_id})
+        await self._broadcast_players()
 
     async def _error(self, user_id: int, code: str, message: str) -> None:
         p = self.players.get(user_id)
@@ -290,10 +366,17 @@ class GameRoom:
         async with self.lock:
             self.touch()
             p = self.players.get(user_id)
+            is_new = p is None
             if p is None:
                 if self.phase != "lobby":
-                    await self._send(ws, {"type": "error", "code": "already_started",
-                                          "message": "La partie a déjà commencé."})
+                    await self._send(
+                        ws,
+                        {
+                            "type": "error",
+                            "code": "already_started",
+                            "message": "La partie a déjà commencé.",
+                        },
+                    )
                     with suppress(Exception):
                         await ws.close(code=4003)
                     return False
@@ -308,7 +391,21 @@ class GameRoom:
             if old_ws is not None and old_ws is not ws:
                 with suppress(Exception):
                     await old_ws.close(code=4000)
-            await self._send(ws, {"type": "joined", "you": {"id": user_id}, "state": self.to_state(user_id)})
+            joined = await self._send(
+                ws,
+                {
+                    "type": "joined",
+                    "you": {"id": user_id},
+                    "state": self.to_state(user_id),
+                },
+            )
+            if not joined:
+                # Socket morte pendant le join : _send n'est pas suivi d'un
+                # handle_disconnect (ws.py return tôt) — ne pas laisser de fantôme
+                # déconnecté dans le salon.
+                if is_new:
+                    del self.players[user_id]
+                return False
             await self.broadcast_players()
             return True
 
@@ -322,7 +419,9 @@ class GameRoom:
             if self.phase == "lobby":
                 del self.players[user_id]
                 if user_id == self.host_id and self.players:
-                    self.host_id = min(self.players.values(), key=lambda x: x.joined_at).user_id
+                    self.host_id = min(
+                        self.players.values(), key=lambda x: x.joined_at
+                    ).user_id
             else:
                 self._maybe_all_answered()
             self.touch()
@@ -363,7 +462,9 @@ class GameRoom:
 
     async def _update_settings(self, user_id: int, msg: dict) -> None:
         if user_id != self.host_id:
-            await self._error(user_id, "not_host", "Seul l'hôte peut modifier les réglages.")
+            await self._error(
+                user_id, "not_host", "Seul l'hôte peut modifier les réglages."
+            )
             return
         if self.phase != "lobby":
             await self._error(user_id, "already_started", "La partie a déjà commencé.")
@@ -375,13 +476,17 @@ class GameRoom:
             if not self.settings["survival"]:
                 quiz_info = await asyncio.to_thread(_survival_info)
                 if quiz_info is None:
-                    await self._error(user_id, "no_questions", "Aucune question disponible.")
+                    await self._error(
+                        user_id, "no_questions", "Aucune question disponible."
+                    )
                     return
         elif incoming.get("randomMix") is True:
             if not self.settings["randomMix"]:
                 quiz_info = await asyncio.to_thread(_random_mix_info)
                 if quiz_info is None:
-                    await self._error(user_id, "no_questions", "Aucune question disponible.")
+                    await self._error(
+                        user_id, "no_questions", "Aucune question disponible."
+                    )
                     return
         elif quiz_id is not None and quiz_id != self.settings["quizId"]:
             quiz_info = await asyncio.to_thread(_load_quiz_info, quiz_id)
@@ -393,7 +498,9 @@ class GameRoom:
             categories = _clean_categories(incoming.get("categories"))
             pool_total = await asyncio.to_thread(_count_question_pool, categories)
             if pool_total == 0:
-                await self._error(user_id, "no_questions", "Aucune question dans ces thèmes.")
+                await self._error(
+                    user_id, "no_questions", "Aucune question dans ces thèmes."
+                )
                 return
             categories_update = (categories, pool_total)
         async with self.lock:
@@ -409,12 +516,18 @@ class GameRoom:
                 self.settings["jokers"] = incoming["jokers"]
             if quiz_info is not None:
                 self.settings.update(quiz_info)
-            if categories_update is not None and (self.settings["randomMix"] or self.settings["survival"]):
+            if categories_update is not None and (
+                self.settings["randomMix"] or self.settings["survival"]
+            ):
                 self.settings["categories"], pool_total = categories_update
                 if self.settings["randomMix"]:
-                    self.settings["quizQuestionTotal"] = min(config.RANDOM_MIX_SIZE, pool_total)
+                    self.settings["quizQuestionTotal"] = min(
+                        config.RANDOM_MIX_SIZE, pool_total
+                    )
             self.touch()
-            await self.broadcast({"type": "settings_updated", "settings": self.settings})
+            await self.broadcast(
+                {"type": "settings_updated", "settings": self.settings}
+            )
 
     async def _start(self, user_id: int) -> None:
         if user_id != self.host_id:
@@ -425,14 +538,20 @@ class GameRoom:
             return
         quiz_id = self.settings["quizId"]
         if self.settings["survival"]:
-            questions = await asyncio.to_thread(_load_survival_questions, self.game_id, self.settings)
+            questions = await asyncio.to_thread(
+                _load_survival_questions, self.game_id, self.settings
+            )
         elif self.settings["randomMix"]:
-            questions = await asyncio.to_thread(_load_random_questions, self.game_id, self.settings)
+            questions = await asyncio.to_thread(
+                _load_random_questions, self.game_id, self.settings
+            )
         elif quiz_id is None:
             await self._error(user_id, "no_quiz", "Choisis un quiz avant de lancer.")
             return
         else:
-            questions = await asyncio.to_thread(_load_questions, quiz_id, self.game_id, self.settings)
+            questions = await asyncio.to_thread(
+                _load_questions, quiz_id, self.game_id, self.settings
+            )
         if not questions:
             await self._error(user_id, "no_questions", "Ce quiz n'a aucune question.")
             return
@@ -446,7 +565,9 @@ class GameRoom:
                 for p in self.players.values():
                     p.lives = config.SURVIVAL_LIVES
                     p.eliminated_at = None
-                await self.broadcast_players()  # les clients doivent voir les vies avant la 1re question
+                await (
+                    self.broadcast_players()
+                )  # les clients doivent voir les vies avant la 1re question
             else:
                 self.questions = questions[: self.settings["questionCount"]]
             self.touch()
@@ -459,7 +580,11 @@ class GameRoom:
                 return
             index = msg.get("questionIndex")
             answer_index = msg.get("answerIndex")
-            if index != self.current_index or not isinstance(answer_index, int) or not 0 <= answer_index <= 3:
+            if (
+                index != self.current_index
+                or not isinstance(answer_index, int)
+                or not 0 <= answer_index <= 3
+            ):
                 await self._error(user_id, "invalid_answer", "Réponse invalide.")
                 return
             p = self.players.get(user_id)
@@ -473,10 +598,14 @@ class GameRoom:
                 return
             answer_index = order[answer_index]
             if self.settings["survival"] and p.lives <= 0:
-                await self._error(user_id, "eliminated", "Tu es éliminé — spectateur jusqu'à la fin.")
+                await self._error(
+                    user_id, "eliminated", "Tu es éliminé — spectateur jusqu'à la fin."
+                )
                 return
             if index in p.answers:
-                await self._error(user_id, "already_answered", "Réponse déjà enregistrée.")
+                await self._error(
+                    user_id, "already_answered", "Réponse déjà enregistrée."
+                )
                 return
             elapsed = time.monotonic() - self.question_started_at
             p.answers[index] = (answer_index, elapsed)
@@ -497,7 +626,11 @@ class GameRoom:
         target_id = msg.get("targetId")
         async with self.lock:
             if not self.settings["jokers"]:
-                await self._error(user_id, "jokers_disabled", "Les jokers sont coupés sur cette partie.")
+                await self._error(
+                    user_id,
+                    "jokers_disabled",
+                    "Les jokers sont coupés sur cette partie.",
+                )
                 return
             if self.phase != "question":
                 await self._error(user_id, "too_late", "Trop tard pour jouer un joker.")
@@ -509,27 +642,39 @@ class GameRoom:
                 await self._error(user_id, "unknown_joker", "Ce joker n'existe pas.")
                 return
             if kind not in p.jokers_left:
-                await self._error(user_id, "joker_spent", "Tu as déjà utilisé ce joker.")
+                await self._error(
+                    user_id, "joker_spent", "Tu as déjà utilisé ce joker."
+                )
                 return
             if self.settings["survival"] and p.lives <= 0:
-                await self._error(user_id, "eliminated", "Tu es éliminé — spectateur jusqu'à la fin.")
+                await self._error(
+                    user_id, "eliminated", "Tu es éliminé — spectateur jusqu'à la fin."
+                )
                 return
             # Le moitié-moitié, le pari et le bouclier doivent précéder la validation.
             # Le braquage, lui, se résout au calcul des points : il reste jouable après
             # avoir répondu, et c'est tout son intérêt.
             if kind != "steal" and self.current_index in p.answers:
-                await self._error(user_id, "already_answered", "Ta réponse est déjà partie.")
+                await self._error(
+                    user_id, "already_answered", "Ta réponse est déjà partie."
+                )
                 return
 
             index = self.current_index
             target: PlayerState | None = None
             if kind == "steal":
-                target = self.players.get(target_id) if isinstance(target_id, int) else None
+                target = (
+                    self.players.get(target_id) if isinstance(target_id, int) else None
+                )
                 if target is None or target.user_id == user_id:
-                    await self._error(user_id, "invalid_target", "Choisis un autre joueur.")
+                    await self._error(
+                        user_id, "invalid_target", "Choisis un autre joueur."
+                    )
                     return
                 if self.settings["survival"] and target.lives <= 0:
-                    await self._error(user_id, "invalid_target", "Ce joueur est déjà éliminé.")
+                    await self._error(
+                        user_id, "invalid_target", "Ce joueur est déjà éliminé."
+                    )
                     return
 
             p.jokers_left.discard(kind)
@@ -537,11 +682,20 @@ class GameRoom:
                 correct = self.questions[index]["correct_index"]
                 order = self._order_for(p, index)
                 # positions **de sa grille** occupées par de mauvaises réponses
-                wrong = [pos for pos, canonical in enumerate(order) if canonical != correct]
+                wrong = [
+                    pos for pos, canonical in enumerate(order) if canonical != correct
+                ]
                 hidden = sorted(random.sample(wrong, min(2, len(wrong))))
                 p.hidden_answers[index] = hidden
                 if p.ws is not None:
-                    await self._send(p.ws, {"type": "joker_hidden", "questionIndex": index, "hidden": hidden})
+                    await self._send(
+                        p.ws,
+                        {
+                            "type": "joker_hidden",
+                            "questionIndex": index,
+                            "hidden": hidden,
+                        },
+                    )
             elif kind == "double":
                 p.double_on = index
             elif kind == "shield":
@@ -566,23 +720,37 @@ class GameRoom:
                     await self._send(p.ws, used)
                     # …y compris la liste des jokers, sans quoi le porteur lui-même verrait
                     # son bouclier encore en main et pourrait le rejouer.
-                    await self._send(p.ws, {
-                        "type": "players",
-                        "players": self.players_payload(),
-                        "hostId": self.host_id,
-                    })
+                    await self._send(
+                        p.ws,
+                        {
+                            "type": "players",
+                            "players": self.players_payload(),
+                            "hostId": self.host_id,
+                        },
+                    )
                 return
             await self.broadcast(used)
-            await self.broadcast({"type": "players", "players": self.players_payload(), "hostId": self.host_id})
+            await self.broadcast(
+                {
+                    "type": "players",
+                    "players": self.players_payload(),
+                    "hostId": self.host_id,
+                }
+            )
 
     def _maybe_all_answered(self) -> None:
         if self.phase != "question":
             return
         survival = bool(self.settings["survival"])
         active = [
-            p for p in self.players.values()
+            p
+            for p in self.players.values()
             if p.connected and (not survival or p.lives > 0)
         ]
+        # Sans joueur actif on ne force rien : si toute la table est déconnectée, la
+        # question court jusqu'au timeout pour laisser aux reconnexions le temps de
+        # reprendre la partie — la solder instantanément achèverait la partie avant
+        # le retour de tout le monde.
         if active and all(self.current_index in p.answers for p in active):
             self.all_answered.set()
 
@@ -592,7 +760,9 @@ class GameRoom:
             return
         if self.phase != "finished":
             return
-        new_game_id = await asyncio.to_thread(_create_next_game, self.code, self.host_id, self.settings)
+        new_game_id = await asyncio.to_thread(
+            _create_next_game, self.code, self.host_id, self.settings
+        )
         async with self.lock:
             if self.phase != "finished":
                 return
@@ -610,12 +780,14 @@ class GameRoom:
             for p in self.players.values():
                 p.reset_for_game()
             self.touch()
-            await self.broadcast({
-                "type": "lobby_reset",
-                "players": self.players_payload(),
-                "settings": self.settings,
-                "hostId": self.host_id,
-            })
+            await self.broadcast(
+                {
+                    "type": "lobby_reset",
+                    "players": self.players_payload(),
+                    "settings": self.settings,
+                    "hostId": self.host_id,
+                }
+            )
 
     # ---------- boucle de jeu autoritaire ----------
 
@@ -649,14 +821,16 @@ class GameRoom:
                 with suppress(asyncio.TimeoutError):
                     await asyncio.wait_for(
                         self.all_answered.wait(),
-                        timeout=self.settings["timePerQuestion"] + config.ANSWER_GRACE_SECONDS,
+                        timeout=self.settings["timePerQuestion"]
+                        + config.ANSWER_GRACE_SECONDS,
                     )
                 async with self.lock:
                     self.phase = "reveal"
-                    self.last_reveal = self._score_question(i)
+                    reveal = self._score_question(i)
+                    self.last_reveal = reveal
                     self.touch()
                 await self.broadcast_personal(
-                    lambda p: self._personalise_reveal(self.last_reveal, p)
+                    lambda p, reveal=reveal: self._personalise_reveal(reveal, p)
                 )
                 # Les jokers de chacun se resynchronisent ici : c'est le moment où un
                 # bouclier, tu jusque-là, devient visible de toute la table.
@@ -678,12 +852,14 @@ class GameRoom:
                     entry["eloBefore"] = rated[0] if rated is not None else None
                     entry["eloDelta"] = rated[1] if rated is not None else None
                 self.touch()
-            await self.broadcast({
-                "type": "game_over",
-                "durationSec": self.duration_sec,
-                "questionsPlayed": self.questions_played,
-                "ranking": self.final_ranking,
-            })
+            await self.broadcast(
+                {
+                    "type": "game_over",
+                    "durationSec": self.duration_sec,
+                    "questionsPlayed": self.questions_played,
+                    "ranking": self.final_ranking,
+                }
+            )
         except Exception:
             logger.exception("La boucle de jeu %s a planté", self.code)
 
@@ -720,32 +896,36 @@ class GameRoom:
                     lives_lost = config.JOKER_DOUBLE_LIVES_COST if double else 1
                     p.lives -= lives_lost
                     if p.lives <= 0:
-                        lives_lost += p.lives  # ce qui a réellement été retiré, sans passer sous zéro
+                        lives_lost += (
+                            p.lives
+                        )  # ce qui a réellement été retiré, sans passer sous zéro
                         p.lives = 0
                         p.eliminated_at = index
             p.score += points
-            results.append({
-                "playerId": p.user_id,
-                "answerIndex": answer_index,
-                "correct": correct,
-                "pointsEarned": points,
-                "score": p.score,
-                "lives": p.lives,
-                # le reveal dit qui avait parié : sans ça, un −1 en bonnes réponses est
-                # incompréhensible pour les autres joueurs
-                "doubled": double,
-                # Vies réellement perdues. Le client l'annonçait « −1 vie » en dur, donc un
-                # pari perdu à deux vies s'affichait comme un simple faux : le joueur en
-                # concluait, à raison, que son joker n'avait rien fait.
-                "livesLost": lives_lost,
-                # Braquage : rempli à la seconde passe, ci-dessous.
-                "stoleFrom": None,
-                "stolenBy": None,
-                # Bouclier posé sur cette question — public seulement à partir d'ici.
-                "shielded": p.shield_on == index,
-                "stealBlocked": None,
-                "stealMissed": None,
-            })
+            results.append(
+                {
+                    "playerId": p.user_id,
+                    "answerIndex": answer_index,
+                    "correct": correct,
+                    "pointsEarned": points,
+                    "score": p.score,
+                    "lives": p.lives,
+                    # le reveal dit qui avait parié : sans ça, un −1 en bonnes réponses est
+                    # incompréhensible pour les autres joueurs
+                    "doubled": double,
+                    # Vies réellement perdues. Le client l'annonçait « −1 vie » en dur, donc un
+                    # pari perdu à deux vies s'affichait comme un simple faux : le joueur en
+                    # concluait, à raison, que son joker n'avait rien fait.
+                    "livesLost": lives_lost,
+                    # Braquage : rempli à la seconde passe, ci-dessous.
+                    "stoleFrom": None,
+                    "stolenBy": None,
+                    # Bouclier posé sur cette question — public seulement à partir d'ici.
+                    "shielded": p.shield_on == index,
+                    "stealBlocked": None,
+                    "stealMissed": None,
+                }
+            )
             correct_by_id[p.user_id] = correct
             result_by_id[p.user_id] = results[-1]
 
@@ -784,15 +964,24 @@ class GameRoom:
         """
         survival = bool(self.settings["survival"])
         pending = [
-            p for p in self.players.values()
-            if p.steal_on == index and p.steal_target is not None and p.user_id in result_by_id
+            p
+            for p in self.players.values()
+            if p.steal_on == index
+            and p.steal_target is not None
+            and p.user_id in result_by_id
         ]
         loot: dict[int, int] = {}  # butin volé encore en main, braquable à son tour
         progressed = True
         while progressed and pending:
             progressed = False
             for thief in list(pending):
-                victim = self.players.get(thief.steal_target)
+                target_id = thief.steal_target
+                if target_id is None:
+                    result_by_id[thief.user_id]["stealMissed"] = "target_wrong"
+                    pending.remove(thief)
+                    progressed = True
+                    continue
+                victim = self.players.get(target_id)
                 if victim is None or victim.user_id not in result_by_id:
                     result_by_id[thief.user_id]["stealMissed"] = "target_wrong"
                     pending.remove(thief)
@@ -849,15 +1038,18 @@ class GameRoom:
         if len(ids) < 2 or self.questions_played < 1:
             return {}
         rows = conn.execute(
-            f"SELECT id, elo, elo_games FROM users WHERE id IN ({','.join('?' * len(ids))})",
-            ids,
+            "SELECT id, elo, elo_games FROM users"
+            " WHERE id IN (SELECT value FROM json_each(?))",
+            (json.dumps(ids),),
         ).fetchall()
         ratings = {r["id"]: r["elo"] for r in rows}
         if len(ratings) < 2:
             return {}  # comptes supprimés entre-temps : plus d'adversaire à classer
         rated_games = {r["id"]: r["elo_games"] for r in rows}
         known = [[uid for uid in place if uid in ratings] for place in groups]
-        results = elo.rate_game([place for place in known if place], ratings, rated_games)
+        results = elo.rate_game(
+            [place for place in known if place], ratings, rated_games
+        )
         for user_id, (before, delta) in results.items():
             conn.execute(
                 "UPDATE users SET elo = ?, elo_games = elo_games + 1 WHERE id = ?",
@@ -878,14 +1070,25 @@ class GameRoom:
                 "INSERT OR REPLACE INTO game_players (game_id, user_id, score, correct_count, rank)"
                 " VALUES (?, ?, ?, ?, ?)",
                 [
-                    (self.game_id, r["playerId"], r["score"], r["correctCount"], r["rank"])
+                    (
+                        self.game_id,
+                        r["playerId"],
+                        r["score"],
+                        r["correctCount"],
+                        r["rank"],
+                    )
                     for r in self.final_ranking
                 ],
             )
             conn.execute(
                 "UPDATE games SET status = 'finished', finished_at = datetime('now'),"
                 " quiz_id = ?, question_count = ?, time_per_question = ? WHERE id = ?",
-                (self.settings["quizId"], self.questions_played, self.settings["timePerQuestion"], self.game_id),
+                (
+                    self.settings["quizId"],
+                    self.questions_played,
+                    self.settings["timePerQuestion"],
+                    self.game_id,
+                ),
             )
             if self.settings["quizId"] is not None:
                 conn.execute(
@@ -901,6 +1104,7 @@ class GameRoom:
 
 # ---------- accès DB synchrones (appelés via asyncio.to_thread) ----------
 
+
 def _clean_categories(value: Any) -> list[str] | None:
     """Normalise une sélection de thèmes : inconnus écartés, vide/invalide = None (tous)."""
     if not isinstance(value, list):
@@ -909,21 +1113,20 @@ def _clean_categories(value: Any) -> list[str] | None:
     return picked or None
 
 
-def _pool_where(categories: list[str] | None) -> tuple[str, list]:
-    """Clause WHERE du pool aléatoire (questions t jointes à leur quiz z)."""
-    if not categories:
-        return "", []
-    return f" WHERE z.category IN ({','.join('?' * len(categories))})", list(categories)
+def _categories_json(categories: list[str] | None) -> str | None:
+    """Catégories passées à SQLite sans construire de SQL dynamique."""
+    return json.dumps(categories) if categories else None
 
 
 def _count_question_pool(categories: list[str] | None) -> int:
     conn = db.connect()
     try:
-        where, params = _pool_where(categories)
+        categories_json = _categories_json(categories)
         return conn.execute(
             "SELECT COUNT(DISTINCT lower(t.text)) AS n FROM questions t"
-            " JOIN quizzes z ON z.id = t.quiz_id" + where,
-            params,
+            " JOIN quizzes z ON z.id = t.quiz_id"
+            " WHERE (? IS NULL OR z.category IN (SELECT value FROM json_each(?)))",
+            (categories_json, categories_json),
         ).fetchone()["n"]
     finally:
         conn.close()
@@ -983,6 +1186,21 @@ def _random_mix_info() -> dict | None:
     return random_mix_settings(total) if total else None
 
 
+def _decode_answers(value: str) -> list[str]:
+    """Valide le JSON d'une question au lieu de laisser fuiter une erreur opaque."""
+    try:
+        answers = json.loads(value)
+    except (json.JSONDecodeError, TypeError) as exc:
+        raise ValueError("Réponses de question invalides en base.") from exc
+    if not isinstance(answers, list) or not all(
+        isinstance(answer, str) for answer in answers
+    ):
+        raise ValueError(
+            "Les réponses d'une question doivent être une liste de textes."
+        )
+    return [answer for answer in answers if isinstance(answer, str)]
+
+
 def _load_questions(quiz_id: int, game_id: int, settings: dict) -> list[dict]:
     conn = db.connect()
     try:
@@ -997,7 +1215,11 @@ def _load_questions(quiz_id: int, game_id: int, settings: dict) -> list[dict]:
         )
         conn.commit()
         return [
-            {"text": r["text"], "answers": json.loads(r["answers"]), "correct_index": r["correct_index"]}
+            {
+                "text": r["text"],
+                "answers": _decode_answers(r["answers"]),
+                "correct_index": r["correct_index"],
+            }
             for r in rows
         ]
     finally:
@@ -1008,7 +1230,7 @@ def _pool_rows_to_questions(rows: list) -> list[dict]:
     return [
         {
             "text": r["text"],
-            "answers": json.loads(r["answers"]),
+            "answers": _decode_answers(r["answers"]),
             "correct_index": r["correct_index"],
             "theme": r["theme"],
         }
@@ -1020,13 +1242,13 @@ def _load_random_questions(game_id: int, settings: dict) -> list[dict]:
     """Quiz virtuel « Mix aléatoire » : questions distinctes piochées dans les thèmes choisis."""
     conn = db.connect()
     try:
-        where, params = _pool_where(settings["categories"])
+        categories_json = _categories_json(settings["categories"])
         rows = conn.execute(
             "SELECT t.text, t.answers, t.correct_index, z.title AS theme"
             " FROM questions t JOIN quizzes z ON z.id = t.quiz_id"
-            + where
-            + " GROUP BY lower(t.text) ORDER BY RANDOM() LIMIT ?",
-            (*params, config.RANDOM_MIX_SIZE),
+            " WHERE (? IS NULL OR z.category IN (SELECT value FROM json_each(?)))"
+            " GROUP BY lower(t.text) ORDER BY RANDOM() LIMIT ?",
+            (categories_json, categories_json, config.RANDOM_MIX_SIZE),
         ).fetchall()
         conn.execute(
             "UPDATE games SET status = 'playing', quiz_id = NULL, question_count = ?,"
@@ -1043,13 +1265,13 @@ def _load_survival_questions(game_id: int, settings: dict) -> list[dict]:
     """Mode Survie : premier lot de questions aléatoires dans les thèmes choisis."""
     conn = db.connect()
     try:
-        where, params = _pool_where(settings["categories"])
+        categories_json = _categories_json(settings["categories"])
         rows = conn.execute(
             "SELECT t.text, t.answers, t.correct_index, z.title AS theme"
             " FROM questions t JOIN quizzes z ON z.id = t.quiz_id"
-            + where
-            + " GROUP BY lower(t.text) ORDER BY RANDOM() LIMIT ?",
-            (*params, config.SURVIVAL_BATCH),
+            " WHERE (? IS NULL OR z.category IN (SELECT value FROM json_each(?)))"
+            " GROUP BY lower(t.text) ORDER BY RANDOM() LIMIT ?",
+            (categories_json, categories_json, config.SURVIVAL_BATCH),
         ).fetchall()
         conn.execute(
             "UPDATE games SET status = 'playing', quiz_id = NULL, question_count = NULL,"
@@ -1062,21 +1284,21 @@ def _load_survival_questions(game_id: int, settings: dict) -> list[dict]:
         conn.close()
 
 
-def _load_more_survival_questions(exclude_texts: set[str], categories: list[str] | None) -> list[dict]:
+def _load_more_survival_questions(
+    exclude_texts: set[str], categories: list[str] | None
+) -> list[dict]:
     """Lot suivant, sans re-poser une question déjà jouée dans cette partie."""
     conn = db.connect()
     try:
-        where, params = _pool_where(categories)
-        if exclude_texts:
-            where += " AND " if where else " WHERE "
-            where += f"lower(t.text) NOT IN ({','.join('?' * len(exclude_texts))})"
-            params += list(exclude_texts)
+        categories_json = _categories_json(categories)
+        excluded_json = json.dumps(sorted(exclude_texts))
         rows = conn.execute(
             "SELECT t.text, t.answers, t.correct_index, z.title AS theme"
             " FROM questions t JOIN quizzes z ON z.id = t.quiz_id"
-            + where
-            + " GROUP BY lower(t.text) ORDER BY RANDOM() LIMIT ?",
-            (*params, config.SURVIVAL_BATCH),
+            " WHERE (? IS NULL OR z.category IN (SELECT value FROM json_each(?)))"
+            " AND lower(t.text) NOT IN (SELECT value FROM json_each(?))"
+            " GROUP BY lower(t.text) ORDER BY RANDOM() LIMIT ?",
+            (categories_json, categories_json, excluded_json, config.SURVIVAL_BATCH),
         ).fetchall()
         return _pool_rows_to_questions(rows)
     finally:
@@ -1089,9 +1311,20 @@ def _create_next_game(code: str, host_id: int, settings: dict) -> int:
         cur = conn.execute(
             "INSERT INTO games (code, quiz_id, host_id, question_count, time_per_question)"
             " VALUES (?, ?, ?, ?, ?)",
-            (code, settings["quizId"], host_id, settings["questionCount"], settings["timePerQuestion"]),
+            (
+                code,
+                settings["quizId"],
+                host_id,
+                settings["questionCount"],
+                settings["timePerQuestion"],
+            ),
         )
         conn.commit()
-        return cur.lastrowid
+        game_id = cur.lastrowid
+        if game_id is None:
+            raise RuntimeError(
+                "La création de la partie n'a retourné aucun identifiant."
+            )
+        return game_id
     finally:
         conn.close()

@@ -1,13 +1,22 @@
 import os
 from pathlib import Path
 
-DB_PATH = os.environ.get("DB_PATH", str(Path(__file__).resolve().parent.parent / "data" / "quizz.db"))
+DB_PATH = os.environ.get(
+    "DB_PATH", str(Path(__file__).resolve().parent.parent / "data" / "quizz.db")
+)
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 STATIC_DIR = os.environ.get("STATIC_DIR", "")
 DOCS_ENABLED = os.environ.get("DOCS_ENABLED", "1") == "1"
 
-TOKEN_MAX_AGE = int(os.environ.get("TOKEN_MAX_AGE", 30 * 24 * 3600))  # validité des sessions : 30 jours
-WS_AUTH_TIMEOUT = 5.0  # délai pour recevoir le message d'auth après ouverture de la socket
+TOKEN_MAX_AGE = int(
+    os.environ.get("TOKEN_MAX_AGE", 30 * 24 * 3600)
+)  # validité des sessions : 30 jours
+WS_AUTH_TIMEOUT = (
+    5.0  # délai pour recevoir le message d'auth après ouverture de la socket
+)
+WS_HEARTBEAT_INTERVAL = (
+    10.0  # ping applicatif : les sockets half-open doivent être détectables côté client
+)
 
 CATEGORIES = [
     "Culture générale",
@@ -31,11 +40,15 @@ CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
 GAME_CODE_LENGTH = 6
 USER_CODE_LENGTH = 8
 
-RANDOM_MIX_SIZE = 30           # taille du quiz virtuel « Mix aléatoire » (questions toutes catégories)
+RANDOM_MIX_SIZE = (
+    30  # taille du quiz virtuel « Mix aléatoire » (questions toutes catégories)
+)
 RANDOM_MIX_TITLE = "Mix aléatoire"
 
-SURVIVAL_LIVES = 3             # mode Survie : vies au départ
-SURVIVAL_BATCH = 30            # questions aléatoires chargées par lot (rechargé tant qu'il reste des vivants)
+SURVIVAL_LIVES = 3  # mode Survie : vies au départ
+SURVIVAL_BATCH = (
+    30  # questions aléatoires chargées par lot (rechargé tant qu'il reste des vivants)
+)
 SURVIVAL_TITLE = "Mode Survie"
 
 TIME_CHOICES = [15, 30, 60]
@@ -48,22 +61,22 @@ POINTS_FLOOR = 250
 
 # Classement Elo — alimenté par les seules parties multijoueurs (le solo ne compte pas).
 # Les points restent la mécanique interne d'une partie ; l'Elo est le classement durable.
-ELO_START = 1000               # rating de départ (doit rester aligné sur le DEFAULT de schema.sql)
-ELO_K = 32                     # amplitude d'ajustement par partie une fois le rating calibré
-ELO_K_PROVISIONAL = 48         # amplitude renforcée pendant les premières parties
-ELO_PROVISIONAL_GAMES = 10     # parties classées avant de passer au K normal
-ELO_FLOOR = 100                # plancher : un rating ne descend jamais en dessous
+ELO_START = 1000  # rating de départ (doit rester aligné sur le DEFAULT de schema.sql)
+ELO_K = 32  # amplitude d'ajustement par partie une fois le rating calibré
+ELO_K_PROVISIONAL = 48  # amplitude renforcée pendant les premières parties
+ELO_PROVISIONAL_GAMES = 10  # parties classées avant de passer au K normal
+ELO_FLOOR = 100  # plancher : un rating ne descend jamais en dessous
 # Jokers — un exemplaire de chacun par joueur et par partie, remis à neuf à chaque
 # manche. Pas de capital durable : le stock reste symétrique, donc compatible avec
 # une partie classée (décision glo du 20/08/2026).
 JOKER_KINDS = ("fifty", "double", "steal", "shield")
-JOKER_DOUBLE_BONUS = 2         # bonnes réponses gagnées si le pari est tenu
-JOKER_DOUBLE_MALUS = 1         # bonnes réponses perdues sinon — peut faire passer sous zéro
-JOKER_DOUBLE_LIVES_COST = 2    # Survie : un pari perdu coûte deux vies au lieu d'une
+JOKER_DOUBLE_BONUS = 2  # bonnes réponses gagnées si le pari est tenu
+JOKER_DOUBLE_MALUS = 1  # bonnes réponses perdues sinon — peut faire passer sous zéro
+JOKER_DOUBLE_LIVES_COST = 2  # Survie : un pari perdu coûte deux vies au lieu d'une
 # Braquage : ne se déclenche que si la cible a trouvé et pas le voleur. Il se résout au
 # calcul des points, donc il se joue à n'importe quel moment de la question — c'est ce qui
 # le distingue du brouillage qu'il remplace, injouable dès que la cible avait répondu.
-JOKER_STEAL_AMOUNT = 1         # bonnes réponses transférées de la cible vers le voleur
+JOKER_STEAL_AMOUNT = 1  # bonnes réponses transférées de la cible vers le voleur
 # Bouclier : annule les jokers subis sur la question où il est posé, l'assaillant perdant
 # quand même le sien. Contrairement aux trois autres, **il n'est pas annoncé quand il est
 # joué** — un bouclier public ne serait qu'un panneau « ne m'attaquez pas », et personne
@@ -72,6 +85,6 @@ JOKER_STEAL_AMOUNT = 1         # bonnes réponses transférées de la cible vers
 REVEAL_SECONDS = 4.0
 ANSWER_GRACE_SECONDS = 0.5
 
-ROOM_FINISHED_TTL = 120        # purge des rooms finies après 2 min
-ROOM_INACTIVE_TTL = 1800       # purge des rooms inactives après 30 min
+ROOM_FINISHED_TTL = 120  # purge des rooms finies après 2 min
+ROOM_INACTIVE_TTL = 1800  # purge des rooms inactives après 30 min
 PURGE_INTERVAL = 60

@@ -1,12 +1,16 @@
+import asyncio
 from contextlib import contextmanager
 
 from app import config
 from app.game.manager import manager
+from app.game.room import GameRoom, PlayerState
 from tests.conftest import auth_headers, create_quiz, register
 
 
 def _create_game(client, session, quiz_id=None):
-    r = client.post("/api/games", json={"quizId": quiz_id}, headers=auth_headers(session))
+    r = client.post(
+        "/api/games", json={"quizId": quiz_id}, headers=auth_headers(session)
+    )
     assert r.status_code == 201, r.text
     return r.json()["code"]
 
@@ -26,6 +30,7 @@ def _slot(code, session, q_index, *, correct=True):
     plus écrire « réponds 0 » et savoir ce que ça vaut. On lit son ordre dans la room.
     """
     room = manager.get(code)
+    assert room is not None
     order = room.players[session["user"]["id"]].answer_order[q_index]
     bonne = order.index(room.questions[q_index]["correct_index"])
     return bonne if correct else (bonne + 1) % len(order)
@@ -37,6 +42,69 @@ def _recv_until(ws, msg_type, limit=20):
         if msg["type"] == msg_type:
             return msg
     raise AssertionError(f"message {msg_type} jamais reçu")
+
+
+def test_ws_emits_application_ping(client, monkeypatch):
+    monkeypatch.setattr(config, "WS_HEARTBEAT_INTERVAL", 0.01)
+    host = register(client, "Hote")
+    code = _create_game(client, host)
+
+    with ws_connect(client, code, host) as ws:
+        assert ws.receive_json()["type"] == "joined"
+        assert _recv_until(ws, "ping")["type"] == "ping"
+
+
+def test_send_failure_disconnects_player(caplog):
+    class BrokenSocket:
+        async def send_text(self, message):
+            raise RuntimeError("socket morte")
+
+        async def close(self, code):
+            self.close_code = code
+
+    room = GameRoom("ABC123", 1, 1, {})
+    room.phase = "question"
+    room.current_index = 0
+    player = PlayerState(user_id=1, username="Hote", ws=BrokenSocket(), connected=True)
+    room.players[1] = player
+
+    with caplog.at_level("WARNING", logger="midi-quizz.room"):
+        sent = asyncio.run(room._send(player.ws, {"type": "ping"}))
+
+    assert sent is False
+    assert player.connected is False
+    assert player.ws is None
+    # Dernier joueur connecté : la question court jusqu'au timeout, on ne solde pas.
+    assert not room.all_answered.is_set()
+    assert "Envoi WebSocket échoué" in caplog.text
+
+
+def test_send_failure_debloque_la_question_si_les_autres_ont_repondu():
+    """CA4 : le fantôme marqué déconnecté sort du décompte des réponses attendues."""
+
+    class BrokenSocket:
+        async def send_text(self, message):
+            raise RuntimeError("socket morte")
+
+        async def close(self, code):
+            pass
+
+    room = GameRoom("ABC123", 1, 1, {})
+    room.phase = "question"
+    room.current_index = 0
+    ghost = PlayerState(
+        user_id=1, username="Fantome", ws=BrokenSocket(), connected=True
+    )
+    other = PlayerState(user_id=2, username="Vivant", connected=True)
+    other.answers[0] = (0, 1.0)
+    room.players[1] = ghost
+    room.players[2] = other
+
+    sent = asyncio.run(room._send(ghost.ws, {"type": "question"}))
+
+    assert sent is False
+    assert ghost.connected is False
+    assert room.all_answered.is_set()
 
 
 def test_ws_rejects_invalid_token(client):
@@ -74,11 +142,15 @@ def test_lobby_join_ready_and_host_only_settings(client):
 
             ws_guest.send_json({"type": "ready", "ready": True})
             players_msg = _recv_until(ws_host, "players")
-            guest_state = next(p for p in players_msg["players"] if p["username"] == "Invite")
+            guest_state = next(
+                p for p in players_msg["players"] if p["username"] == "Invite"
+            )
             assert guest_state["ready"] is True
 
             # un invité ne peut pas modifier les réglages
-            ws_guest.send_json({"type": "update_settings", "settings": {"timePerQuestion": 60}})
+            ws_guest.send_json(
+                {"type": "update_settings", "settings": {"timePerQuestion": 60}}
+            )
             err = _recv_until(ws_guest, "error")
             assert err["code"] == "not_host"
 
@@ -91,8 +163,10 @@ def test_full_game_flow(client, monkeypatch):
     quiz_id = create_quiz(host)
     code = _create_game(client, host, quiz_id=quiz_id)
 
-    with ws_connect(client, code, host) as ws_host, \
-         ws_connect(client, code, guest) as ws_guest:
+    with (
+        ws_connect(client, code, host) as ws_host,
+        ws_connect(client, code, guest) as ws_guest,
+    ):
         assert ws_host.receive_json()["type"] == "joined"
         assert ws_guest.receive_json()["type"] == "joined"
 
@@ -105,10 +179,20 @@ def test_full_game_flow(client, monkeypatch):
             assert "correctIndex" not in q_host
             assert q_host["theme"] is None  # quiz choisi : pas de contexte à afficher
 
-            ws_host.send_json({"type": "answer", "questionIndex": q_host["index"],
-                               "answerIndex": _slot(code, host, q_host["index"])})
-            ws_guest.send_json({"type": "answer", "questionIndex": q_guest["index"],
-                                "answerIndex": _slot(code, guest, q_guest["index"], correct=False)})
+            ws_host.send_json(
+                {
+                    "type": "answer",
+                    "questionIndex": q_host["index"],
+                    "answerIndex": _slot(code, host, q_host["index"]),
+                }
+            )
+            ws_guest.send_json(
+                {
+                    "type": "answer",
+                    "questionIndex": q_guest["index"],
+                    "answerIndex": _slot(code, guest, q_guest["index"], correct=False),
+                }
+            )
 
             reveal = _recv_until(ws_host, "reveal")
             assert reveal["questionIndex"] == q_host["index"]
@@ -170,15 +254,22 @@ def test_random_mix_full_flow(client, monkeypatch):
         settings = joined["state"]["settings"]
         assert settings["randomMix"] is True
         assert settings["quizId"] is None
-        assert settings["quizQuestionTotal"] == 2  # le quiz de test n'a que 2 questions distinctes
+        assert (
+            settings["quizQuestionTotal"] == 2
+        )  # le quiz de test n'a que 2 questions distinctes
 
         ws.send_json({"type": "start"})
         for _ in range(2):
             q = _recv_until(ws, "question")
             assert q["total"] == 2
             assert "correctIndex" not in q
-            ws.send_json({"type": "answer", "questionIndex": q["index"],
-                          "answerIndex": _slot(code, host, q["index"])})
+            ws.send_json(
+                {
+                    "type": "answer",
+                    "questionIndex": q["index"],
+                    "answerIndex": _slot(code, host, q["index"]),
+                }
+            )
             _recv_until(ws, "reveal")
         over = _recv_until(ws, "game_over")
         assert len(over["ranking"]) == 1
@@ -227,9 +318,11 @@ def test_survival_full_flow(client, monkeypatch):
     create_quiz(host, questions=questions)
     code = _create_game(client, host)
 
-    with ws_connect(client, code, host) as ws_host, \
-         ws_connect(client, code, loser) as ws_loser, \
-         ws_connect(client, code, other) as ws_other:
+    with (
+        ws_connect(client, code, host) as ws_host,
+        ws_connect(client, code, loser) as ws_loser,
+        ws_connect(client, code, other) as ws_other,
+    ):
         for ws in (ws_host, ws_loser, ws_other):
             assert ws.receive_json()["type"] == "joined"
 
@@ -245,17 +338,34 @@ def test_survival_full_flow(client, monkeypatch):
             _recv_until(ws_other, "question")
 
             if i < 3:
-                ws_loser.send_json({"type": "answer", "questionIndex": q["index"],
-                                    "answerIndex": _slot(code, loser, q["index"], correct=False)})
+                ws_loser.send_json(
+                    {
+                        "type": "answer",
+                        "questionIndex": q["index"],
+                        "answerIndex": _slot(code, loser, q["index"], correct=False),
+                    }
+                )
             elif i == 3:
                 # éliminé : sa réponse est refusée (avant que les vivants ne clôturent la question)
-                ws_loser.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 0})
+                ws_loser.send_json(
+                    {"type": "answer", "questionIndex": q["index"], "answerIndex": 0}
+                )
                 err = _recv_until(ws_loser, "error")
                 assert err["code"] == "eliminated"
-            ws_host.send_json({"type": "answer", "questionIndex": q["index"],
-                               "answerIndex": _slot(code, host, q["index"])})
-            ws_other.send_json({"type": "answer", "questionIndex": q["index"],
-                                "answerIndex": _slot(code, other, q["index"])})
+            ws_host.send_json(
+                {
+                    "type": "answer",
+                    "questionIndex": q["index"],
+                    "answerIndex": _slot(code, host, q["index"]),
+                }
+            )
+            ws_other.send_json(
+                {
+                    "type": "answer",
+                    "questionIndex": q["index"],
+                    "answerIndex": _slot(code, other, q["index"]),
+                }
+            )
 
             reveal = _recv_until(ws_host, "reveal")
             if i < 3:
@@ -299,13 +409,20 @@ def test_random_mix_categories_and_theme(client, monkeypatch):
         assert upd["settings"]["quizQuestionTotal"] == 5
 
         # restreindre les thèmes : catégorie inconnue écartée, total recalculé
-        ws.send_json({"type": "update_settings", "settings": {"categories": ["Musique", "Inconnue"]}})
+        ws.send_json(
+            {
+                "type": "update_settings",
+                "settings": {"categories": ["Musique", "Inconnue"]},
+            }
+        )
         upd = _recv_until(ws, "settings_updated")
         assert upd["settings"]["categories"] == ["Musique"]
         assert upd["settings"]["quizQuestionTotal"] == 2
 
         # un thème sans aucune question est refusé (la sélection reste inchangée)
-        ws.send_json({"type": "update_settings", "settings": {"categories": ["Nature"]}})
+        ws.send_json(
+            {"type": "update_settings", "settings": {"categories": ["Nature"]}}
+        )
         err = _recv_until(ws, "error")
         assert err["code"] == "no_questions"
 
@@ -315,7 +432,9 @@ def test_random_mix_categories_and_theme(client, monkeypatch):
             assert q["theme"] == "Quiz musique"  # contexte affiché pendant la partie
             assert q["text"].startswith("Musique")
             assert "correctIndex" not in q
-            ws.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": 0})
+            ws.send_json(
+                {"type": "answer", "questionIndex": q["index"], "answerIndex": 0}
+            )
             _recv_until(ws, "reveal")
         _recv_until(ws, "game_over")
 
@@ -342,16 +461,25 @@ def test_survival_categories_across_batches(client, monkeypatch):
         assert ws.receive_json()["type"] == "joined"
         ws.send_json({"type": "update_settings", "settings": {"survival": True}})
         _recv_until(ws, "settings_updated")
-        ws.send_json({"type": "update_settings", "settings": {"categories": ["Musique"]}})
+        ws.send_json(
+            {"type": "update_settings", "settings": {"categories": ["Musique"]}}
+        )
         upd = _recv_until(ws, "settings_updated")
         assert upd["settings"]["categories"] == ["Musique"]
 
         ws.send_json({"type": "start"})
-        for _ in range(4):  # 2 lots de 2 : le pool Musique est épuisé sans fuiter d'autres thèmes
+        for _ in range(
+            4
+        ):  # 2 lots de 2 : le pool Musique est épuisé sans fuiter d'autres thèmes
             q = _recv_until(ws, "question")
             assert q["theme"] == "Quiz musique"
-            ws.send_json({"type": "answer", "questionIndex": q["index"],
-                          "answerIndex": _slot(code, host, q["index"])})
+            ws.send_json(
+                {
+                    "type": "answer",
+                    "questionIndex": q["index"],
+                    "answerIndex": _slot(code, host, q["index"]),
+                }
+            )
             _recv_until(ws, "reveal")
         over = _recv_until(ws, "game_over")
         assert over["questionsPlayed"] == 4
@@ -362,13 +490,23 @@ def test_joker_double_perd_deux_vies_par_la_socket(client, monkeypatch):
     monkeypatch.setattr(config, "REVEAL_SECONDS", 0.05)
     host = register(client, "Hote")
     other = register(client, "Vif")
-    create_quiz(host, questions=[
-        {"text": f"Question {i} ?", "answers": ["a", "b", "c", "d"], "correctIndex": 0}
-        for i in range(4)
-    ])
+    create_quiz(
+        host,
+        questions=[
+            {
+                "text": f"Question {i} ?",
+                "answers": ["a", "b", "c", "d"],
+                "correctIndex": 0,
+            }
+            for i in range(4)
+        ],
+    )
     code = _create_game(client, host)
 
-    with ws_connect(client, code, host) as ws_host, ws_connect(client, code, other) as ws_other:
+    with (
+        ws_connect(client, code, host) as ws_host,
+        ws_connect(client, code, other) as ws_other,
+    ):
         for ws in (ws_host, ws_other):
             assert ws.receive_json()["type"] == "joined"
         ws_host.send_json({"type": "update_settings", "settings": {"survival": True}})
@@ -383,10 +521,20 @@ def test_joker_double_perd_deux_vies_par_la_socket(client, monkeypatch):
         assert used["kind"] == "double" and used["playerId"] == host["user"]["id"]
 
         # réponse volontairement fausse (la bonne est l'index 0)
-        ws_host.send_json({"type": "answer", "questionIndex": q["index"],
-                           "answerIndex": _slot(code, host, q["index"], correct=False)})
-        ws_other.send_json({"type": "answer", "questionIndex": q["index"],
-                            "answerIndex": _slot(code, other, q["index"])})
+        ws_host.send_json(
+            {
+                "type": "answer",
+                "questionIndex": q["index"],
+                "answerIndex": _slot(code, host, q["index"], correct=False),
+            }
+        )
+        ws_other.send_json(
+            {
+                "type": "answer",
+                "questionIndex": q["index"],
+                "answerIndex": _slot(code, other, q["index"]),
+            }
+        )
 
         reveal = _recv_until(ws_host, "reveal")
         me = next(r for r in reveal["results"] if r["playerId"] == host["user"]["id"])
@@ -404,7 +552,10 @@ def test_joker_braquage_prend_la_bonne_reponse_par_la_socket(client, monkeypatch
     create_quiz(host)
     code = _create_game(client, host)
 
-    with ws_connect(client, code, host) as ws_host, ws_connect(client, code, other) as ws_other:
+    with (
+        ws_connect(client, code, host) as ws_host,
+        ws_connect(client, code, other) as ws_other,
+    ):
         for ws in (ws_host, ws_other):
             assert ws.receive_json()["type"] == "joined"
         quiz_id = client.get("/api/quizzes").json()[0]["id"]
@@ -416,19 +567,31 @@ def test_joker_braquage_prend_la_bonne_reponse_par_la_socket(client, monkeypatch
 
         # la cible répond juste et en premier : le braquage reste jouable, contrairement
         # au brouillage qu'il remplace
-        ws_other.send_json({"type": "answer", "questionIndex": q["index"],
-                            "answerIndex": _slot(code, other, q["index"])})
+        ws_other.send_json(
+            {
+                "type": "answer",
+                "questionIndex": q["index"],
+                "answerIndex": _slot(code, other, q["index"]),
+            }
+        )
         _recv_until(ws_host, "player_answered")
 
         # Le braquage part alors que la cible a déjà validé — c'est précisément ce que le
         # brouillage interdisait. Il est joué avant la réponse de l'hôte, sinon la question
         # se clôt (tout le monde a répondu) et le joker arriverait après le reveal.
-        ws_host.send_json({"type": "joker", "kind": "steal", "targetId": other["user"]["id"]})
+        ws_host.send_json(
+            {"type": "joker", "kind": "steal", "targetId": other["user"]["id"]}
+        )
         used = _recv_until(ws_host, "joker_used")
         assert used["kind"] == "steal" and used["targetId"] == other["user"]["id"]
 
-        ws_host.send_json({"type": "answer", "questionIndex": q["index"],
-                           "answerIndex": _slot(code, host, q["index"], correct=False)})
+        ws_host.send_json(
+            {
+                "type": "answer",
+                "questionIndex": q["index"],
+                "answerIndex": _slot(code, host, q["index"], correct=False),
+            }
+        )
 
         reveal = _recv_until(ws_host, "reveal")
         results = {r["playerId"]: r for r in reveal["results"]}
@@ -447,7 +610,10 @@ def test_joker_braquage_refuse_sur_soi_meme(client, monkeypatch):
     create_quiz(host)
     code = _create_game(client, host)
 
-    with ws_connect(client, code, host) as ws_host, ws_connect(client, code, other) as ws_other:
+    with (
+        ws_connect(client, code, host) as ws_host,
+        ws_connect(client, code, other) as ws_other,
+    ):
         for ws in (ws_host, ws_other):
             assert ws.receive_json()["type"] == "joined"
         quiz_id = client.get("/api/quizzes").json()[0]["id"]
@@ -457,11 +623,14 @@ def test_joker_braquage_refuse_sur_soi_meme(client, monkeypatch):
         _recv_until(ws_host, "question")
         _recv_until(ws_other, "question")
 
-        ws_host.send_json({"type": "joker", "kind": "steal", "targetId": host["user"]["id"]})
+        ws_host.send_json(
+            {"type": "joker", "kind": "steal", "targetId": host["user"]["id"]}
+        )
         err = _recv_until(ws_host, "error")
         assert err["code"] == "invalid_target"
 
         room = manager.get(code)
+        assert room is not None
         assert "steal" in room.players[host["user"]["id"]].jokers_left
 
 
@@ -473,12 +642,22 @@ def test_chaque_joueur_recoit_les_reponses_dans_son_ordre(client, monkeypatch):
     monkeypatch.setattr(config, "REVEAL_SECONDS", 0.05)
     host = register(client, "Hote")
     other = register(client, "Voisin")
-    create_quiz(host, questions=[
-        {"text": "Capitale du Pérou ?", "answers": ["Lima", "Quito", "La Paz", "Bogota"], "correctIndex": 0},
-    ])
+    create_quiz(
+        host,
+        questions=[
+            {
+                "text": "Capitale du Pérou ?",
+                "answers": ["Lima", "Quito", "La Paz", "Bogota"],
+                "correctIndex": 0,
+            },
+        ],
+    )
     code = _create_game(client, host)
 
-    with ws_connect(client, code, host) as ws_host, ws_connect(client, code, other) as ws_other:
+    with (
+        ws_connect(client, code, host) as ws_host,
+        ws_connect(client, code, other) as ws_other,
+    ):
         for ws in (ws_host, ws_other):
             assert ws.receive_json()["type"] == "joined"
         quiz_id = client.get("/api/quizzes").json()[0]["id"]
@@ -489,11 +668,18 @@ def test_chaque_joueur_recoit_les_reponses_dans_son_ordre(client, monkeypatch):
         q_host = _recv_until(ws_host, "question")
         q_other = _recv_until(ws_other, "question")
 
-        assert sorted(q_host["answers"]) == sorted(q_other["answers"])  # mêmes propositions
+        assert sorted(q_host["answers"]) == sorted(
+            q_other["answers"]
+        )  # mêmes propositions
         room = manager.get(code)
+        assert room is not None
         ordres = {
-            host["user"]["id"]: room.players[host["user"]["id"]].answer_order[q_host["index"]],
-            other["user"]["id"]: room.players[other["user"]["id"]].answer_order[q_host["index"]],
+            host["user"]["id"]: room.players[host["user"]["id"]].answer_order[
+                q_host["index"]
+            ],
+            other["user"]["id"]: room.players[other["user"]["id"]].answer_order[
+                q_host["index"]
+            ],
         }
         # l'ordre est bien mémorisé et sert à composer la grille envoyée
         canon = room.questions[q_host["index"]]["answers"]
@@ -503,8 +689,20 @@ def test_chaque_joueur_recoit_les_reponses_dans_son_ordre(client, monkeypatch):
         # les deux répondent juste, chacun dans sa grille — les index peuvent différer
         slot_host = _slot(code, host, q_host["index"])
         slot_other = _slot(code, other, q_host["index"])
-        ws_host.send_json({"type": "answer", "questionIndex": q_host["index"], "answerIndex": slot_host})
-        ws_other.send_json({"type": "answer", "questionIndex": q_host["index"], "answerIndex": slot_other})
+        ws_host.send_json(
+            {
+                "type": "answer",
+                "questionIndex": q_host["index"],
+                "answerIndex": slot_host,
+            }
+        )
+        ws_other.send_json(
+            {
+                "type": "answer",
+                "questionIndex": q_host["index"],
+                "answerIndex": slot_other,
+            }
+        )
 
         rev_host = _recv_until(ws_host, "reveal")
         rev_other = _recv_until(ws_other, "reveal")
@@ -512,7 +710,9 @@ def test_chaque_joueur_recoit_les_reponses_dans_son_ordre(client, monkeypatch):
         assert q_host["answers"][rev_host["correctIndex"]] == "Lima"
         assert q_other["answers"][rev_other["correctIndex"]] == "Lima"
         # et sa propre réponse retraduite dans sa grille
-        moi = next(r for r in rev_host["results"] if r["playerId"] == host["user"]["id"])
+        moi = next(
+            r for r in rev_host["results"] if r["playerId"] == host["user"]["id"]
+        )
         assert moi["answerIndex"] == slot_host and moi["correct"] is True
 
 
@@ -520,24 +720,45 @@ def test_l_ordre_des_reponses_survit_a_une_reconnexion(client, monkeypatch):
     """Sinon la réponse déjà donnée se rattacherait à la mauvaise proposition."""
     monkeypatch.setattr(config, "REVEAL_SECONDS", 0.05)
     host = register(client, "Hote")
-    create_quiz(host, questions=[
-        {"text": "Capitale du Pérou ?", "answers": ["Lima", "Quito", "La Paz", "Bogota"], "correctIndex": 0},
-    ])
+    guest = register(client, "Invite")
+    create_quiz(
+        host,
+        questions=[
+            {
+                "text": "Capitale du Pérou ?",
+                "answers": ["Lima", "Quito", "La Paz", "Bogota"],
+                "correctIndex": 0,
+            },
+        ],
+    )
     code = _create_game(client, host)
 
-    with ws_connect(client, code, host) as ws:
-        assert ws.receive_json()["type"] == "joined"
-        quiz_id = client.get("/api/quizzes").json()[0]["id"]
-        ws.send_json({"type": "update_settings", "settings": {"quizId": quiz_id}})
-        _recv_until(ws, "settings_updated")
-        ws.send_json({"type": "start"})
-        q = _recv_until(ws, "question")
-        slot = _slot(code, host, q["index"])
-        ws.send_json({"type": "answer", "questionIndex": q["index"], "answerIndex": slot})
-        _recv_until(ws, "answer_ack")
+    # L'invité reste connecté sans répondre : la question ne bascule pas au reveal
+    # pendant la reconnexion de l'hôte. Le test ne dépend plus d'une course de 50 ms.
+    with ws_connect(client, code, guest) as ws_guest:
+        assert ws_guest.receive_json()["type"] == "joined"
+        with ws_connect(client, code, host) as ws:
+            assert ws.receive_json()["type"] == "joined"
+            quiz_id = client.get("/api/quizzes").json()[0]["id"]
+            ws.send_json({"type": "update_settings", "settings": {"quizId": quiz_id}})
+            _recv_until(ws, "settings_updated")
+            ws.send_json({"type": "start"})
+            q = _recv_until(ws, "question")
+            _recv_until(ws_guest, "question")
+            ws.send_json({"type": "joker", "kind": "fifty"})
+            hidden = _recv_until(ws, "joker_hidden")["hidden"]
+            _recv_until(ws, "joker_used")
+            slot = _slot(code, host, q["index"])
+            ws.send_json(
+                {"type": "answer", "questionIndex": q["index"], "answerIndex": slot}
+            )
+            _recv_until(ws, "answer_ack")
 
-    with ws_connect(client, code, host) as ws2:
-        joined = ws2.receive_json()
-        state = joined["state"]
-        assert state["question"]["answers"] == q["answers"]  # même grille qu'avant
-        assert state["yourAnswer"] == slot                   # et la même case cochée
+        with ws_connect(client, code, host) as ws2:
+            joined = ws2.receive_json()
+            state = joined["state"]
+            assert state["phase"] == "question"
+            assert state["question"]["answers"] == q["answers"]  # même grille qu'avant
+            assert state["question"]["elapsed"] >= 0
+            assert state["yourAnswer"] == slot  # et la même case cochée
+            assert state["jokerState"]["hidden"] == hidden
