@@ -1,4 +1,6 @@
 import asyncio
+import json
+import threading
 from contextlib import contextmanager
 
 from app import config
@@ -105,6 +107,83 @@ def test_send_failure_debloque_la_question_si_les_autres_ont_repondu():
     assert sent is False
     assert ghost.connected is False
     assert room.all_answered.is_set()
+
+def test_reconnexion_conserve_le_joueur_pendant_le_chargement(monkeypatch):
+    """Une coupure entre « start » et la première question ne fait pas perdre la place."""
+
+    class Socket:
+        def __init__(self):
+            self.messages = []
+            self.close_code = None
+
+        async def send_text(self, message):
+            self.messages.append(json.loads(message))
+
+        async def close(self, code):
+            self.close_code = code
+
+    loading = threading.Event()
+    release = threading.Event()
+
+    def slow_load(quiz_id, game_id, settings):
+        loading.set()
+        release.wait(timeout=2)
+        return [
+            {
+                "text": "Question",
+                "answers": ["A", "B", "C", "D"],
+                "correct_index": 0,
+                "theme": "Test",
+            }
+        ]
+
+    monkeypatch.setattr("app.game.room._load_questions", slow_load)
+
+    async def scenario():
+        room = GameRoom("ABC123", 1, 1, {"quizId": 7})
+        old_socket = Socket()
+        player = PlayerState(
+            user_id=1,
+            username="Hote",
+            ws=old_socket,
+            connected=True,
+            ready=True,
+        )
+        room.players[1] = player
+
+        start_task = asyncio.create_task(room._start(1))
+        try:
+            assert await asyncio.to_thread(loading.wait, 1)
+            assert room.starting is True
+            await room.handle_disconnect(1, old_socket)
+            assert room.players[1] is player
+            assert player.connected is False
+
+            release.set()
+            await start_task
+            await asyncio.sleep(0)
+            assert room.phase == "question"
+
+            new_socket = Socket()
+            assert await room.handle_join(1, "Hote", new_socket)
+            assert player.ready is True
+            joined = next(m for m in new_socket.messages if m["type"] == "joined")
+            assert joined["state"]["phase"] == "question"
+            assert joined["state"]["question"]["text"] == "Question"
+
+            outsider_socket = Socket()
+            assert not await room.handle_join(2, "Retardataire", outsider_socket)
+            assert outsider_socket.messages[0]["code"] == "already_started"
+            assert outsider_socket.close_code == 4003
+        finally:
+            release.set()
+            if not start_task.done():
+                await start_task
+            if room.run_task is not None:
+                room.run_task.cancel()
+                await asyncio.gather(room.run_task, return_exceptions=True)
+
+    asyncio.run(scenario())
 
 
 def test_ws_rejects_invalid_token(client):

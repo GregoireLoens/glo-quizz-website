@@ -106,6 +106,10 @@ class GameRoom:
         self.all_answered = asyncio.Event()
         self.lock = asyncio.Lock()
         self.run_task: asyncio.Task | None = None
+        # Réserve le salon dès que l'hôte lance la partie, avant le chargement DB.
+        # La phase reste "lobby" côté protocole jusqu'à la première question, mais les
+        # joueurs déconnectés pendant cette fenêtre doivent pouvoir reprendre leur place.
+        self.starting = False
         self.last_activity = time.monotonic()
 
     # ---------- helpers ----------
@@ -368,7 +372,7 @@ class GameRoom:
             p = self.players.get(user_id)
             is_new = p is None
             if p is None:
-                if self.phase != "lobby":
+                if self.phase != "lobby" or self.starting:
                     await self._send(
                         ws,
                         {
@@ -416,7 +420,7 @@ class GameRoom:
                 return  # socket déjà remplacée par une reconnexion
             p.ws = None
             p.connected = False
-            if self.phase == "lobby":
+            if self.phase == "lobby" and not self.starting:
                 del self.players[user_id]
                 if user_id == self.host_id and self.players:
                     self.host_id = min(
@@ -451,7 +455,7 @@ class GameRoom:
 
     async def _ready(self, user_id: int, msg: dict) -> None:
         async with self.lock:
-            if self.phase != "lobby":
+            if self.phase != "lobby" or self.starting:
                 return
             p = self.players.get(user_id)
             if p is None:
@@ -466,7 +470,7 @@ class GameRoom:
                 user_id, "not_host", "Seul l'hôte peut modifier les réglages."
             )
             return
-        if self.phase != "lobby":
+        if self.phase != "lobby" or self.starting:
             await self._error(user_id, "already_started", "La partie a déjà commencé.")
             return
         incoming = msg.get("settings") or {}
@@ -504,7 +508,7 @@ class GameRoom:
                 return
             categories_update = (categories, pool_total)
         async with self.lock:
-            if self.phase != "lobby":
+            if self.phase != "lobby" or self.starting:
                 return
             qc = incoming.get("questionCount")
             if isinstance(qc, int) and qc in config.QUESTION_COUNT_CHOICES:
@@ -530,36 +534,54 @@ class GameRoom:
             )
 
     async def _start(self, user_id: int) -> None:
-        if user_id != self.host_id:
-            await self._error(user_id, "not_host", "Seul l'hôte peut lancer la partie.")
-            return
-        if self.phase != "lobby":
-            await self._error(user_id, "already_started", "La partie a déjà commencé.")
-            return
-        quiz_id = self.settings["quizId"]
-        if self.settings["survival"]:
-            questions = await asyncio.to_thread(
-                _load_survival_questions, self.game_id, self.settings
-            )
-        elif self.settings["randomMix"]:
-            questions = await asyncio.to_thread(
-                _load_random_questions, self.game_id, self.settings
-            )
-        elif quiz_id is None:
-            await self._error(user_id, "no_quiz", "Choisis un quiz avant de lancer.")
-            return
-        else:
-            questions = await asyncio.to_thread(
-                _load_questions, quiz_id, self.game_id, self.settings
-            )
-        if not questions:
-            await self._error(user_id, "no_questions", "Ce quiz n'a aucune question.")
-            return
         async with self.lock:
-            if self.phase != "lobby" or self.run_task is not None:
+            if user_id != self.host_id:
+                await self._error(
+                    user_id, "not_host", "Seul l'hôte peut lancer la partie."
+                )
+                return
+            if self.phase != "lobby" or self.starting or self.run_task is not None:
+                await self._error(
+                    user_id, "already_started", "La partie a déjà commencé."
+                )
+                return
+            settings = dict(self.settings)
+            quiz_id = settings["quizId"]
+            if quiz_id is None and not settings["survival"] and not settings["randomMix"]:
+                await self._error(
+                    user_id, "no_quiz", "Choisis un quiz avant de lancer."
+                )
+                return
+            self.starting = True
+            self.touch()
+
+        try:
+            if settings["survival"]:
+                questions = await asyncio.to_thread(
+                    _load_survival_questions, self.game_id, settings
+                )
+            elif settings["randomMix"]:
+                questions = await asyncio.to_thread(
+                    _load_random_questions, self.game_id, settings
+                )
+            else:
+                questions = await asyncio.to_thread(
+                    _load_questions, quiz_id, self.game_id, settings
+                )
+        except BaseException:
+            async with self.lock:
+                self.starting = False
+            raise
+
+        async with self.lock:
+            if not questions:
+                self.starting = False
+                await self._error(
+                    user_id, "no_questions", "Ce quiz n'a aucune question."
+                )
                 return
             random.shuffle(questions)
-            if self.settings["survival"]:
+            if settings["survival"]:
                 self.questions = questions
                 self.survival_threshold = 1 if len(self.players) >= 2 else 0
                 for p in self.players.values():
@@ -569,7 +591,7 @@ class GameRoom:
                     self.broadcast_players()
                 )  # les clients doivent voir les vies avant la 1re question
             else:
-                self.questions = questions[: self.settings["questionCount"]]
+                self.questions = questions[: settings["questionCount"]]
             self.touch()
             self.run_task = asyncio.create_task(self.run())
 
@@ -810,6 +832,7 @@ class GameRoom:
                     random.shuffle(more)
                     self.questions.extend(more)
                 async with self.lock:
+                    self.starting = False
                     self.phase = "question"
                     self.current_index = i
                     self.all_answered = asyncio.Event()
